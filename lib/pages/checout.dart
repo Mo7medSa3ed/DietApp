@@ -1,12 +1,8 @@
 import 'package:csc_picker/csc_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test_app/constants/config.dart';
-import 'package:flutter_test_app/pages/map.dart';
 import 'package:flutter_test_app/widgets/custum.dart';
-import 'package:geocoder/geocoder.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:location/location.dart' as loc;
 
 class CheckoutScrean extends StatefulWidget {
   @override
@@ -18,7 +14,7 @@ class _CheckoutScreanState extends State<CheckoutScrean> {
   var citySelected;
   var _nameController = TextEditingController(text: '');
   var _phone = TextEditingController(text: '');
-  var address;
+/*   var address;
   getCurrantaddress() async {
     loc.Location location = new loc.Location();
 
@@ -50,45 +46,10 @@ class _CheckoutScreanState extends State<CheckoutScrean> {
         });
       });
     });
-  }
-
-  getCurrantLocation() async {
-    await Geolocator.checkPermission().then((value) {
-      if (value == LocationPermission.always ||
-          value == LocationPermission.whileInUse) {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => MapScrean()));
-      } else {
-        buildDialogforNotification(
-            context: context,
-            test: false,
-            text: "Allow your Location",
-            desc: "we will need your location to give you better experience.",
-            img: "location.png",
-            conTap: () {
-              Navigator.of(context).pop();
-              Geolocator.requestPermission().then((value) {
-                if (value == LocationPermission.always ||
-                    value == LocationPermission.whileInUse) {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (_) => MapScrean()));
-                } else {
-                  Navigator.of(context).pop();
-                }
-              });
-            },
-            backTap: () {
-              Navigator.of(context).pop();
-            },
-            conText: "Sure, I'd Like that",
-            backText: "Not now");
-      }
-    });
-  }
+  } */
 
   @override
   void initState() {
-    getCurrantaddress();
     super.initState();
   }
 
@@ -126,31 +87,9 @@ class _CheckoutScreanState extends State<CheckoutScrean> {
                             widget: buildCountrySelector(),
                             controller: TextEditingController()), */
                         buldinputContainer(
-                          controller: TextEditingController(text: ''),
-                          text: "Address",
-                          widget: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20.0, vertical: 15),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                      address != null ? address.toString() : '',
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w900,
-                                          color: kprimary)),
-                                ),
-                                address == null
-                                    ? Container(
-                                        child: CircularProgressIndicator(
-                                        color: kprimary,
-                                      ))
-                                    : Container()
-                              ],
-                            ),
-                          ),
-                        ),
+                            controller: TextEditingController(text: ''),
+                            text: "Address",
+                            hint: 'Enter your address'),
                         buldinputContainer(
                             text: "PhoneNumber",
                             widget: "phone",
@@ -338,7 +277,7 @@ class _CheckoutScreanState extends State<CheckoutScrean> {
                             shape: BoxShape.circle),
                         child: IconButton(
                             onPressed: () async {
-                              await getCurrantLocation();
+                              await getCurrantLocation(context);
                             },
                             icon: Icon(
                               Icons.location_on,

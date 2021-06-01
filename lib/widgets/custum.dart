@@ -7,8 +7,11 @@ import 'package:flutter_test_app/pages/home.dart';
 import 'package:flutter_test_app/pages/orders.dart';
 import 'package:flutter_test_app/pages/profile.dart';
 import 'package:flutter_test_app/pages/shop.dart';
+import 'package:flutter_test_app/provider/app_provider.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:provider/provider.dart';
 import 'package:response/response.dart';
+import 'package:toast/toast.dart';
 
 final response = ResponseUI.instance;
 
@@ -220,15 +223,15 @@ buildCartItem() {
       children: [
         Expanded(
           child: Container(
-            padding: EdgeInsets.all(12),
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             height: response.setHeight(100),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30), color: kwhite),
             child: Row(
               children: [
                 Container(
-                  height: 85,
-                  width: 85,
+                  height: 90,
+                  width: 90,
                   padding: EdgeInsets.all(10),
                   decoration: BoxDecoration(
                       // image: DecorationImage(
@@ -255,7 +258,7 @@ buildCartItem() {
                           style: TextStyle(
                               color: kprimary,
                               fontWeight: FontWeight.w900,
-                              fontSize: response.setFontSize(16.5))),
+                              fontSize: response.setFontSize(16))),
                       SizedBox(
                         height: response.setHeight(4),
                       ),
@@ -265,7 +268,7 @@ buildCartItem() {
                         style: TextStyle(
                             color: ksecondary,
                             fontWeight: FontWeight.w900,
-                            fontSize: response.setFontSize(14.0)),
+                            fontSize: response.setFontSize(13.0)),
                         overflow: TextOverflow.ellipsis,
                       ),
                       SizedBox(
@@ -283,7 +286,7 @@ buildCartItem() {
                                 style: TextStyle(
                                     color: kprimary,
                                     fontWeight: FontWeight.w900,
-                                    fontSize: response.setFontSize(17)),
+                                    fontSize: response.setFontSize(16.5)),
                               ),
                             ),
                             Expanded(
@@ -509,13 +512,8 @@ buildShopItem(context) {
           backgroundColor: kdrawer,
           elevation: 1,
           onPressed: () {
-            return buildDialog(
-              context: context,
-              test: true,
-              text: "Product added to cart successfully.",
-              desc: "we can add more to cart",
-              img: "image5.png",
-            );
+            Toast.show("Product added to cart successfully", context,
+                duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
           },
           child: Image.asset("assets/images/cart.png"),
         ),
@@ -523,6 +521,7 @@ buildShopItem(context) {
     ],
   );
 }
+
 buildText(text, {color = kprimary, fontsize}) {
   return Text(text.toString().trim(),
       overflow: TextOverflow.ellipsis,
@@ -842,6 +841,7 @@ buildAppBarForPages(context, text, {showProfile = true}) {
     ),
   );
 }
+
 buildSearch({hint, icon = Icons.search, onChange}) {
   return Container(
     padding: EdgeInsets.symmetric(horizontal: 15),
@@ -865,109 +865,130 @@ buildSearch({hint, icon = Icons.search, onChange}) {
 }
 
 Widget buildDrawer(context) {
-  return Container(
-    height: double.infinity,
-    width: MediaQuery.of(context).size.width * 0.7,
-    decoration: BoxDecoration(
-        color: Color(0xff3f4075),
-        borderRadius: BorderRadius.only(
-            topRight: Radius.circular(50), bottomRight: Radius.circular(50))),
-    child: Stack(
-      children: [
-        ClipPath(
-          clipper: custumLinearclipperForDrawer(),
-          child: Container(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment(1, 0),
-                    end: Alignment(1, 0.5),
-                    colors: [
-                  Color(0xff3d4183),
-                  Color(0xff3f4075),
-                ])),
+  final app = Provider.of<AppProvider>(context, listen: false);
+  return Selector<AppProvider, int>(
+    selector: (context, app) => app.index,
+    builder: (context, i, w) => Container(
+      height: double.infinity,
+      width: MediaQuery.of(context).size.width * 0.7,
+      decoration: BoxDecoration(
+          color: Color(0xff3f4075),
+          borderRadius: BorderRadius.only(
+              topRight: Radius.circular(50), bottomRight: Radius.circular(50))),
+      child: Stack(
+        children: [
+          ClipPath(
+            clipper: custumLinearclipperForDrawer(),
+            child: Container(
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment(1, 0),
+                      end: Alignment(1, 0.5),
+                      colors: [
+                    Color(0xff3d4183),
+                    Color(0xff3f4075),
+                  ])),
+            ),
           ),
-        ),
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            buildBackButton(context),
-            InkWell(
-              onTap: () => GoTo(context, ProfileScrean()),
-              child: Container(
-                alignment: Alignment.center,
-                height: response.setHeight(100),
-                width: response.setWidth(100),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(200),
-                    color: kwhite,
-                    image: DecorationImage(
-                      image: AssetImage("assets/images/profile.jpg"),
-                      fit: BoxFit.cover,
-                    )),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              buildBackButton(context),
+              InkWell(
+                onTap: () => GoTo(context, ProfileScrean()),
+                child: Container(
+                  alignment: Alignment.center,
+                  height: response.setHeight(100),
+                  width: response.setWidth(100),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(200),
+                      color: kwhite,
+                      image: DecorationImage(
+                        image: AssetImage("assets/images/profile.jpg"),
+                        fit: BoxFit.cover,
+                      )),
+                ),
               ),
-            ),
-            SizedBox(
-              height: response.setHeight(10),
-            ),
-            Text('mohaed saeed',
-                style: TextStyle(
-                    fontSize: response.setFontSize(16),
-                    color: kwhite,
-                    fontWeight: FontWeight.w700)),
-            SizedBox(
-              height: response.setHeight(5),
-            ),
-            Text('@mohaed',
-                style: TextStyle(
-                    fontSize: response.setFontSize(14),
-                    color: ksecondary,
-                    fontWeight: FontWeight.w400)),
-            SizedBox(
-              height: response.setHeight(40),
-            ),
-            buildDrawerItem("Home", Icons.home, () {
-              GoTo(context, HomeScrean());
-            }),
-            SizedBox(
-              height: response.setHeight(20),
-            ),
-            buildDrawerItem("My Course", Icons.home, () {
-              GoTo(context, CouresScrean());
-            }),
-            SizedBox(
-              height: response.setHeight(20),
-            ),
-            buildDrawerItem("Shop", Icons.store, () {
-              GoTo(context, ShopScrean());
-            }),
-            SizedBox(
-              height: response.setHeight(20),
-            ),
-            buildDrawerItem("Cart", Icons.shopping_cart_rounded, () {
-              GoTo(context, CartScrean());
-            }),
-            SizedBox(
-              height: response.setHeight(20),
-            ),
-            buildDrawerItem("Orders", Icons.home, () {
-              GoTo(context, OrderScrean());
-            }),
-            SizedBox(
-              height: response.setHeight(20),
-            ),
-            buildDrawerItem("Settings", Icons.settings, () {
-              GoTo(context, AchieveScrean());
-            }),
-          ],
-        )
-      ],
+              SizedBox(
+                height: response.setHeight(10),
+              ),
+              Text('mohaed saeed',
+                  style: TextStyle(
+                      fontSize: response.setFontSize(16),
+                      color: kwhite,
+                      fontWeight: FontWeight.w700)),
+              SizedBox(
+                height: response.setHeight(5),
+              ),
+              Text('@mohaed',
+                  style: TextStyle(
+                      fontSize: response.setFontSize(14),
+                      color: ksecondary,
+                      fontWeight: FontWeight.w400)),
+              SizedBox(
+                height: response.setHeight(40),
+              ),
+              buildDrawerItem("Home", 0, i, 6, () {
+                app.changeIndex(0);
+                Navigator.of(context).pop();
+                GoTo(context, HomeScrean());
+              }),
+              SizedBox(
+                height: response.setHeight(20),
+              ),
+              buildDrawerItem("My Course", 1, i, 2, () {
+                app.changeIndex(1);
+                Navigator.of(context).pop();
+
+                GoTo(context, CouresScrean());
+              }),
+              SizedBox(
+                height: response.setHeight(20),
+              ),
+              buildDrawerItem("Shop", 2, i, 4, () {
+                app.changeIndex(2);
+                Navigator.of(context).pop();
+
+                GoTo(context, ShopScrean());
+              }),
+              SizedBox(
+                height: response.setHeight(20),
+              ),
+              buildDrawerItem("Cart", 3, i, 7, () {
+                app.changeIndex(3);
+                Navigator.of(context).pop();
+
+                GoTo(context, CartScrean());
+              }),
+              SizedBox(
+                height: response.setHeight(20),
+              ),
+              buildDrawerItem("Orders", 4, i, 1, () {
+                app.changeIndex(4);
+                Navigator.of(context).pop();
+
+                GoTo(context, OrderScrean());
+              }),
+              SizedBox(
+                height: response.setHeight(20),
+              ),
+              buildDrawerItem("Settings", 5, i, 5, () {
+                app.changeIndex(5);
+                Navigator.of(context).pop();
+
+                GoTo(context, AchieveScrean());
+              }),
+            ],
+          )
+        ],
+      ),
     ),
   );
 }
 
-Widget buildDrawerItem(text, icon, onTap) {
+Widget buildDrawerItem(text, index, currant, icon, onTap) {
   return InkWell(
     onTap: onTap,
     child: Container(
@@ -975,18 +996,17 @@ Widget buildDrawerItem(text, icon, onTap) {
       padding: EdgeInsets.symmetric(horizontal: 25),
       margin: EdgeInsets.only(left: 50),
       decoration: BoxDecoration(
-          border: Border(
-              left: BorderSide(
-                  color: kprimary, width: 2, style: BorderStyle.solid))),
+          border: index == currant
+              ? Border(
+                  left: BorderSide(
+                      color: kprimary2, width: 2, style: BorderStyle.solid))
+              : null),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Icon(
-            icon,
-            color: kwhite,
-          ),
+          Image.asset("assets/images/icon$icon.png"),
           SizedBox(
             width: response.setWidth(15),
           ),

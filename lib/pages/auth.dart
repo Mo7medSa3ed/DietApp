@@ -1,6 +1,7 @@
 import 'package:delayed_display/delayed_display.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test_app/constants/config.dart';
+import 'package:flutter_test_app/pages/home.dart';
 import 'package:flutter_test_app/widgets/custum.dart';
 import 'package:response/response.dart';
 
@@ -19,6 +20,7 @@ class _AuthScreanState extends State<AuthScrean> {
     final response = ResponseUI.instance;
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Stack(
           children: [
             DelayedDisplay(
@@ -136,7 +138,9 @@ class _AuthScreanState extends State<AuthScrean> {
               child: FloatingActionButton(
                 elevation: 0,
                 backgroundColor: kwhite,
-                onPressed: () {},
+                onPressed: () {
+                  GoTo(context,HomeScrean());
+                },
                 child: Icon(
                   Icons.arrow_forward_sharp,
                   color: kprimary,

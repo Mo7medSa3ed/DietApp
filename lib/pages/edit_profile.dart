@@ -73,6 +73,19 @@ class _EditProfileScreanState extends State<EditProfileScrean> {
                   text: "Phone Number",
                   widget: "phone",
                   controller: TextEditingController(text: '')),
+              Row(
+                children: [
+                  Spacer(),
+                  Container(
+                    margin:EdgeInsets.symmetric(horizontal: 20),
+                    width: 200,
+                    child: buildFillElevatedButton(
+                      text: "Send Code",
+                      onpressed: () {},
+                    ),
+                  ),
+                ],
+              ),
               buldinputContainer(
                   text: "Confirmation Code",
                   hint: 'Enter confirmation code ...',

@@ -26,7 +26,7 @@ class _HomeScreanState extends State<HomeScrean> {
     return SafeArea(
       child: Scaffold(
           key: scaffoldKey,
-          resizeToAvoidBottomInset: false,
+          //resizeToAvoidBottomInset: false,
           drawer: buildDrawer(context),
           body: Container(
             width: double.infinity,
@@ -40,7 +40,7 @@ class _HomeScreanState extends State<HomeScrean> {
                   padding: const EdgeInsets.all(16.0),
                   child: buildAppBar(() {
                     scaffoldKey.currentState.openDrawer();
-                  },context),
+                  }, context),
                 ),
                 SizedBox(
                   height: response.setHeight(20),

@@ -44,6 +44,7 @@ dependencies:
   geocoder:
   dropdown_search:
   intl:
+  toast: ^0.1.5
 
 dev_dependencies:
   flutter_test:

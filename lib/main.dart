@@ -1,16 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test_app/constants/config.dart';
+// ignore: unused_import
 import 'package:flutter_test_app/pages/auth.dart';
+import 'package:flutter_test_app/pages/home.dart';
 import 'package:flutter_test_app/provider/app_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:response/response.dart';
 
-void main() => runApp(
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) {
+    runApp(
       //DevicePreview(
       // builder: (context) =>
       MyApp(), // Wrap your app
       // ),
     );
+  });
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -31,12 +40,12 @@ class MyApp extends StatelessWidget {
             fontFamily: 'Nexa',
             primaryColor: kprimary,
             splashColor: kprimary,
-            textSelectionTheme: TextSelectionThemeData( 
+            textSelectionTheme: TextSelectionThemeData(
               cursorColor: kprimary,
             ),
             scaffoldBackgroundColor: kcolor1,
           ),
-          home: AuthScrean(),
+          home: HomeScrean(),
         ),
       ),
     );

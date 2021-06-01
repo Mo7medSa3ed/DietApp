@@ -62,7 +62,7 @@ class _ProfileScreanState extends State<ProfileScrean> {
                 ),
                 buildContainerForPRoileData(
                   title: "Birthdate",
-                  subtitle: "dd/mm/yyyy",
+                  subtitle: "4/2/2021",
                 ),
                 buildContainerForPRoileData(
                   title: "Gender",
