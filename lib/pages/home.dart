@@ -40,7 +40,7 @@ class _HomeScreanState extends State<HomeScrean> {
                   padding: const EdgeInsets.all(16.0),
                   child: buildAppBar(() {
                     scaffoldKey.currentState.openDrawer();
-                  }),
+                  },context),
                 ),
                 SizedBox(
                   height: response.setHeight(20),

@@ -405,7 +405,7 @@ buildCourseItem() {
   );
 }
 
-buildShopItem() {
+buildShopItem(context) {
   return Stack(
     children: [
       Container(
@@ -416,7 +416,7 @@ buildShopItem() {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
               height: response.setHeight(96),
               width: response.screenWidth - 32,
               decoration: BoxDecoration(
@@ -424,17 +424,15 @@ buildShopItem() {
               child: Row(
                 children: [
                   Container(
+                    padding: EdgeInsets.all(5),
                     alignment: Alignment.center,
-                    height: 80,
-                    width: 80,
+                    height: 90,
+                    width: 90,
                     decoration: BoxDecoration(
-                        image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: NetworkImage(
-                              "https://digitaldefynd.com/wp-content/uploads/2020/04/Best-Food-Styling-course-tutorial-class-certification-training-online-1024x625.jpg",
-                            )),
-                        borderRadius: BorderRadius.circular(25),
-                        color: Colors.grey[200]),
+                      borderRadius: BorderRadius.circular(25),
+                      color: kcolor1.withOpacity(0.5),
+                    ),
+                    child: Image.asset("assets/images/image4.png"),
                   ),
                   SizedBox(
                     width: 15,
@@ -505,23 +503,26 @@ buildShopItem() {
         ),
       ),
       Positioned(
-          right: 35,
-          bottom: 0,
-          child: Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                color: kdrawer,
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                    image: AssetImage(
-                  "assets/images/cart.png",
-                )),
-              )))
+        right: 35,
+        bottom: 0,
+        child: FloatingActionButton(
+          backgroundColor: kdrawer,
+          elevation: 1,
+          onPressed: () {
+            return buildDialog(
+              context: context,
+              test: true,
+              text: "Product added to cart successfully.",
+              desc: "we can add more to cart",
+              img: "image5.png",
+            );
+          },
+          child: Image.asset("assets/images/cart.png"),
+        ),
+      )
     ],
   );
 }
-
 buildText(text, {color = kprimary, fontsize}) {
   return Text(text.toString().trim(),
       overflow: TextOverflow.ellipsis,
@@ -841,13 +842,13 @@ buildAppBarForPages(context, text, {showProfile = true}) {
     ),
   );
 }
-
-buildSearch({hint, icon = Icons.search}) {
+buildSearch({hint, icon = Icons.search, onChange}) {
   return Container(
     padding: EdgeInsets.symmetric(horizontal: 15),
     decoration:
         BoxDecoration(color: kwhite, borderRadius: BorderRadius.circular(20)),
     child: TextField(
+      onChanged: onChange,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.symmetric(
               vertical: response.setHeight(15),
@@ -855,6 +856,7 @@ buildSearch({hint, icon = Icons.search}) {
           suffixIcon: Icon(
             icon,
             size: 30,
+            color: kprimary,
           ),
           border: InputBorder.none,
           hintText: hint),
