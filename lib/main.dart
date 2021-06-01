@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test_app/constants/config.dart';
-import 'package:flutter_test_app/pages/acheive.dart';
 import 'package:flutter_test_app/pages/auth.dart';
-import 'package:flutter_test_app/pages/edit_profile.dart';
-import 'package:flutter_test_app/pages/home.dart';
-import 'package:flutter_test_app/pages/profile.dart';
 import 'package:flutter_test_app/provider/app_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:response/response.dart';
@@ -35,7 +31,7 @@ class MyApp extends StatelessWidget {
             fontFamily: 'Nexa',
             primaryColor: kprimary,
             splashColor: kprimary,
-            textSelectionTheme: TextSelectionThemeData(
+            textSelectionTheme: TextSelectionThemeData( 
               cursorColor: kprimary,
             ),
             scaffoldBackgroundColor: kcolor1,

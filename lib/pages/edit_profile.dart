@@ -13,7 +13,6 @@ class _EditProfileScreanState extends State<EditProfileScrean> {
   bool isVisible = true;
   bool isConfirmVisible = true;
   List gengerList = ["Male", "Female"];
-  var _selectedGender;
   var _selectedDate;
 
   @override

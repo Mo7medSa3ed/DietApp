@@ -14,7 +14,6 @@ class _AchieveScreanState extends State<AchieveScrean> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
         backgroundColor: Color(0xff232749),
         body: Stack(children: [
           Align(

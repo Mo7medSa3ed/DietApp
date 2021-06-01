@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test_app/constants/config.dart';
+import 'package:flutter_test_app/pages/cart.dart';
 import 'package:flutter_test_app/widgets/custum.dart';
 
 class ShopScrean extends StatefulWidget {
@@ -13,7 +14,6 @@ class _ShopScreanState extends State<ShopScrean> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
         body: Container(
           decoration: BoxDecoration(
               gradient:
@@ -74,7 +74,8 @@ class _ShopScreanState extends State<ShopScrean> {
               ),
               Expanded(
                 child: ListView(
-                  children: List.generate(10, (index) => buildShopItem())),
+                    children:
+                        List.generate(10, (index) => buildShopItem(context))),
               ),
               Container(
                 padding:
@@ -99,7 +100,7 @@ class _ShopScreanState extends State<ShopScrean> {
                     buildIconElevatedButton(
                         icon: Image.asset("assets/images/cart.png"),
                         label: 'Shopping Cart',
-                        onpressed: () {})
+                        onpressed: () => GoTo(context, CartScrean()))
                   ],
                 ),
               )
