@@ -17,7 +17,9 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+      
       child: Scaffold(
+      resizeToAvoidBottomInset: false,
         backgroundColor: kcolor1,
         body: Container(
           width: double.infinity,
@@ -292,10 +294,7 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
                         ? idxList.remove(index)
                         : idxList.add(index);
                   });
-                  Timer.periodic(Duration(seconds: 1), (t) {
-                    t.cancel();
-                    GoTo(context, AchieveScrean());
-                  });
+                  Timer.periodic(Duration(seconds: 2), (t){GoTo(context, AchieveScrean());});
                 })
           ],
         ),
@@ -362,16 +361,16 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+       
         Container(
           height: 80,
           width: 80,
           padding: EdgeInsets.all(8),
-          decoration: BoxDecoration(
-              /*    image:
-                  DecorationImage(image: AssetImage(img), fit: BoxFit.cover)), */
+          /* decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              color: kcolor1.withOpacity(0.5)),
-          child: Image.asset(img),
+              image:
+                  DecorationImage(image: AssetImage(img), fit: BoxFit.cover)), */
+                  child: Image.asset(img),
         ),
         SizedBox(
           width: 15,

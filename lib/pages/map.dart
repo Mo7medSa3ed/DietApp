@@ -76,6 +76,7 @@ class _MapScreanState extends State<MapScrean> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Container(
           width: double.infinity,
           height: double.infinity,
@@ -114,7 +115,7 @@ class _MapScreanState extends State<MapScrean> {
                                 )
                               : Center(
                                   child: CircularProgressIndicator(
-                                    color: kprimary2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(kprimary),
                                   ),
                                 ),
                         ),

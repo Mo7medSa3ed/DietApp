@@ -13,6 +13,7 @@ class _OrderScreanState extends State<OrderScrean> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Container(
           decoration: BoxDecoration(
               gradient:

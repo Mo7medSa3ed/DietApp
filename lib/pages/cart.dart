@@ -14,6 +14,7 @@ class _CartScreanState extends State<CartScrean> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Container(
           decoration: BoxDecoration(
               gradient:

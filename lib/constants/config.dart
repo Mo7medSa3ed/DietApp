@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_test_app/pages/map.dart';
+import 'package:flutter_test_app/widgets/custum.dart';
+import 'package:geolocator/geolocator.dart';
 
 const ksecondary = Color.fromARGB(255, 142, 156, 182);
 const kprimary = Color.fromARGB(255, 23, 29, 45);
@@ -16,6 +19,46 @@ const kgreen = Color(0xff00c488);
 const kblue = Color(0xff3f4075);
 const APIKEY ="AIzaSyDXgbuvH4h_A7OkEbqAucUKQSLUfJs8i2Y";
 const img ="https://digitaldefynd.com/wp-content/uploads/2020/04/Best-Food-Styling-course-tutorial-class-certification-training-online-1024x625.jpg";
+
+
+
+
+getCurrantLocation(context) async {
+    await Geolocator.checkPermission().then((value) {
+      if (value == LocationPermission.always ||
+          value == LocationPermission.whileInUse) {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => MapScrean()));
+      } else {
+        buildDialogforNotification(
+            context: context,
+            test: false,
+            text: "Allow your Location",
+            desc: "we will need your location to give you better experience.",
+            img: "location.png",
+            conTap: () {
+              Navigator.of(context).pop();
+              Geolocator.requestPermission().then((value) {
+                if (value == LocationPermission.always ||
+                    value == LocationPermission.whileInUse) {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (_) => MapScrean()));
+                } else {
+                  Navigator.of(context).pop();
+                }
+              });
+            },
+            backTap: () {
+              Navigator.of(context).pop();
+            },
+            conText: "Sure, I'd Like that",
+            backText: "Not now");
+      }
+    });
+  }
+
+
+
 
 class custumLinearclipper extends CustomClipper<Path> {
   @override

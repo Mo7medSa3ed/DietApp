@@ -5,24 +5,24 @@ import 'package:flutter_test_app/pages/cart.dart';
 import 'package:flutter_test_app/pages/course.dart';
 import 'package:flutter_test_app/pages/home.dart';
 import 'package:flutter_test_app/pages/orders.dart';
+import 'package:flutter_test_app/pages/profile.dart';
 import 'package:flutter_test_app/pages/shop.dart';
-import 'package:flutter_test_app/provider/app_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:response/response.dart';
 
 final response = ResponseUI.instance;
 
-buildFillElevatedButton({text, onpressed}) {
+buildFillElevatedButton({text, onpressed, bgcolor = kprimary2, txtcolor}) {
   return ElevatedButton(
     onPressed: onpressed,
     child: Text(text.toString().trim(),
         style: TextStyle(
-            color: kwhite.withOpacity(0.9),
+            color: txtcolor ?? kwhite.withOpacity(0.9),
             fontWeight: FontWeight.w900,
             fontSize: response.setFontSize(16))),
     style: ButtonStyle(
         padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 15)),
-        backgroundColor: MaterialStateProperty.all<Color>(kprimary2),
+        backgroundColor: MaterialStateProperty.all<Color>(bgcolor),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30),
@@ -75,10 +75,12 @@ buildOutElevatedButton({text, onpressed, test: true}) {
   );
 }
 
-buildIconElevatedButton({icon, label, onpressed}) {
+buildIconElevatedButton(
+    {icon, label, onpressed, color = kwhite, bg = kprimary2}) {
   return ElevatedButton.icon(
     label: Text(label,
         style: TextStyle(
+          color: color,
           fontSize: 18,
           fontWeight: FontWeight.w900,
         )),
@@ -86,7 +88,7 @@ buildIconElevatedButton({icon, label, onpressed}) {
     icon: icon,
     style: ButtonStyle(
         padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 18)),
-        backgroundColor: MaterialStateProperty.all<Color>(kprimary2),
+        backgroundColor: MaterialStateProperty.all<Color>(bg),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30),
@@ -122,14 +124,13 @@ buildIconElevatedButtonOutLine(
 
 buildDialog({context, text, desc, img, test = true}) {
   return showDialog(
-      barrierDismissible: false,
       context: context,
       builder: (ctx) => Dialog(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
             child: Container(
               margin: EdgeInsets.all(20),
-              height: response.screenHeight * 0.42,
+              height: response.screenHeight * 0.55,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -137,29 +138,24 @@ buildDialog({context, text, desc, img, test = true}) {
                 children: [
                   Container(
                     height: response.setHeight(160),
-                    child: Image.asset(
-                      "assets/images/$img",
-                    ),
+                    child:
+                        FlutterLogo() /*  Image.asset("assets/images/$img") */,
                   ),
                   Text(text,
                       style: TextStyle(
-                          fontWeight: FontWeight.w800,
+                          fontWeight: FontWeight.bold,
                           fontSize: response.setFontSize(16)),
                       textAlign: TextAlign.center),
                   Text(desc,
                       style: TextStyle(
                           fontWeight: FontWeight.w700,
-                          color: ksecondary,
+                          color: kprimary.withOpacity(0.3),
                           fontSize: response.setFontSize(12)),
                       textAlign: TextAlign.center),
-                  SizedBox(height: 8),
                   buildOutElevatedButton(
-                      text: "Continue Shopping",
-                      onpressed: () => GoTo(context, ShopScrean()),
-                      test: test),
+                      text: "Continue Shopping", onpressed: () {}, test: test),
                   buildFillElevatedButton(
-                      text: "Go To Orders",
-                      onpressed: () => GoTo(context, OrderScrean())),
+                      text: "Go To Orders", onpressed: () {}),
                 ],
               ),
             ),
@@ -184,7 +180,7 @@ buildDialogforNotification(
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
             child: Container(
               margin: EdgeInsets.all(20),
-              height: response.screenHeight * 0.42,
+              height: response.screenHeight * 0.5,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -224,15 +220,15 @@ buildCartItem() {
       children: [
         Expanded(
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 16),
+            padding: EdgeInsets.all(12),
             height: response.setHeight(100),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30), color: kwhite),
             child: Row(
               children: [
                 Container(
-                  height: 90,
-                  width: 90,
+                  height: 85,
+                  width: 85,
                   padding: EdgeInsets.all(10),
                   decoration: BoxDecoration(
                       // image: DecorationImage(
@@ -345,7 +341,7 @@ buildCourseItem() {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
-          padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
           // height: response.setHeight(94),
           width: response.screenWidth - 32,
 
@@ -355,18 +351,17 @@ buildCourseItem() {
             children: [
               Container(
                 alignment: Alignment.center,
-                height: 90,
-                width: 90,
+                height: 80,
+                width: 80,
                 padding: EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  /*   image: DecorationImage(
+                    /*   image: DecorationImage(
                         fit: BoxFit.cover,
                         image: NetworkImage(
                           "https://digitaldefynd.com/wp-content/uploads/2020/04/Best-Food-Styling-course-tutorial-class-certification-training-online-1024x625.jpg",
                         )), */
-                  borderRadius: BorderRadius.circular(25),
-                  color: kcolor1.withOpacity(0.5),
-                ),
+                    borderRadius: BorderRadius.circular(25),
+                    color: Colors.grey[200]),
                 child: Image.asset("assets/images/image4.png"),
               ),
               SizedBox(
@@ -410,7 +405,7 @@ buildCourseItem() {
   );
 }
 
-buildShopItem(context) {
+buildShopItem() {
   return Stack(
     children: [
       Container(
@@ -421,7 +416,7 @@ buildShopItem(context) {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
               height: response.setHeight(96),
               width: response.screenWidth - 32,
               decoration: BoxDecoration(
@@ -429,15 +424,17 @@ buildShopItem(context) {
               child: Row(
                 children: [
                   Container(
-                    padding: EdgeInsets.all(5),
                     alignment: Alignment.center,
-                    height: 90,
-                    width: 90,
+                    height: 80,
+                    width: 80,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25),
-                      color: kcolor1.withOpacity(0.5),
-                    ),
-                    child: Image.asset("assets/images/image4.png"),
+                        image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: NetworkImage(
+                              "https://digitaldefynd.com/wp-content/uploads/2020/04/Best-Food-Styling-course-tutorial-class-certification-training-online-1024x625.jpg",
+                            )),
+                        borderRadius: BorderRadius.circular(25),
+                        color: Colors.grey[200]),
                   ),
                   SizedBox(
                     width: 15,
@@ -508,23 +505,19 @@ buildShopItem(context) {
         ),
       ),
       Positioned(
-        right: 35,
-        bottom: 0,
-        child: FloatingActionButton(
-          backgroundColor: kdrawer,
-          elevation: 1,
-          onPressed: () {
-            return buildDialog(
-              context: context,
-              test: true,
-              text: "Product added to cart successfully.",
-              desc: "we can add more to cart",
-              img: "image5.png",
-            );
-          },
-          child: Image.asset("assets/images/cart.png"),
-        ),
-      )
+          right: 35,
+          bottom: 0,
+          child: Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: kdrawer,
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                    image: AssetImage(
+                  "assets/images/cart.png",
+                )),
+              )))
     ],
   );
 }
@@ -710,11 +703,11 @@ buildOrderItem() {
                   child: buildIconElevatedButtonOutLine(
                       label: '\tCancel',
                       color: kprimary2,
-                      fontSize: 18.0,
+                      fontSize: 17.0,
                       icon: Icon(
                         Icons.close,
                         color: kprimary2,
-                        size: 30,
+                        size: 25,
                       ),
                       onpressed: () {}),
                 ),
@@ -727,7 +720,7 @@ buildOrderItem() {
   );
 }
 
-buildAppBar(ontap, {img = 'profile.jpg'}) {
+buildAppBar(ontap, context, {img = 'profile.jpg'}) {
   return Container(
     child: Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -775,24 +768,27 @@ buildAppBar(ontap, {img = 'profile.jpg'}) {
           ],
         ),
         Spacer(),
-        Container(
-          alignment: Alignment.center,
-          width: 55,
-          height: 55,
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/images/$img"),
-                fit: BoxFit.fill,
-              ),
-              color: kwhite,
-              borderRadius: BorderRadius.circular(15)),
+        InkWell(
+          onTap: () => GoTo(context, ProfileScrean()),
+          child: Container(
+            alignment: Alignment.center,
+            width: 55,
+            height: 55,
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/images/$img"),
+                  fit: BoxFit.fill,
+                ),
+                color: kwhite,
+                borderRadius: BorderRadius.circular(15)),
+          ),
         ),
       ],
     ),
   );
 }
 
-buildAppBarForPages(context, text) {
+buildAppBarForPages(context, text, {showProfile = true}) {
   return Container(
     padding: EdgeInsets.all(16),
     child: Row(
@@ -824,30 +820,34 @@ buildAppBarForPages(context, text) {
                   color: kprimary,
                   fontWeight: FontWeight.w800)),
         ),
-        Container(
-          width: 55,
-          height: 55,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/images/profile.jpg"),
-              fit: BoxFit.fill,
-            ),
-            color: kwhite,
-            borderRadius: BorderRadius.circular(15),
-          ),
-        ),
+        showProfile
+            ? InkWell(
+                onTap: () => GoTo(context, ProfileScrean()),
+                child: Container(
+                  width: 55,
+                  height: 55,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/images/profile.jpg"),
+                      fit: BoxFit.fill,
+                    ),
+                    color: kwhite,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                ),
+              )
+            : Container(),
       ],
     ),
   );
 }
 
-buildSearch({hint, icon = Icons.search, onChange}) {
+buildSearch({hint, icon = Icons.search}) {
   return Container(
     padding: EdgeInsets.symmetric(horizontal: 15),
     decoration:
         BoxDecoration(color: kwhite, borderRadius: BorderRadius.circular(20)),
     child: TextField(
-      onChanged: onChange,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.symmetric(
               vertical: response.setHeight(15),
@@ -855,7 +855,6 @@ buildSearch({hint, icon = Icons.search, onChange}) {
           suffixIcon: Icon(
             icon,
             size: 30,
-            color: kprimary,
           ),
           border: InputBorder.none,
           hintText: hint),
@@ -864,38 +863,37 @@ buildSearch({hint, icon = Icons.search, onChange}) {
 }
 
 Widget buildDrawer(context) {
-  final app = Provider.of<AppProvider>(context, listen: false);
-  return Selector<AppProvider, int>(
-    selector: (context, app) => app.index,
-    builder: (context, i, w) => Container(
-      height: double.infinity,
-      width: MediaQuery.of(context).size.width * 0.7,
-      decoration: BoxDecoration(
-          color: Color(0xff3f4075),
-          borderRadius: BorderRadius.only(
-              topRight: Radius.circular(50), bottomRight: Radius.circular(50))),
-      child: Stack(
-        children: [
-          ClipPath(
-            clipper: custumLinearclipperForDrawer(),
-            child: Container(
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment(1, 0),
-                      end: Alignment(1, 0.5),
-                      colors: [
-                    Color(0xff3d4183),
-                    Color(0xff3f4075),
-                  ])),
-            ),
+  return Container(
+    height: double.infinity,
+    width: MediaQuery.of(context).size.width * 0.7,
+    decoration: BoxDecoration(
+        color: Color(0xff3f4075),
+        borderRadius: BorderRadius.only(
+            topRight: Radius.circular(50), bottomRight: Radius.circular(50))),
+    child: Stack(
+      children: [
+        ClipPath(
+          clipper: custumLinearclipperForDrawer(),
+          child: Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment(1, 0),
+                    end: Alignment(1, 0.5),
+                    colors: [
+                  Color(0xff3d4183),
+                  Color(0xff3f4075),
+                ])),
           ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              buildBackButton(context),
-              Container(
+        ),
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            buildBackButton(context),
+            InkWell(
+              onTap: () => GoTo(context, ProfileScrean()),
+              child: Container(
                 alignment: Alignment.center,
                 height: response.setHeight(100),
                 width: response.setWidth(100),
@@ -907,84 +905,67 @@ Widget buildDrawer(context) {
                       fit: BoxFit.cover,
                     )),
               ),
-              SizedBox(
-                height: response.setHeight(10),
-              ),
-              Text('mohaed saeed',
-                  style: TextStyle(
-                      fontSize: response.setFontSize(16),
-                      color: kwhite,
-                      fontWeight: FontWeight.w700)),
-              SizedBox(
-                height: response.setHeight(5),
-              ),
-              Text('@mohaed',
-                  style: TextStyle(
-                      fontSize: response.setFontSize(14),
-                      color: ksecondary,
-                      fontWeight: FontWeight.w400)),
-              SizedBox(
-                height: response.setHeight(40),
-              ),
-              buildDrawerItem("Home", 0, i, 6, () {
-                app.changeIndex(0);
-                Navigator.of(context).pop();
-                GoTo(context, HomeScrean());
-              }),
-              SizedBox(
-                height: response.setHeight(20),
-              ),
-              buildDrawerItem("My Course", 1, i, 2, () {
-                app.changeIndex(1);
-                Navigator.of(context).pop();
-
-                GoTo(context, CouresScrean());
-              }),
-              SizedBox(
-                height: response.setHeight(20),
-              ),
-              buildDrawerItem("Shop", 2, i, 4, () {
-                app.changeIndex(2);
-                Navigator.of(context).pop();
-
-                GoTo(context, ShopScrean());
-              }),
-              SizedBox(
-                height: response.setHeight(20),
-              ),
-              buildDrawerItem("Cart", 3, i, 7, () {
-                app.changeIndex(3);
-                Navigator.of(context).pop();
-
-                GoTo(context, CartScrean());
-              }),
-              SizedBox(
-                height: response.setHeight(20),
-              ),
-              buildDrawerItem("Orders", 4, i, 1, () {
-                app.changeIndex(4);
-                Navigator.of(context).pop();
-
-                GoTo(context, OrderScrean());
-              }),
-              SizedBox(
-                height: response.setHeight(20),
-              ),
-              buildDrawerItem("Settings", 5, i, 5, () {
-                app.changeIndex(5);
-                Navigator.of(context).pop();
-
-                GoTo(context, AchieveScrean());
-              }),
-            ],
-          )
-        ],
-      ),
+            ),
+            SizedBox(
+              height: response.setHeight(10),
+            ),
+            Text('mohaed saeed',
+                style: TextStyle(
+                    fontSize: response.setFontSize(16),
+                    color: kwhite,
+                    fontWeight: FontWeight.w700)),
+            SizedBox(
+              height: response.setHeight(5),
+            ),
+            Text('@mohaed',
+                style: TextStyle(
+                    fontSize: response.setFontSize(14),
+                    color: ksecondary,
+                    fontWeight: FontWeight.w400)),
+            SizedBox(
+              height: response.setHeight(40),
+            ),
+            buildDrawerItem("Home", Icons.home, () {
+              GoTo(context, HomeScrean());
+            }),
+            SizedBox(
+              height: response.setHeight(20),
+            ),
+            buildDrawerItem("My Course", Icons.home, () {
+              GoTo(context, CouresScrean());
+            }),
+            SizedBox(
+              height: response.setHeight(20),
+            ),
+            buildDrawerItem("Shop", Icons.store, () {
+              GoTo(context, ShopScrean());
+            }),
+            SizedBox(
+              height: response.setHeight(20),
+            ),
+            buildDrawerItem("Cart", Icons.shopping_cart_rounded, () {
+              GoTo(context, CartScrean());
+            }),
+            SizedBox(
+              height: response.setHeight(20),
+            ),
+            buildDrawerItem("Orders", Icons.home, () {
+              GoTo(context, OrderScrean());
+            }),
+            SizedBox(
+              height: response.setHeight(20),
+            ),
+            buildDrawerItem("Settings", Icons.settings, () {
+              GoTo(context, AchieveScrean());
+            }),
+          ],
+        )
+      ],
     ),
   );
 }
 
-Widget buildDrawerItem(text, index, currant, icon, onTap) {
+Widget buildDrawerItem(text, icon, onTap) {
   return InkWell(
     onTap: onTap,
     child: Container(
@@ -992,17 +973,18 @@ Widget buildDrawerItem(text, index, currant, icon, onTap) {
       padding: EdgeInsets.symmetric(horizontal: 25),
       margin: EdgeInsets.only(left: 50),
       decoration: BoxDecoration(
-          border: index == currant
-              ? Border(
-                  left: BorderSide(
-                      color: kprimary2, width: 2, style: BorderStyle.solid))
-              : null),
+          border: Border(
+              left: BorderSide(
+                  color: kprimary, width: 2, style: BorderStyle.solid))),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Image.asset("assets/images/icon$icon.png"),
+          Icon(
+            icon,
+            color: kwhite,
+          ),
           SizedBox(
             width: response.setWidth(15),
           ),
@@ -1045,6 +1027,158 @@ Widget buildBackButton(context) {
           ),
         ),
       ),
+    ),
+  );
+}
+
+Widget buldinputContainer({
+  text,
+  widget,
+  hint,
+  TextEditingController controller,
+  onpressed,
+}) {
+  return Container(
+    margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+    decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          width: 1.5,
+          color: (controller.text.isNotEmpty) ? kprimary2 : ksecondary,
+        )),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          height: 12,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(text,
+                    style: TextStyle(
+                        color: kprimary2,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w900)),
+              ),
+              text == "Address" || text == "Location"
+                  ? Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          color: kprimary.withOpacity(0.3),
+                          shape: BoxShape.circle),
+                      child: IconButton(
+                          onPressed: onpressed,
+                          icon: Icon(
+                            Icons.location_on,
+                            color: kwhite,
+                          )),
+                    )
+                  : Container()
+            ],
+          ),
+        ),
+        Row(
+          children: [
+            Expanded(
+              child: widget == "phone"
+                  ? Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: IntlPhoneField(
+                        controller: controller,
+                        style: TextStyle(
+                            color: kprimary,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w900),
+                        initialCountryCode: "EG",
+                        keyboardType: TextInputType.phone,
+                        autoValidate: true,
+                        countryCodeTextColor: kprimary,
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(0),
+                          isDense: true,
+                          border: InputBorder.none,
+                          alignLabelWithHint: true,
+                          labelText: "",
+                          hintText: "enter phone number",
+                          hintStyle: TextStyle(
+                              color: ksecondary,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700),
+                        ),
+                        onChanged: (phone) {},
+                        onCountryChanged: (phone) {
+                          print(phone.countryCode);
+                        },
+                      ),
+                    )
+                  : widget != null
+                      ? widget
+                      : Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: TextField(
+                            controller: controller,
+                            cursorColor: kprimary,
+                            maxLength: text == "Weight" ? 3 : null,
+                            keyboardType:
+                                text == "Weight" ? TextInputType.number : null,
+                            style: TextStyle(
+                                color: kprimary,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w900),
+                            decoration: InputDecoration(
+                                counterText: '',
+                                hintStyle: TextStyle(
+                                    color: ksecondary,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700),
+                                border: InputBorder.none,
+                                hintText: hint),
+                          ),
+                        ),
+            ),
+            text == "Address"
+                ? Container()
+                : text == "Weight"
+                    ? Expanded(
+                        flex: 3,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Kg",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w900, fontSize: 20),
+                            ),
+                            Spacer(),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: Image.asset(
+                                "assets/images/check.png",
+                                height: 25,
+                                width: 25,
+                                fit: BoxFit.fill,
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Image.asset(
+                          "assets/images/check.png",
+                          height: 25,
+                          width: 25,
+                          fit: BoxFit.fill,
+                        ),
+                      )
+          ],
+        ),
+      ],
     ),
   );
 }

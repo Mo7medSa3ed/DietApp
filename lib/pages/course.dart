@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test_app/constants/config.dart';
-import 'package:flutter_test_app/pages/cart.dart';
-import 'package:flutter_test_app/pages/shop.dart';
-import 'package:flutter_test_app/pages/timeline.dart';
 import 'package:flutter_test_app/widgets/custum.dart';
 import 'package:response/response.dart';
 
@@ -17,6 +14,7 @@ class _CouresScreanState extends State<CouresScrean> {
     final response = ResponseUI.instance;
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Container(
           decoration: BoxDecoration(
               gradient:
@@ -57,7 +55,7 @@ class _CouresScreanState extends State<CouresScrean> {
                           Positioned(
                               right: 25,
                               left: 25,
-                              bottom: -10,
+                              bottom:-10,
                               top: 60,
                               child: Container(
                                 width: double.infinity,
@@ -148,10 +146,14 @@ class _CouresScreanState extends State<CouresScrean> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    FloatingActionButton(
+                    CircleAvatar(
+                      radius: 30,
                       backgroundColor: kdrawer,
-                      onPressed: () => GoTo(context, CartScrean()),
-                      child: Image.asset("assets/images/cart.png"),
+                      child: IconButton(
+                        onPressed: () {},
+                        icon: Image.asset("assets/images/cart.png"),
+                        color: kwhite,
+                      ),
                     ),
                     SizedBox(
                       width: response.setWidth(20),
@@ -160,7 +162,7 @@ class _CouresScreanState extends State<CouresScrean> {
                         child: buildIconElevatedButton(
                             icon: Icon(Icons.play_arrow),
                             label: 'Start Now',
-                            onpressed: () => GoTo(context, TimeLineScrean())))
+                            onpressed: () {}))
                   ],
                 ),
               )
