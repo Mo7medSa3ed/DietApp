@@ -9,17 +9,20 @@ class ProfileScrean extends StatefulWidget {
 }
 
 class _ProfileScreanState extends State<ProfileScrean> {
+   final scaffoldkey =GlobalKey<ScaffoldState>(); 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        key: scaffoldkey,
+        drawer: buildDrawer(context),
           resizeToAvoidBottomInset: false,
           body: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                buildAppBarForPages(context, "Profile", showProfile: false),
+                buildAppBarForPages(context, "Profile",  ()=>scaffoldkey.currentState.openDrawer(),showProfile: false),
                 Container(
                     width: 160,
                     height: 160,
@@ -88,7 +91,7 @@ class _ProfileScreanState extends State<ProfileScrean> {
                         ),
                         label: "Edit",
                         onpressed: () {
-                          GoTo(context, EditProfileScrean());
+                          goTo(context, EditProfileScrean());
                         },
                       ),
                     ),

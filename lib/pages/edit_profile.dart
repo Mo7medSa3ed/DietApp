@@ -10,6 +10,7 @@ class EditProfileScrean extends StatefulWidget {
 }
 
 class _EditProfileScreanState extends State<EditProfileScrean> {
+   final scaffoldkey =GlobalKey<ScaffoldState>(); 
   bool isVisible = true;
   bool isConfirmVisible = true;
   List gengerList = ["Male", "Female"];
@@ -19,10 +20,12 @@ class _EditProfileScreanState extends State<EditProfileScrean> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        key: scaffoldkey,
+        drawer: buildDrawer(context),
         body: SingleChildScrollView(
           child: Column(
             children: [
-              buildAppBarForPages(context, "Edit Profile", showProfile: false),
+              buildAppBarForPages(context, "Edit Profile", ()=>scaffoldkey.currentState.openDrawer(), showProfile: false),
               Stack(
                 children: [
                   Container(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test_app/constants/config.dart';
 import 'package:flutter_test_app/pages/acheive.dart';
 import 'package:flutter_test_app/pages/cart.dart';
@@ -15,7 +16,8 @@ import 'package:toast/toast.dart';
 
 final response = ResponseUI.instance;
 
-buildFillElevatedButton({text, onpressed, bgcolor = kprimary2, txtcolor}) {
+Widget buildFillElevatedButton(
+    {text, onpressed, bgcolor = kprimary2, txtcolor ,elevation}) {
   return ElevatedButton(
     onPressed: onpressed,
     child: Text(text.toString().trim(),
@@ -24,7 +26,9 @@ buildFillElevatedButton({text, onpressed, bgcolor = kprimary2, txtcolor}) {
             fontWeight: FontWeight.w900,
             fontSize: response.setFontSize(16))),
     style: ButtonStyle(
-        padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 15)),
+      elevation: elevation!=null? MaterialStateProperty.all(elevation):null,
+        padding: MaterialStateProperty.all(
+            EdgeInsets.symmetric(vertical: 15, horizontal: 25)),
         backgroundColor: MaterialStateProperty.all<Color>(bgcolor),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
@@ -38,8 +42,8 @@ buildIconButton({icon, onpressed}) {
     splashColor: kprimary,
     onTap: onpressed,
     child: Container(
-      width: 35,
-      height: 30,
+      width: 30,
+      height: 25,
       decoration: BoxDecoration(
           color: kprimary2, borderRadius: BorderRadius.circular(15)),
       child: Icon(
@@ -79,18 +83,19 @@ buildOutElevatedButton({text, onpressed, test: true}) {
 }
 
 buildIconElevatedButton(
-    {icon, label, onpressed, color = kwhite, bg = kprimary2}) {
+    {icon, label, onpressed, color = kwhite, bg = kprimary2, fontSize = 16.0}) {
   return ElevatedButton.icon(
     label: Text(label,
         style: TextStyle(
           color: color,
-          fontSize: 18,
+          fontSize: response.setFontSize(fontSize.toDouble()),
           fontWeight: FontWeight.w900,
         )),
     onPressed: onpressed,
     icon: icon,
     style: ButtonStyle(
-        padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 18)),
+        padding: MaterialStateProperty.all(
+            EdgeInsets.symmetric(vertical: 12, horizontal: 8)),
         backgroundColor: MaterialStateProperty.all<Color>(bg),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
@@ -112,7 +117,8 @@ buildIconElevatedButtonOutLine(
     onPressed: onpressed,
     icon: icon,
     style: ButtonStyle(
-        padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 15)),
+        padding: MaterialStateProperty.all(
+            EdgeInsets.symmetric(vertical: 12, horizontal: 8)),
         backgroundColor: MaterialStateProperty.all<Color>(kwhite),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
@@ -120,7 +126,7 @@ buildIconElevatedButtonOutLine(
             color: kprimary.withOpacity(0.6),
             width: 2,
           ),
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(50),
         ))),
   );
 }
@@ -133,7 +139,6 @@ buildDialog({context, text, desc, img, test = true}) {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
             child: Container(
               margin: EdgeInsets.all(20),
-              height: response.screenHeight * 0.55,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -141,22 +146,30 @@ buildDialog({context, text, desc, img, test = true}) {
                 children: [
                   Container(
                     height: response.setHeight(160),
-                    child:
-                        FlutterLogo() /*  Image.asset("assets/images/$img") */,
+                    child: Image.asset("assets/images/$img"),
                   ),
                   Text(text,
                       style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w800,
                           fontSize: response.setFontSize(16)),
                       textAlign: TextAlign.center),
+                  SizedBox(
+                    height: 8,
+                  ),
                   Text(desc,
                       style: TextStyle(
                           fontWeight: FontWeight.w700,
-                          color: kprimary.withOpacity(0.3),
+                          color: kprimary.withOpacity(0.5),
                           fontSize: response.setFontSize(12)),
                       textAlign: TextAlign.center),
+                  SizedBox(
+                    height: 12,
+                  ),
                   buildOutElevatedButton(
                       text: "Continue Shopping", onpressed: () {}, test: test),
+                  SizedBox(
+                    height: 8,
+                  ),
                   buildFillElevatedButton(
                       text: "Go To Orders", onpressed: () {}),
                 ],
@@ -223,15 +236,14 @@ buildCartItem() {
       children: [
         Expanded(
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            height: response.setHeight(100),
+            padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30), color: kwhite),
             child: Row(
               children: [
                 Container(
-                  height: 90,
-                  width: 90,
+                  height: 80,
+                  width: 80,
                   padding: EdgeInsets.all(10),
                   decoration: BoxDecoration(
                       // image: DecorationImage(
@@ -344,10 +356,8 @@ buildCourseItem() {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
-          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-          // height: response.setHeight(94),
+          padding: EdgeInsets.all(10),
           width: response.screenWidth - 32,
-
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(30), color: kwhite),
           child: Row(
@@ -358,11 +368,6 @@ buildCourseItem() {
                 width: 80,
                 padding: EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                    /*   image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: NetworkImage(
-                          "https://digitaldefynd.com/wp-content/uploads/2020/04/Best-Food-Styling-course-tutorial-class-certification-training-online-1024x625.jpg",
-                        )), */
                     borderRadius: BorderRadius.circular(25),
                     color: Colors.grey[200]),
                 child: Image.asset("assets/images/image4.png"),
@@ -419,7 +424,7 @@ buildShopItem(context) {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+              padding: EdgeInsets.all(10),
               height: response.setHeight(96),
               width: response.screenWidth - 32,
               decoration: BoxDecoration(
@@ -509,13 +514,17 @@ buildShopItem(context) {
         right: 35,
         bottom: 0,
         child: FloatingActionButton(
+          mini: true,
           backgroundColor: kdrawer,
-          elevation: 1,
+          elevation: 2,
           onPressed: () {
             Toast.show("Product added to cart successfully", context,
                 duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
           },
-          child: Image.asset("assets/images/cart.png"),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Image.asset("assets/images/cart.png"),
+          ),
         ),
       )
     ],
@@ -528,7 +537,9 @@ buildText(text, {color = kprimary, fontsize}) {
       style: TextStyle(
           color: color,
           fontWeight: FontWeight.w900,
-          fontSize: fontsize != null ? fontsize : response.setFontSize(18)));
+          fontSize: fontsize != null
+              ? response.setFontSize(fontsize.toDouble())
+              : response.setFontSize(17)));
 }
 
 buildText2(text, {color = ksecondary, fontsize}) {
@@ -537,7 +548,9 @@ buildText2(text, {color = ksecondary, fontsize}) {
       style: TextStyle(
           color: color,
           fontWeight: FontWeight.w900,
-          fontSize: fontsize != null ? fontsize : response.setFontSize(16)));
+          fontSize: fontsize != null
+              ? response.setFontSize(fontsize.toDouble())
+              : response.setFontSize(15)));
 }
 
 buildOrderItem() {
@@ -561,11 +574,11 @@ buildOrderItem() {
               children: [
                 Expanded(
                   flex: 8,
-                  child: buildText2("Client Name : "),
+                  child: buildText2("Client Name : ", fontsize: 14),
                 ),
                 Expanded(
                   flex: 20,
-                  child: buildText("Mohamed Saeed"),
+                  child: buildText("Mohamed Saeed", fontsize: 15),
                 ),
               ],
             ),
@@ -579,11 +592,12 @@ buildOrderItem() {
               children: [
                 Expanded(
                   flex: 8,
-                  child: buildText2("Address : "),
+                  child: buildText2("Address : ", fontsize: 14),
                 ),
                 Expanded(
                   flex: 20,
-                  child: buildText("Minya Alqamh sharkia wagih abaza"),
+                  child: buildText("Minya Alqamh sharkia wagih abaza",
+                      fontsize: 15),
                 ),
               ],
             ),
@@ -597,11 +611,11 @@ buildOrderItem() {
               children: [
                 Expanded(
                   flex: 8,
-                  child: buildText2("Phone : "),
+                  child: buildText2("Phone : ", fontsize: 14),
                 ),
                 Expanded(
                   flex: 20,
-                  child: buildText("+02 01017030127"),
+                  child: buildText("+02 01017030127", fontsize: 15),
                 ),
               ],
             ),
@@ -615,7 +629,7 @@ buildOrderItem() {
               children: [
                 Expanded(
                   flex: 8,
-                  child: buildText2("Order : "),
+                  child: buildText2("Order : ", fontsize: 14),
                 ),
                 Expanded(
                     flex: 20,
@@ -623,8 +637,8 @@ buildOrderItem() {
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children:
-                          List.generate(10, (index) => buildText(" 2 x food ")),
+                      children: List.generate(
+                          10, (index) => buildText(" 2 x food ", fontsize: 15)),
                     )),
               ],
             ),
@@ -638,11 +652,11 @@ buildOrderItem() {
               children: [
                 Expanded(
                   flex: 8,
-                  child: buildText2("Total Price : "),
+                  child: buildText2("Total Price : ", fontsize: 14),
                 ),
                 Expanded(
                   flex: 20,
-                  child: buildText("50"),
+                  child: buildText("50", fontsize: 15),
                 ),
               ],
             ),
@@ -656,11 +670,11 @@ buildOrderItem() {
               children: [
                 Expanded(
                   flex: 8,
-                  child: buildText2("Date : "),
+                  child: buildText2("Date : ", fontsize: 14),
                 ),
                 Expanded(
                   flex: 20,
-                  child: buildText("05/05/2021"),
+                  child: buildText("05/05/2021", fontsize: 15),
                 ),
               ],
             ),
@@ -674,11 +688,11 @@ buildOrderItem() {
               children: [
                 Expanded(
                   flex: 8,
-                  child: buildText2("Status : "),
+                  child: buildText2("Status : ", fontsize: 14),
                 ),
                 Expanded(
                   flex: 20,
-                  child: buildText2("pending.....  "),
+                  child: buildText2("pending.....  ", fontsize: 14),
                 ),
               ],
             ),
@@ -697,13 +711,13 @@ buildOrderItem() {
                       onpressed: () {}),
                 ),
                 SizedBox(
-                  width: response.setWidth(15),
+                  width: response.setWidth(8),
                 ),
                 Expanded(
                   child: buildIconElevatedButtonOutLine(
-                      label: '\tCancel',
+                      label: 'Cancel',
                       color: kprimary2,
-                      fontSize: 17.0,
+                      fontSize: 15.0,
                       icon: Icon(
                         Icons.close,
                         color: kprimary2,
@@ -730,8 +744,8 @@ buildAppBar(ontap, context, {img = 'profile.jpg'}) {
           onTap: ontap,
           child: Container(
             alignment: Alignment.center,
-            width: 55,
-            height: 55,
+            width: response.setHeight(45),
+            height: response.setHeight(45),
             decoration: BoxDecoration(
                 color: kwhite, borderRadius: BorderRadius.circular(15)),
             child: Icon(
@@ -769,11 +783,11 @@ buildAppBar(ontap, context, {img = 'profile.jpg'}) {
         ),
         Spacer(),
         InkWell(
-          onTap: () => GoTo(context, ProfileScrean()),
+          onTap: () => goTo(context, ProfileScrean()),
           child: Container(
             alignment: Alignment.center,
-            width: 55,
-            height: 55,
+            width: response.setHeight(45),
+            height: response.setHeight(45),
             decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage("assets/images/$img"),
@@ -788,7 +802,7 @@ buildAppBar(ontap, context, {img = 'profile.jpg'}) {
   );
 }
 
-buildAppBarForPages(context, text, {showProfile = true}) {
+buildAppBarForPages(context, text, press, {showProfile = true}) {
   return Container(
     padding: EdgeInsets.all(16),
     child: Row(
@@ -796,18 +810,16 @@ buildAppBarForPages(context, text, {showProfile = true}) {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         GestureDetector(
-          onTap: () => Navigator.of(context).pop(),
+          onTap: press,
           child: Container(
-            width: 55,
-            height: 55,
+            alignment: Alignment.center,
+            width: response.setHeight(45),
+            height: response.setHeight(45),
             decoration: BoxDecoration(
-                color: kwhite.withOpacity(0.5),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                    width: 2, color: kscaffoldcolor.withOpacity(0.95))),
+                color: kwhite, borderRadius: BorderRadius.circular(15)),
             child: Icon(
-              Icons.arrow_back_ios_rounded,
-              // size: 27,
+              Icons.menu,
+              size: 30,
             ),
           ),
         ),
@@ -822,10 +834,10 @@ buildAppBarForPages(context, text, {showProfile = true}) {
         ),
         showProfile
             ? InkWell(
-                onTap: () => GoTo(context, ProfileScrean()),
+                onTap: () => goTo(context, ProfileScrean()),
                 child: Container(
-                  width: 55,
-                  height: 55,
+                  width: response.setHeight(45),
+                  height: response.setHeight(45),
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage("assets/images/profile.jpg"),
@@ -842,14 +854,35 @@ buildAppBarForPages(context, text, {showProfile = true}) {
   );
 }
 
-buildSearch({hint, icon = Icons.search, onChange}) {
+buildSearch(
+    {hint,
+    label,
+    autoValidate = false,
+    icon = Icons.search,
+    enabled,
+    onChange,
+    onValidate,
+    maxlength,
+    keyboard}) {
   return Container(
     padding: EdgeInsets.symmetric(horizontal: 15),
     decoration:
         BoxDecoration(color: kwhite, borderRadius: BorderRadius.circular(20)),
-    child: TextField(
+    child: TextFormField(
+      enabled: enabled,
       onChanged: onChange,
+      maxLength: maxlength,
+      validator: onValidate,
+      obscureText: label == 'Password' ? true : false,
+      autovalidateMode:
+          autoValidate ? AutovalidateMode.onUserInteraction : null,
+      keyboardType: keyboard,
+      inputFormatters: keyboard == TextInputType.number
+          ? <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly]
+          : null,
       decoration: InputDecoration(
+          labelText: label,
+          counterText: '',
           contentPadding: EdgeInsets.symmetric(
               vertical: response.setHeight(15),
               horizontal: response.setWidth(10)),
@@ -878,7 +911,7 @@ Widget buildDrawer(context) {
       child: Stack(
         children: [
           ClipPath(
-            clipper: custumLinearclipperForDrawer(),
+            clipper: CustumLinearclipperForDrawer(),
             child: Container(
               decoration: BoxDecoration(
                   gradient: LinearGradient(
@@ -897,11 +930,11 @@ Widget buildDrawer(context) {
             children: [
               buildBackButton(context),
               InkWell(
-                onTap: () => GoTo(context, ProfileScrean()),
+                onTap: () => goTo(context, ProfileScrean()),
                 child: Container(
                   alignment: Alignment.center,
                   height: response.setHeight(100),
-                  width: response.setWidth(100),
+                  width: response.setHeight(100),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(200),
                       color: kwhite,
@@ -933,7 +966,7 @@ Widget buildDrawer(context) {
               buildDrawerItem("Home", 0, i, 6, () {
                 app.changeIndex(0);
                 Navigator.of(context).pop();
-                GoTo(context, HomeScrean());
+                goTo(context, HomeScrean());
               }),
               SizedBox(
                 height: response.setHeight(20),
@@ -942,7 +975,7 @@ Widget buildDrawer(context) {
                 app.changeIndex(1);
                 Navigator.of(context).pop();
 
-                GoTo(context, CouresScrean());
+                goTo(context, CouresScrean());
               }),
               SizedBox(
                 height: response.setHeight(20),
@@ -951,7 +984,7 @@ Widget buildDrawer(context) {
                 app.changeIndex(2);
                 Navigator.of(context).pop();
 
-                GoTo(context, ShopScrean());
+                goTo(context, ShopScrean());
               }),
               SizedBox(
                 height: response.setHeight(20),
@@ -960,7 +993,7 @@ Widget buildDrawer(context) {
                 app.changeIndex(3);
                 Navigator.of(context).pop();
 
-                GoTo(context, CartScrean());
+                goTo(context, CartScrean());
               }),
               SizedBox(
                 height: response.setHeight(20),
@@ -969,7 +1002,7 @@ Widget buildDrawer(context) {
                 app.changeIndex(4);
                 Navigator.of(context).pop();
 
-                GoTo(context, OrderScrean());
+                goTo(context, OrderScrean());
               }),
               SizedBox(
                 height: response.setHeight(20),
@@ -978,7 +1011,7 @@ Widget buildDrawer(context) {
                 app.changeIndex(5);
                 Navigator.of(context).pop();
 
-                GoTo(context, AchieveScrean());
+                goTo(context, AchieveScrean());
               }),
             ],
           )
@@ -1021,8 +1054,18 @@ Widget buildDrawerItem(text, index, currant, icon, onTap) {
   );
 }
 
-GoTo(context, page) {
+goTo(context, page) {
   Navigator.of(context).push(MaterialPageRoute(builder: (_) => page));
+}
+
+goToWithReplace(context, page) {
+  Navigator.of(context)
+      .pushReplacement(MaterialPageRoute(builder: (_) => page));
+}
+
+goToWithRemoveUntill(context, page) {
+  Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (_) => page), (Route<dynamic> route) => false);
 }
 
 Widget buildBackButton(context) {
@@ -1034,8 +1077,8 @@ Widget buildBackButton(context) {
         Navigator.of(context).pop();
       },
       child: Container(
-        width: 55,
-        height: 55,
+        width: response.setHeight(45),
+        height: response.setHeight(45),
         decoration: BoxDecoration(
             color: kwhite, borderRadius: BorderRadius.circular(15)),
         child: Center(

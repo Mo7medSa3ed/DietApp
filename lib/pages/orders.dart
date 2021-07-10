@@ -9,10 +9,13 @@ class OrderScrean extends StatefulWidget {
 }
 
 class _OrderScreanState extends State<OrderScrean> {
+   final scaffoldkey =GlobalKey<ScaffoldState>(); 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        key: scaffoldkey,
+        drawer: buildDrawer(context),
         body: Container(
           decoration: BoxDecoration(
               gradient:
@@ -21,7 +24,7 @@ class _OrderScreanState extends State<OrderScrean> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              buildAppBarForPages(context, 'Orders'),
+              buildAppBarForPages(context, 'Orders', ()=>scaffoldkey.currentState.openDrawer(),),
               SizedBox(
                 height: response.setHeight(8),
               ),

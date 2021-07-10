@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test_app/constants/config.dart';
-// ignore: unused_import
-import 'package:flutter_test_app/pages/auth.dart';
-import 'package:flutter_test_app/pages/home.dart';
+import 'package:flutter_test_app/pages/height.dart';
 import 'package:flutter_test_app/provider/app_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:response/response.dart';
@@ -40,12 +38,18 @@ class MyApp extends StatelessWidget {
             fontFamily: 'Nexa',
             primaryColor: kprimary,
             splashColor: kprimary,
+            accentColor: kprimary,
+            inputDecorationTheme: InputDecorationTheme(
+                labelStyle: TextStyle(
+                    color: kprimary, fontSize: 16, fontWeight: FontWeight.w700),
+                hintStyle: TextStyle(fontSize: 14)),
             textSelectionTheme: TextSelectionThemeData(
-              cursorColor: kprimary,
-            ),
+                selectionHandleColor: kprimary,
+                cursorColor: kprimary,
+                selectionColor: kprimary),
             scaffoldBackgroundColor: kcolor1,
           ),
-          home: HomeScrean(),
+          home: HeightScrean(),
         ),
       ),
     );

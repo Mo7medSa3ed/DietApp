@@ -44,7 +44,13 @@ dependencies:
   geocoder:
   dropdown_search:
   intl:
+  flutter_svg:
   toast: ^0.1.5
+  http: ^0.12.0+2
+  cool_alert:
+  shared_preferences:
+  height_slider:
+  weight_slider:
 
 dev_dependencies:
   flutter_test:
@@ -52,7 +58,6 @@ dev_dependencies:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
 # The following section is specific to Flutter.
 flutter:
 

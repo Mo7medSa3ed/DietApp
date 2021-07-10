@@ -9,11 +9,14 @@ class AchieveScrean extends StatefulWidget {
 }
 
 class _AchieveScreanState extends State<AchieveScrean> {
+  final scaffoldkey =GlobalKey<ScaffoldState>(); 
   bool isBoy = false;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        key: scaffoldkey,
+        drawer: buildDrawer(context),
         backgroundColor: Color(0xff232749),
         body: Stack(children: [
           Align(
@@ -85,7 +88,7 @@ class _AchieveScreanState extends State<AchieveScrean> {
                 ),
               )),
           ClipPath(
-            clipper: custumLinearclipper(),
+            clipper: CustumLinearclipper(),
             child: Container(
               decoration: BoxDecoration(
                 gradient: RadialGradient(
@@ -98,7 +101,7 @@ class _AchieveScreanState extends State<AchieveScrean> {
                 children: [
                   Align(
                     alignment: Alignment.topCenter,
-                    child: buildAppBarForPages(context, 'Clean 9'),
+                    child: buildAppBarForPages(context, 'Clean 9',()=>scaffoldkey.currentState.openDrawer(),),
                   ),
                   Align(
                     alignment: Alignment(0, -0.75),

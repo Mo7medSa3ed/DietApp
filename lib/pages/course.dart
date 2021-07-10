@@ -13,11 +13,14 @@ class CouresScrean extends StatefulWidget {
 }
 
 class _CouresScreanState extends State<CouresScrean> {
+  final scaffoldkey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     final response = ResponseUI.instance;
     return SafeArea(
       child: Scaffold(
+        key: scaffoldkey,
+        drawer: buildDrawer(context),
         body: Container(
           decoration: BoxDecoration(
               gradient:
@@ -27,7 +30,11 @@ class _CouresScreanState extends State<CouresScrean> {
               Expanded(
                 child: ListView(
                   children: [
-                    buildAppBarForPages(context, 'Clean 9'),
+                    buildAppBarForPages(
+                      context,
+                      'Clean 9',
+                      () => scaffoldkey.currentState.openDrawer(),
+                    ),
                     SizedBox(
                       height: response.setHeight(30),
                     ),
@@ -138,9 +145,15 @@ class _CouresScreanState extends State<CouresScrean> {
                 ),
               ),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                height: response.screenHeight * 0.12,
+                padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                          color: ksecondary,
+                          offset: Offset(0, -5),
+                          blurRadius: 10,
+                          spreadRadius: 2)
+                    ],
                     color: kwhite,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(50),
@@ -151,17 +164,17 @@ class _CouresScreanState extends State<CouresScrean> {
                   children: [
                     FloatingActionButton(
                       backgroundColor: kdrawer,
-                      onPressed: () => GoTo(context, CartScrean()),
+                      onPressed: () => goTo(context, CartScrean()),
                       child: Image.asset("assets/images/cart.png"),
                     ),
                     SizedBox(
-                      width: response.setWidth(20),
+                      width: response.setWidth(10),
                     ),
                     Expanded(
                         child: buildIconElevatedButton(
                             icon: Icon(Icons.play_arrow),
                             label: 'Start Now',
-                            onpressed: () => GoTo(context, TimeLineScrean())))
+                            onpressed: () => goTo(context, TimeLineScrean())))
                   ],
                 ),
               )

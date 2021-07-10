@@ -10,6 +10,7 @@ class CheckoutScrean extends StatefulWidget {
 }
 
 class _CheckoutScreanState extends State<CheckoutScrean> {
+  final scaffoldkey = GlobalKey<ScaffoldState>();
   var countrySelected;
   var citySelected;
   var _nameController = TextEditingController(text: '');
@@ -57,6 +58,8 @@ class _CheckoutScreanState extends State<CheckoutScrean> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+            key: scaffoldkey,
+            drawer: buildDrawer(context),
             backgroundColor: kcolor1,
             body: Container(
               width: double.infinity,
@@ -69,7 +72,11 @@ class _CheckoutScreanState extends State<CheckoutScrean> {
                   Expanded(
                     child: ListView(
                       children: [
-                        buildAppBarForPages(context, "Checkout"),
+                        buildAppBarForPages(
+                          context,
+                          "Checkout",
+                          () => scaffoldkey.currentState.openDrawer(),
+                        ),
                         Container(
                             padding: EdgeInsets.symmetric(
                                 horizontal: 20, vertical: 10),
@@ -102,10 +109,14 @@ class _CheckoutScreanState extends State<CheckoutScrean> {
                   ),
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 30),
-                    height: (MediaQuery.of(context).size.height * 0.24) < 215.0
-                        ? 215.0
-                        : MediaQuery.of(context).size.height * 0.24,
                     decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                              color: ksecondary,
+                              offset: Offset(0, -5),
+                              blurRadius: 10,
+                              spreadRadius: 2)
+                        ],
                         color: Colors.grey[200],
                         borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(50),
@@ -134,8 +145,8 @@ class _CheckoutScreanState extends State<CheckoutScrean> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            buildText("Total", fontsize: 21.0),
-                            buildText("\$ 85", fontsize: 21.0),
+                            buildText("Total", fontsize: 18.0),
+                            buildText("\$ 85", fontsize: 18.0),
                           ],
                         ),
                         Container(
@@ -233,9 +244,9 @@ class _CheckoutScreanState extends State<CheckoutScrean> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          buildText2(text, fontsize: 18.0),
+          buildText2(text, fontsize: 15.0),
           buildText2(price > 0 ? "\$ $price" : "-\$ ${price * -1}",
-              fontsize: 18.0),
+              fontsize: 15.0),
         ],
       ),
     );

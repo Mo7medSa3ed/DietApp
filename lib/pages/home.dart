@@ -43,7 +43,7 @@ class _HomeScreanState extends State<HomeScrean> {
                   }, context),
                 ),
                 SizedBox(
-                  height: response.setHeight(20),
+                  height: response.setHeight(10),
                 ),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 24),
@@ -53,7 +53,7 @@ class _HomeScreanState extends State<HomeScrean> {
                   height: response.setHeight(20),
                 ),
                 InkWell(
-                  onTap: () => GoTo(context, CouresScrean()),
+                  onTap: () => goTo(context, CouresScrean()),
                   child: Container(
                     margin: EdgeInsets.only(right: 24, left: 24),
                     decoration: BoxDecoration(
@@ -123,8 +123,17 @@ class _HomeScreanState extends State<HomeScrean> {
                 SizedBox(
                   height: response.setHeight(20),
                 ),
-                Padding(
+                Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                            color: ksecondary.withOpacity(0.3),
+                            offset: Offset(0, 0),
+                            blurRadius: 15,
+                            spreadRadius: 5)
+                      ],
+                    ),
                     child: buildSearch(
                         hint: "search",
                         onChange: (v) {
@@ -163,7 +172,7 @@ class _HomeScreanState extends State<HomeScrean> {
                                         Color(0xff34386e),
                                         Color(0xff232749),
                                       ]),
-                                  borderRadius: BorderRadius.circular(40)),
+                                  borderRadius: BorderRadius.circular(30)),
                               width: response.screenWidth * 0.6,
                               height: response.setHeight(150),
                               child: Stack(
@@ -172,6 +181,7 @@ class _HomeScreanState extends State<HomeScrean> {
                                     left: 0,
                                     right: 0,
                                     bottom: 0,
+                                    top: 0,
                                     child: Image.asset(
                                       "assets/images/icon3.png",
                                       fit: BoxFit.contain,
@@ -185,19 +195,19 @@ class _HomeScreanState extends State<HomeScrean> {
                               child: Container(
                                 margin: EdgeInsets.only(left: 16),
                                 padding: EdgeInsets.symmetric(horizontal: 25),
-                                height: response.setHeight(75),
+                                height: response.setHeight(65),
                                 width: response.screenWidth * 0.6,
                                 decoration: BoxDecoration(
                                     color: Colors.grey[100],
                                     borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(40),
-                                        bottomRight: Radius.circular(40))),
+                                        bottomLeft: Radius.circular(30),
+                                        bottomRight: Radius.circular(30))),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    buildText(courseList[i], fontsize: 22.0),
-                                    buildText2("15 Days", fontsize: 16.0),
+                                    buildText(courseList[i], fontsize: 16.0),
+                                    buildText2("15 Days", fontsize: 13.0),
                                   ],
                                 ),
                               ),

@@ -13,6 +13,7 @@ class MapScrean extends StatefulWidget {
 }
 
 class _MapScreanState extends State<MapScrean> {
+   final scaffoldkey =GlobalKey<ScaffoldState>(); 
   Position location;
   GoogleMapController _mapController;
 
@@ -76,12 +77,14 @@ class _MapScreanState extends State<MapScrean> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        key: scaffoldkey,
+        drawer: buildDrawer(context),
         body: Container(
           width: double.infinity,
           height: double.infinity,
           child: Column(
             children: [
-              buildAppBarForPages(context, "Address"),
+              buildAppBarForPages(context, "Address", ()=>scaffoldkey.currentState.openDrawer(),),
               SizedBox(
                 height: 15,
               ),

@@ -12,12 +12,15 @@ class TimeLineScrean extends StatefulWidget {
 }
 
 class _TimeLineScreanState extends State<TimeLineScrean> {
+  final scaffoldkey = GlobalKey<ScaffoldState>();
   int press = -1;
   var idxList = [];
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        key: scaffoldkey,
+        drawer: buildDrawer(context),
         backgroundColor: kcolor1,
         body: Container(
           width: double.infinity,
@@ -30,7 +33,11 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                buildAppBarForPages(context, "Clean 9"),
+                buildAppBarForPages(
+                  context,
+                  "Clean 9",
+                  () => scaffoldkey.currentState.openDrawer(),
+                ),
                 Container(
                   height: 80,
                   decoration: BoxDecoration(
@@ -109,7 +116,7 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 60, vertical: 20),
+                  margin: EdgeInsets.all(20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -120,14 +127,14 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
                   ),
                 ),
                 Container(
-                    margin: EdgeInsets.symmetric(horizontal: 30),
+                    margin: EdgeInsets.symmetric(horizontal: 20),
                     child: Text(
                       "Today",
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
                     )),
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                  margin: EdgeInsets.all(10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -294,7 +301,7 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
                   });
                   Timer.periodic(Duration(seconds: 1), (t) {
                     t.cancel();
-                    GoTo(context, AchieveScrean());
+                    goTo(context, AchieveScrean());
                   });
                 })
           ],
@@ -305,7 +312,7 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
 
   Widget buildItemForCourse(img, title, desc, index) {
     return Container(
-      margin: EdgeInsets.only(top: 5, bottom: 5, left: 25),
+      margin: EdgeInsets.only(top: 5, bottom: 5, left: 15),
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: kwhite,
@@ -363,12 +370,10 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
-          height: 80,
-          width: 80,
+          height: 70,
+          width: 70,
           padding: EdgeInsets.all(8),
           decoration: BoxDecoration(
-              /*    image:
-                  DecorationImage(image: AssetImage(img), fit: BoxFit.cover)), */
               borderRadius: BorderRadius.circular(20),
               color: kcolor1.withOpacity(0.5)),
           child: Image.asset(img),

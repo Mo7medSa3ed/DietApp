@@ -10,10 +10,13 @@ class CartScrean extends StatefulWidget {
 }
 
 class _CartScreanState extends State<CartScrean> {
+  final scaffoldkey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        key: scaffoldkey,
+        drawer: buildDrawer(context),
         body: Container(
           decoration: BoxDecoration(
               gradient:
@@ -22,7 +25,11 @@ class _CartScreanState extends State<CartScrean> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              buildAppBarForPages(context, 'Cart'),
+              buildAppBarForPages(
+                context,
+                'Cart',
+                () => scaffoldkey.currentState.openDrawer(),
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Column(
@@ -32,7 +39,9 @@ class _CartScreanState extends State<CartScrean> {
                     ),
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: buildText("Order review"),
+                      child: buildText(
+                        "Order review",
+                      ),
                     ),
                     SizedBox(
                       height: response.setHeight(8),
@@ -49,10 +58,16 @@ class _CartScreanState extends State<CartScrean> {
               ),
               Container(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 50.0),
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 30.0),
                 width: double.infinity,
-                height: 142,
                 decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                        color: ksecondary,
+                        offset: Offset(0, -5),
+                        blurRadius: 10,
+                        spreadRadius: 2)
+                  ],
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(50),
                     topRight: Radius.circular(50),
@@ -66,13 +81,13 @@ class _CartScreanState extends State<CartScrean> {
                     buildOutElevatedButton(
                         text: "Continue Shopping",
                         onpressed: () {
-                          GoTo(context, ShopScrean());
+                          goTo(context, ShopScrean());
                         }),
-                    SizedBox(height: 5),
+                    SizedBox(height: 8),
                     buildFillElevatedButton(
                         text: 'Checkout',
                         onpressed: () {
-                          GoTo(context, CheckoutScrean());
+                          goTo(context, CheckoutScrean());
                         })
                   ],
                 ),

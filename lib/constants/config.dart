@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test_app/pages/map.dart';
 import 'package:flutter_test_app/widgets/custum.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 const ksecondary = Color.fromARGB(255, 142, 156, 182);
 const kprimary = Color.fromARGB(255, 23, 29, 45);
@@ -21,7 +22,16 @@ const APIKEY ="AIzaSyDXgbuvH4h_A7OkEbqAucUKQSLUfJs8i2Y";
 const img ="https://digitaldefynd.com/wp-content/uploads/2020/04/Best-Food-Styling-course-tutorial-class-certification-training-online-1024x625.jpg";
 
 
+setValue({key , value})async{
+  SharedPreferences prfs = await SharedPreferences.getInstance();
+  prfs.setString(key, value);
+}
 
+Future<dynamic> getValue({key})async{
+  SharedPreferences prfs = await SharedPreferences.getInstance();
+  final value = prfs.get(key);
+  return value;
+}
 
 getCurrantLocation(context) async {
     await Geolocator.checkPermission().then((value) {
@@ -57,10 +67,7 @@ getCurrantLocation(context) async {
     });
   }
 
-
-
-
-class custumLinearclipper extends CustomClipper<Path> {
+class CustumLinearclipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     Path path = Path();
@@ -85,7 +92,7 @@ class custumLinearclipper extends CustomClipper<Path> {
   }
 }
 
-class custumLinearclipperForDrawer extends CustomClipper<Path> {
+class CustumLinearclipperForDrawer extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     Path path = Path();
