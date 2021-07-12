@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:delayed_display/delayed_display.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test_app/API.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_test_app/constants/config.dart';
 import 'package:flutter_test_app/pages/forgetPassword.dart';
 import 'package:flutter_test_app/pages/home.dart';
 import 'package:flutter_test_app/widgets/custum.dart';
+import 'package:intl/intl.dart';
 import 'package:response/response.dart';
 
 class LoginScrean extends StatefulWidget {
@@ -23,8 +25,16 @@ class _LoginScreanState extends State<LoginScrean>
   final formKey = GlobalKey<FormState>();
   final formKey2 = GlobalKey<FormState>();
 
-  var username, mobile, pass, age, isMale;
+  bool isVisible = true;
+  var nameController = TextEditingController(text: '');
+  var emailController = TextEditingController(text: '');
+  var phoneController = TextEditingController(text: '');
+  var locationController = TextEditingController(text: '');
+  var passController = TextEditingController(text: '');
+  var confirController = TextEditingController(text: '');
 
+  bool isConfirmVisible = true;
+  var _selectedDate;
   @override
   void initState() {
     super.initState();
@@ -68,19 +78,19 @@ class _LoginScreanState extends State<LoginScrean>
             body: ListView(
       children: [
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 25),
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 50),
           child: DelayedDisplay(
             fadeIn: true,
             fadingDuration: Duration(seconds: 2),
             child: Text(
               "Welcome !",
+              textAlign: TextAlign.center,
               style: TextStyle(
-                  fontSize: response.setFontSize(30),
+                  fontSize: response.setFontSize(35),
                   fontWeight: FontWeight.w700),
             ),
           ),
         ),
-        SizedBox(height: response.setHeight(40)),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -121,7 +131,7 @@ class _LoginScreanState extends State<LoginScrean>
                       opacity: _controller.value,
                       child: SvgPicture.asset(
                         "assets/images/hold.svg",
-                           height: _controller.value > 0 ? 50 : 0,
+                        height: _controller.value > 0 ? 50 : 0,
                       ),
                     ))
               ],
@@ -178,158 +188,259 @@ class _LoginScreanState extends State<LoginScrean>
                   borderRadius: BorderRadius.circular(20)),
               child: Container(
                 width: response.screenWidth * 0.9,
-                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                padding: EdgeInsets.symmetric(vertical: 8),
                 child: Form(
                   key: _controller.value > 0.0 ? formKey : formKey2,
                   child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: _controller.value > 0.0
                           ? [
-                              buildSearch(
-                                  label: 'Mobile',
-                                  hint: 'ex: 01234567890',
-                                  icon: Icons.phone_android,
-                                  maxlength: 11,
-                                  onChange: (String value) {
-                                    if (value.trim().isNotEmpty ||
-                                        value != null) {
-                                      setState(() {
-                                        mobile = value.trim();
-                                      });
-                                    }
+                              buldinputContainer(
+                                  onChange: (v) {
+                                    if (v.length == 0 || v.length == 1)
+                                      setState(() {});
                                   },
-                                  onValidate: (String v) {
-                                    if (v.trim().isEmpty || v == null) {
-                                      return 'please enter your mobile...';
-                                    }
-                                  }),
-                              buildSearch(
-                                  label: 'Password',
-                                  hint: 'enter your password',
-                                  onChange: (String value) {
-                                    if (value.trim().isNotEmpty ||
-                                        value != null) {
-                                      setState(() {
-                                        pass = value.trim();
-                                      });
-                                    }
-                                  },
-                                  onValidate: (String v) {
-                                    if (v.trim().isEmpty || v == null) {
-                                      return 'please enter your password...';
-                                    }
-                                  },
-                                  icon: Icons.lock),
+                                  text: "Email",
+                                  hint: 'Enter your email ...',
+                                  controller: emailController),
+                              buldinputContainer(
+                                text: "Password",
+                                controller: passController,
+                                widget: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0),
+                                  child: TextField(
+                                    controller: passController,
+                                    onChanged: (v) {
+                                      setState(() {});
+                                    },
+                                    obscureText: isVisible,
+                                    cursorColor: kprimary,
+                                    style: TextStyle(
+                                        color: kprimary,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w900),
+                                    decoration: InputDecoration(
+                                        suffixIcon: IconButton(
+                                            icon: Icon(
+                                              isVisible
+                                                  ? Icons.visibility
+                                                  : Icons.visibility_off,
+                                              color: ksecondary,
+                                            ),
+                                            onPressed: () {
+                                              setState(() {
+                                                isVisible = !isVisible;
+                                              });
+                                            }),
+                                        hintStyle: TextStyle(
+                                            color: ksecondary,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w700),
+                                        border: InputBorder.none,
+                                        hintText: "enter your password ..."),
+                                  ),
+                                ),
+                              ),
                             ]
                           : [
-                              buildSearch(
-                                  label: 'Username',
-                                  hint: 'enter your name',
-                                  onChange: (String value) {
-                                    if (value.trim().isNotEmpty ||
-                                        value != null) {
-                                      setState(() {
-                                        username = value.trim();
-                                      });
-                                    }
+                              buldinputContainer(
+                                  onChange: (v) {
+                                    if (v.length == 0 || v.length == 1)
+                                      setState(() {});
                                   },
-                                  onValidate: (String v) {
-                                    if (v.trim().isEmpty || v == null) {
-                                      return 'please enter your name...';
-                                    }
+                                  text: "Name",
+                                  hint: 'Enter client name ...',
+                                  controller: nameController),
+                              buldinputContainer(
+                                  onChange: (v) {
+                                    if (v.length == 0 || v.length == 1)
+                                      setState(() {});
                                   },
-                                  icon: Icons.person),
-                              buildSearch(
-                                label: 'Mobile',
-                                hint: 'ex: 01234567890',
-                                icon: Icons.phone_android,
-                                keyboard: TextInputType.phone,
-                                maxlength: 11,
-                                onChange: (String value) {
-                                  if (value.trim().isNotEmpty ||
-                                      value != null) {
-                                    setState(() {
-                                      mobile = value.trim();
-                                    });
-                                  }
-                                },
-                                onValidate: (String v) {
-                                  if (v.trim().isEmpty || v == null) {
-                                    return 'please enter your mobile...';
-                                  }
-                                },
+                                  text: "Email",
+                                  hint: 'Enter your email ...',
+                                  controller: emailController),
+                              buldinputContainer(
+                                  onChange: (v) {
+                                    if (v.length == 0 || v.length == 1)
+                                      setState(() {});
+                                  },
+                                  text: "Phone Number",
+                                  widget: "phone",
+                                  controller: phoneController),
+                              /*   Row(
+                children: [
+                  Spacer(),
+                  Container(
+                    margin:EdgeInsets.symmetric(horizontal: 20),
+                    width: 200,
+                    child: buildFillElevatedButton(
+                      text: "Send Code",
+                      onpressed: () {},
+                    ),
+                  ),
+                ],
+              ),
+              buldinputContainer(
+                  text: "Confirmation Code",
+                  hint: 'Enter confirmation code ...',
+                  controller: TextEditingController(text: '')), */
+                              buldinputContainer(
+                                  onChange: (v) {
+                                    if (v.length == 0 || v.length == 1)
+                                      setState(() {});
+                                  },
+                                  hint: "Enter your location ...",
+                                  text: "Location",
+                                  onpressed: () async {
+                                    await getCurrantLocation(context);
+                                  },
+                                  controller: locationController),
+                              buldinputContainer(
+                                  text: "Birth date",
+                                  widget: InkWell(
+                                      onTap: () async {
+                                        FocusScope.of(context)
+                                            .requestFocus(new FocusNode());
+                                        _selectedDate = await showDatePicker(
+                                            context: context,
+                                            initialDate: DateTime(2000),
+                                            firstDate: DateTime(1970),
+                                            lastDate: DateTime.now());
+                                        setState(() {});
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20.0, vertical: 16),
+                                        child: Text(
+                                            _selectedDate != null
+                                                ? DateFormat('dd/MM/yyyy')
+                                                    .format(_selectedDate)
+                                                    .toString()
+                                                : 'select your birthdate',
+                                            style: TextStyle(
+                                                color: _selectedDate != null
+                                                    ? kprimary
+                                                    : ksecondary,
+                                                fontWeight:
+                                                    _selectedDate != null
+                                                        ? FontWeight.w900
+                                                        : FontWeight.w600,
+                                                fontSize: _selectedDate != null
+                                                    ? 20
+                                                    : 18)),
+                                      )),
+                                  controller: TextEditingController(text: '')),
+                              buldinputContainer(
+                                text: "Gender",
+                                controller: TextEditingController(text: ''),
+                                widget: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20),
+                                  child: DropdownSearch<String>(
+                                      searchBoxDecoration: InputDecoration(
+                                        border: InputBorder.none,
+                                      ),
+                                      dropdownSearchDecoration: InputDecoration(
+                                        border: InputBorder.none,
+                                      ),
+                                      mode: Mode.MENU,
+                                      dropdownBuilder: (context, selectedItem,
+                                              itemAsString) =>
+                                          Text(
+                                            selectedItem,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w900,
+                                                fontSize: 20),
+                                          ),
+                                      items: ['Male', 'Female'],
+                                      popupBackgroundColor: kcolor1,
+                                      maxHeight: 110,
+                                      hint: "Choose your gender ...",
+                                      onChanged: print,
+                                      selectedItem: "Male"),
+                                ),
                               ),
-                              buildSearch(
-                                  label: 'Password',
-                                  hint: 'enter your password',
-                                  onChange: (String value) {
-                                    if (value.trim().isNotEmpty ||
-                                        value != null) {
-                                      setState(() {
-                                        pass = value.trim();
-                                      });
-                                    }
-                                  },
-                                  onValidate: (String v) {
-                                    if (v.trim().isEmpty || v == null) {
-                                      return 'please enter your password...';
-                                    }
-                                  },
-                                  icon: Icons.lock),
-                              buildSearch(
-                                  label: "Age",
-                                  hint: 'enter your age',
-                                  icon: null,
-                                  autoValidate: true,
-                                  maxlength: 2,
-                                  onChange: (String value) {
-                                    if (value.trim().isNotEmpty ||
-                                        value != null) {
-                                      setState(() {
-                                        age = value.trim();
-                                      });
-                                    }
-                                  },
-                                  onValidate: (String v) {
-                                    if (v != null && v.isNotEmpty) {
-                                      if (int.parse(v.trim()) < 6) {
-                                        return "age must be greater than 6";
-                                      }
-                                    } else if (v.trim().isEmpty || v == null) {
-                                      return 'please enter your age...';
-                                    }
-                                  },
-                                  keyboard: TextInputType.number),
-                              Row(
-                                children: [
-                                  Expanded(
-                                      child: RadioListTile(
-                                    activeColor: kprimary,
-                                    groupValue: isMale,
-                                    value: 'male',
+                              buldinputContainer(
+                                text: "Password",
+                                controller: passController,
+                                widget: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0),
+                                  child: TextField(
+                                    controller: passController,
                                     onChanged: (v) {
-                                      print(v);
-                                      isMale = v;
                                       setState(() {});
                                     },
-                                    title: Text("Male"),
-                                  )),
-                                ],
+                                    obscureText: isVisible,
+                                    cursorColor: kprimary,
+                                    style: TextStyle(
+                                        color: kprimary,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w900),
+                                    decoration: InputDecoration(
+                                        suffixIcon: IconButton(
+                                            icon: Icon(
+                                              isVisible
+                                                  ? Icons.visibility
+                                                  : Icons.visibility_off,
+                                              color: ksecondary,
+                                            ),
+                                            onPressed: () {
+                                              setState(() {
+                                                isVisible = !isVisible;
+                                              });
+                                            }),
+                                        hintStyle: TextStyle(
+                                            color: ksecondary,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w700),
+                                        border: InputBorder.none,
+                                        hintText: "enter your password ..."),
+                                  ),
+                                ),
                               ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                      child: RadioListTile(
-                                    activeColor: kprimary,
-                                    groupValue: isMale,
-                                    value: 'female',
+                              buldinputContainer(
+                                text: "Confirm Password",
+                                controller: confirController,
+                                widget: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0),
+                                  child: TextField(
                                     onChanged: (v) {
-                                      isMale = v;
-                                      setState(() {});
+                                      if (v.length == 0 || v.length == 1)
+                                        setState(() {});
                                     },
-                                    title: Text("Female"),
-                                  ))
-                                ],
+                                    controller: confirController,
+                                    obscureText: isConfirmVisible,
+                                    cursorColor: kprimary,
+                                    style: TextStyle(
+                                        color: kprimary,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w900),
+                                    decoration: InputDecoration(
+                                        suffixIcon: IconButton(
+                                            icon: Icon(
+                                              isConfirmVisible
+                                                  ? Icons.visibility
+                                                  : Icons.visibility_off,
+                                              color: ksecondary,
+                                            ),
+                                            onPressed: () {
+                                              setState(() {
+                                                isConfirmVisible =
+                                                    !isConfirmVisible;
+                                              });
+                                            }),
+                                        hintStyle: TextStyle(
+                                            color: ksecondary,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w700),
+                                        border: InputBorder.none,
+                                        hintText:
+                                            "enter confirm password ...."),
+                                  ),
+                                ),
                               )
                             ]),
                 ),
@@ -360,7 +471,7 @@ class _LoginScreanState extends State<LoginScrean>
                 elevation: 8,
                 backgroundColor: kwhite,
                 onPressed: () async {
-                  if (_controller.value > 0.0) {
+                  /* if (_controller.value > 0.0) {
                     if (formKey.currentState.validate()) {
                       await login();
                     }
@@ -368,7 +479,8 @@ class _LoginScreanState extends State<LoginScrean>
                     if (formKey2.currentState.validate()) {
                       await signUp();
                     }
-                  }
+                  } */
+                  goTo(context, HomeScrean());
                 },
                 child: Icon(
                   Icons.arrow_forward_sharp,
@@ -381,12 +493,12 @@ class _LoginScreanState extends State<LoginScrean>
       ],
     )));
   }
-
+/* 
   signUp() async {
     Alert.loadingAlert(ctx: context);
     final body = {
-      "name": username,
-      "mobile": mobile,
+      "name": nameController.text,
+      "mobile": ,
       "password": pass,
       "gender": isMale,
       "age": age,
@@ -432,4 +544,5 @@ class _LoginScreanState extends State<LoginScrean>
       return Alert.errorAlert(ctx: context, title: "Something went wrong...");
     }
   }
+ */
 }

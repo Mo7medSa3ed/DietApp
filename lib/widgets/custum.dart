@@ -17,7 +17,7 @@ import 'package:toast/toast.dart';
 final response = ResponseUI.instance;
 
 Widget buildFillElevatedButton(
-    {text, onpressed, bgcolor = kprimary2, txtcolor ,elevation}) {
+    {text, onpressed, bgcolor = kprimary2, txtcolor, elevation}) {
   return ElevatedButton(
     onPressed: onpressed,
     child: Text(text.toString().trim(),
@@ -26,7 +26,8 @@ Widget buildFillElevatedButton(
             fontWeight: FontWeight.w900,
             fontSize: response.setFontSize(16))),
     style: ButtonStyle(
-      elevation: elevation!=null? MaterialStateProperty.all(elevation):null,
+        elevation:
+            elevation != null ? MaterialStateProperty.all(elevation) : null,
         padding: MaterialStateProperty.all(
             EdgeInsets.symmetric(vertical: 15, horizontal: 25)),
         backgroundColor: MaterialStateProperty.all<Color>(bgcolor),
@@ -42,6 +43,7 @@ buildIconButton({icon, onpressed}) {
     splashColor: kprimary,
     onTap: onpressed,
     child: Container(
+      margin: EdgeInsets.symmetric(horizontal: 8),
       width: 30,
       height: 25,
       decoration: BoxDecoration(
@@ -95,7 +97,7 @@ buildIconElevatedButton(
     icon: icon,
     style: ButtonStyle(
         padding: MaterialStateProperty.all(
-            EdgeInsets.symmetric(vertical: 12, horizontal: 8)),
+            EdgeInsets.symmetric(vertical: 12, horizontal: 18)),
         backgroundColor: MaterialStateProperty.all<Color>(bg),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
@@ -196,7 +198,6 @@ buildDialogforNotification(
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
             child: Container(
               margin: EdgeInsets.all(20),
-              height: response.screenHeight * 0.5,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -212,12 +213,18 @@ buildDialogforNotification(
                           fontWeight: FontWeight.w900,
                           fontSize: response.setFontSize(18)),
                       textAlign: TextAlign.center),
+                  SizedBox(
+                    height: 5,
+                  ),
                   Text(desc,
                       style: TextStyle(
                           fontWeight: FontWeight.w800,
                           color: ksecondary,
                           fontSize: response.setFontSize(14)),
                       textAlign: TextAlign.center),
+                  SizedBox(
+                    height: 10,
+                  ),
                   buildFillElevatedButton(text: conText, onpressed: conTap),
                   buildOutElevatedButton(
                       text: backText, onpressed: backTap, test: test),
@@ -246,9 +253,6 @@ buildCartItem() {
                   width: 80,
                   padding: EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                      // image: DecorationImage(
-                      //     fit: BoxFit.contain,
-                      //     image: AssetImage("assets/images/image4.png")),
                       borderRadius: BorderRadius.circular(25),
                       color: Colors.grey[200]),
                   child: Image.asset(
@@ -290,8 +294,7 @@ buildCartItem() {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Expanded(
-                              flex: 2,
+                            SizedBox(
                               child: Text(
                                 "\$ 55",
                                 softWrap: false,
@@ -301,27 +304,28 @@ buildCartItem() {
                                     fontSize: response.setFontSize(16.5)),
                               ),
                             ),
-                            Expanded(
-                              flex: 3,
-                              child: Container(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  //  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    buildIconButton(
-                                        icon: Icons.remove, onpressed: () {}),
-                                    Text(
-                                      "2",
+                            Container(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  buildIconButton(
+                                      icon: Icons.remove, onpressed: () {}),
+                                  SizedBox(
+                                    child: Text(
+                                      "464",
+                                      softWrap: false,
+                                      overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                           color: kprimary,
                                           fontWeight: FontWeight.w900,
                                           fontSize: response.setFontSize(14)),
                                     ),
-                                    buildIconButton(
-                                        icon: Icons.add, onpressed: () {}),
-                                  ],
-                                ),
+                                  ),
+                                  buildIconButton(
+                                      icon: Icons.add, onpressed: () {}),
+                                ],
                               ),
                             )
                           ],
@@ -1102,9 +1106,10 @@ Widget buldinputContainer({
   hint,
   TextEditingController controller,
   onpressed,
+  onChange,
 }) {
   return Container(
-    margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+    margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
@@ -1174,10 +1179,7 @@ Widget buldinputContainer({
                               fontSize: 18,
                               fontWeight: FontWeight.w700),
                         ),
-                        onChanged: (phone) {},
-                        onCountryChanged: (phone) {
-                          print(phone.countryCode);
-                        },
+                        onChanged: onChange,
                       ),
                     )
                   : widget != null
@@ -1186,6 +1188,7 @@ Widget buldinputContainer({
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
                           child: TextField(
                             controller: controller,
+                            onChanged: onChange,
                             cursorColor: kprimary,
                             maxLength: text == "Weight" ? 3 : null,
                             keyboardType:
@@ -1216,7 +1219,7 @@ Widget buldinputContainer({
                             Text(
                               "Kg",
                               style: TextStyle(
-                                  fontWeight: FontWeight.w900, fontSize: 20),
+                                  fontWeight: FontWeight.w800, fontSize: 20),
                             ),
                             Spacer(),
                             Padding(
@@ -1226,18 +1229,24 @@ Widget buldinputContainer({
                                 "assets/images/check.png",
                                 height: 25,
                                 width: 25,
+                                color: controller.text.isNotEmpty
+                                    ? kprimary2
+                                    : ksecondary,
                                 fit: BoxFit.fill,
                               ),
                             )
                           ],
                         ),
                       )
-                    : Padding(
+                    : Container(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: Image.asset(
                           "assets/images/check.png",
                           height: 25,
                           width: 25,
+                          color: controller.text.isNotEmpty
+                              ? kprimary2
+                              : ksecondary,
                           fit: BoxFit.fill,
                         ),
                       )

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test_app/constants/config.dart';
 import 'package:flutter_test_app/pages/height.dart';
+import 'package:flutter_test_app/pages/login.dart';
 import 'package:flutter_test_app/provider/app_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:response/response.dart';
@@ -29,27 +30,33 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: Response(
-        child: MaterialApp(
-          //locale: DevicePreview.of(context).locale,
-          //builder: DevicePreview.appBuilder,
-          title: 'Diet App',
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            fontFamily: 'Nexa',
-            primaryColor: kprimary,
-            splashColor: kprimary,
-            accentColor: kprimary,
-            inputDecorationTheme: InputDecorationTheme(
-                labelStyle: TextStyle(
-                    color: kprimary, fontSize: 16, fontWeight: FontWeight.w700),
-                hintStyle: TextStyle(fontSize: 14)),
-            textSelectionTheme: TextSelectionThemeData(
+        child: GestureDetector(
+          onTap: () => FocusScope.of(context).requestFocus(new FocusNode()),
+          child: MaterialApp(
+            //locale: DevicePreview.of(context).locale,
+            //builder: DevicePreview.appBuilder,
+            title: 'Diet App',
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+              fontFamily: 'Nexa',
+              primaryColor: kprimary,
+              splashColor: kprimary,
+              accentColor: kprimary,
+              inputDecorationTheme: InputDecorationTheme(
+                  labelStyle: TextStyle(
+                      color: kprimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700),
+                  hintStyle: TextStyle(fontSize: 14)),
+              textSelectionTheme: TextSelectionThemeData(
                 selectionHandleColor: kprimary,
                 cursorColor: kprimary,
-                selectionColor: kprimary),
-            scaffoldBackgroundColor: kcolor1,
+                //selectionColor: kprimary,
+              ),
+              scaffoldBackgroundColor: kcolor1,
+            ),
+            home: LoginScrean(),
           ),
-          home: HeightScrean(),
         ),
       ),
     );
