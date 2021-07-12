@@ -1,11 +1,8 @@
-import 'dart:convert';
 
 import 'package:delayed_display/delayed_display.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_test_app/API.dart';
-import 'package:flutter_test_app/Alert.dart';
 import 'package:flutter_test_app/constants/config.dart';
 import 'package:flutter_test_app/pages/forgetPassword.dart';
 import 'package:flutter_test_app/pages/home.dart';
