@@ -101,7 +101,7 @@ buildIconElevatedButton(
         backgroundColor: MaterialStateProperty.all<Color>(bg),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(50),
         ))),
   );
 }
@@ -113,14 +113,14 @@ buildIconElevatedButtonOutLine(
       label,
       style: TextStyle(
           color: color,
-          fontSize: response.setFontSize(fontSize),
+          fontSize: response.setFontSize(fontSize.toDouble()),
           fontWeight: FontWeight.w900),
     ),
     onPressed: onpressed,
     icon: icon,
     style: ButtonStyle(
         padding: MaterialStateProperty.all(
-            EdgeInsets.symmetric(vertical: 12, horizontal: 8)),
+            EdgeInsets.symmetric(vertical: 10, horizontal: 18)),
         backgroundColor: MaterialStateProperty.all<Color>(kwhite),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
@@ -243,7 +243,7 @@ buildCartItem() {
       children: [
         Expanded(
           child: Container(
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.only(left: 10, right: 2, bottom: 10, top: 10),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30), color: kwhite),
             child: Row(
@@ -269,7 +269,7 @@ buildCartItem() {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text("Continu Shopping",
-                          overflow: TextOverflow.ellipsis,
+                          overflow: TextOverflow.fade,
                           softWrap: false,
                           style: TextStyle(
                               color: kprimary,
@@ -285,7 +285,7 @@ buildCartItem() {
                             color: ksecondary,
                             fontWeight: FontWeight.w900,
                             fontSize: response.setFontSize(13.0)),
-                        overflow: TextOverflow.ellipsis,
+                        overflow: TextOverflow.fade,
                       ),
                       SizedBox(
                         height: response.setHeight(4),
@@ -296,8 +296,9 @@ buildCartItem() {
                           children: [
                             SizedBox(
                               child: Text(
-                                "\$ 55",
+                                "\$ 125",
                                 softWrap: false,
+                                overflow: TextOverflow.fade,
                                 style: TextStyle(
                                     color: kprimary,
                                     fontWeight: FontWeight.w900,
@@ -308,15 +309,15 @@ buildCartItem() {
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
-                                mainAxisSize: MainAxisSize.max,
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
                                   buildIconButton(
                                       icon: Icons.remove, onpressed: () {}),
                                   SizedBox(
                                     child: Text(
-                                      "464",
+                                      "4644545",
                                       softWrap: false,
-                                      overflow: TextOverflow.ellipsis,
+                                      overflow: TextOverflow.fade,
                                       style: TextStyle(
                                           color: kprimary,
                                           fontWeight: FontWeight.w900,
@@ -338,15 +339,13 @@ buildCartItem() {
             ),
           ),
         ),
-        Container(
-            width: 50,
-            child: IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.delete_forever,
-                  color: kprimary,
-                  size: 40,
-                )))
+        IconButton(
+            onPressed: () {},
+            icon: Icon(
+              Icons.delete_forever,
+              color: kprimary,
+              size: 40,
+            ))
       ],
     ),
   );
@@ -384,7 +383,7 @@ buildCourseItem() {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text("Forevver Therm",
-                      overflow: TextOverflow.ellipsis,
+                      overflow: TextOverflow.fade,
                       style: TextStyle(
                           color: kprimary,
                           fontWeight: FontWeight.w900,
@@ -393,7 +392,7 @@ buildCourseItem() {
                     height: response.setHeight(2),
                   ),
                   Text("Forevver Therm",
-                      overflow: TextOverflow.ellipsis,
+                      overflow: TextOverflow.fade,
                       style: TextStyle(
                           color: ksecondary,
                           fontWeight: FontWeight.w900,
@@ -402,7 +401,7 @@ buildCourseItem() {
                     height: response.setHeight(2),
                   ),
                   Text("x 1",
-                      overflow: TextOverflow.ellipsis,
+                      overflow: TextOverflow.fade,
                       style: TextStyle(
                           color: kprimary,
                           fontWeight: FontWeight.w900,
@@ -457,7 +456,7 @@ buildShopItem(context) {
                         Row(children: [
                           Expanded(
                             child: Text("Forevver Therm",
-                                overflow: TextOverflow.ellipsis,
+                                overflow: TextOverflow.fade,
                                 style: TextStyle(
                                     color: kprimary,
                                     fontWeight: FontWeight.w900,
@@ -472,7 +471,7 @@ buildShopItem(context) {
                           height: 2,
                         ),
                         Text("Forevver Therm",
-                            overflow: TextOverflow.ellipsis,
+                            overflow: TextOverflow.fade,
                             style: TextStyle(
                                 color: ksecondary,
                                 fontWeight: FontWeight.w900,
@@ -537,7 +536,7 @@ buildShopItem(context) {
 
 buildText(text, {color = kprimary, fontsize}) {
   return Text(text.toString().trim(),
-      overflow: TextOverflow.ellipsis,
+      overflow: TextOverflow.fade,
       style: TextStyle(
           color: color,
           fontWeight: FontWeight.w900,
@@ -548,7 +547,7 @@ buildText(text, {color = kprimary, fontsize}) {
 
 buildText2(text, {color = ksecondary, fontsize}) {
   return Text(text.toString().trim(),
-      overflow: TextOverflow.ellipsis,
+      overflow: TextOverflow.fade,
       style: TextStyle(
           color: color,
           fontWeight: FontWeight.w900,
@@ -704,31 +703,22 @@ buildOrderItem() {
               height: response.setHeight(15),
             ),
             Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Expanded(
-                  child: buildIconElevatedButton(
-                      label: ' Edit Order',
-                      icon: Image.asset("assets/images/edit-button.png"),
-                      onpressed: () {}),
-                ),
-                SizedBox(
-                  width: response.setWidth(8),
-                ),
-                Expanded(
-                  child: buildIconElevatedButtonOutLine(
-                      label: 'Cancel',
+                buildIconElevatedButton(
+                    label: 'Edit Order',
+                    icon: Image.asset("assets/images/edit-button.png"),
+                    onpressed: () {}),
+                buildIconElevatedButtonOutLine(
+                    label: 'Cancel',
+                    color: kprimary2,
+                    icon: Icon(
+                      Icons.close,
                       color: kprimary2,
-                      fontSize: 15.0,
-                      icon: Icon(
-                        Icons.close,
-                        color: kprimary2,
-                        size: 25,
-                      ),
-                      onpressed: () {}),
-                ),
+                      size: 25,
+                    ),
+                    onpressed: () {}),
               ],
             ),
           ],
@@ -778,7 +768,7 @@ buildAppBar(ontap, context, {img = 'profile.jpg'}) {
             ),
             Text("Mohamed Saeed",
                 softWrap: false,
-                overflow: TextOverflow.ellipsis,
+                overflow: TextOverflow.fade,
                 style: TextStyle(
                     fontSize: response.setFontSize(15),
                     color: kprimary,
@@ -933,90 +923,106 @@ Widget buildDrawer(context) {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               buildBackButton(context),
-              InkWell(
-                onTap: () => goTo(context, ProfileScrean()),
-                child: Container(
-                  alignment: Alignment.center,
-                  height: response.setHeight(100),
-                  width: response.setHeight(100),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(200),
-                      color: kwhite,
-                      image: DecorationImage(
-                        image: AssetImage("assets/images/profile.jpg"),
-                        fit: BoxFit.cover,
-                      )),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      InkWell(
+                        onTap: () => goTo(context, ProfileScrean()),
+                        child: Container(
+                          alignment: Alignment.center,
+                          height: response.setHeight(100),
+                          width: response.setHeight(100),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(200),
+                              color: kwhite,
+                              image: DecorationImage(
+                                image: AssetImage("assets/images/profile.jpg"),
+                                fit: BoxFit.cover,
+                              )),
+                        ),
+                      ),
+                      SizedBox(
+                        height: response.setHeight(10),
+                      ),
+                      Container(
+                        width: double.infinity,
+                        child: Text('mohaed saeed',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: response.setFontSize(16),
+                                color: kwhite,
+                                fontWeight: FontWeight.w700)),
+                      ),
+                      SizedBox(
+                        height: response.setHeight(5),
+                      ),
+                      Container(
+                        width: double.infinity,
+                        child: Text('@mohaed',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: response.setFontSize(14),
+                                color: ksecondary,
+                                fontWeight: FontWeight.w400)),
+                      ),
+                      SizedBox(
+                        height: response.setHeight(40),
+                      ),
+                      buildDrawerItem("Home", 0, i, 6, () {
+                        app.changeIndex(0);
+                        Navigator.of(context).pop();
+                        goTo(context, HomeScrean());
+                      }),
+                      SizedBox(
+                        height: response.setHeight(20),
+                      ),
+                      buildDrawerItem("My Course", 1, i, 2, () {
+                        app.changeIndex(1);
+                        Navigator.of(context).pop();
+
+                        goTo(context, CouresScrean());
+                      }),
+                      SizedBox(
+                        height: response.setHeight(20),
+                      ),
+                      buildDrawerItem("Shop", 2, i, 4, () {
+                        app.changeIndex(2);
+                        Navigator.of(context).pop();
+
+                        goTo(context, ShopScrean());
+                      }),
+                      SizedBox(
+                        height: response.setHeight(20),
+                      ),
+                      buildDrawerItem("Cart", 3, i, 7, () {
+                        app.changeIndex(3);
+                        Navigator.of(context).pop();
+
+                        goTo(context, CartScrean());
+                      }),
+                      SizedBox(
+                        height: response.setHeight(20),
+                      ),
+                      buildDrawerItem("Orders", 4, i, 1, () {
+                        app.changeIndex(4);
+                        Navigator.of(context).pop();
+
+                        goTo(context, OrderScrean());
+                      }),
+                      SizedBox(
+                        height: response.setHeight(20),
+                      ),
+                      buildDrawerItem("Settings", 5, i, 5, () {
+                        app.changeIndex(5);
+                        Navigator.of(context).pop();
+
+                        goTo(context, AchieveScrean());
+                      }),
+                    ],
+                  ),
                 ),
               ),
-              SizedBox(
-                height: response.setHeight(10),
-              ),
-              Text('mohaed saeed',
-                  style: TextStyle(
-                      fontSize: response.setFontSize(16),
-                      color: kwhite,
-                      fontWeight: FontWeight.w700)),
-              SizedBox(
-                height: response.setHeight(5),
-              ),
-              Text('@mohaed',
-                  style: TextStyle(
-                      fontSize: response.setFontSize(14),
-                      color: ksecondary,
-                      fontWeight: FontWeight.w400)),
-              SizedBox(
-                height: response.setHeight(40),
-              ),
-              buildDrawerItem("Home", 0, i, 6, () {
-                app.changeIndex(0);
-                Navigator.of(context).pop();
-                goTo(context, HomeScrean());
-              }),
-              SizedBox(
-                height: response.setHeight(20),
-              ),
-              buildDrawerItem("My Course", 1, i, 2, () {
-                app.changeIndex(1);
-                Navigator.of(context).pop();
-
-                goTo(context, CouresScrean());
-              }),
-              SizedBox(
-                height: response.setHeight(20),
-              ),
-              buildDrawerItem("Shop", 2, i, 4, () {
-                app.changeIndex(2);
-                Navigator.of(context).pop();
-
-                goTo(context, ShopScrean());
-              }),
-              SizedBox(
-                height: response.setHeight(20),
-              ),
-              buildDrawerItem("Cart", 3, i, 7, () {
-                app.changeIndex(3);
-                Navigator.of(context).pop();
-
-                goTo(context, CartScrean());
-              }),
-              SizedBox(
-                height: response.setHeight(20),
-              ),
-              buildDrawerItem("Orders", 4, i, 1, () {
-                app.changeIndex(4);
-                Navigator.of(context).pop();
-
-                goTo(context, OrderScrean());
-              }),
-              SizedBox(
-                height: response.setHeight(20),
-              ),
-              buildDrawerItem("Settings", 5, i, 5, () {
-                app.changeIndex(5);
-                Navigator.of(context).pop();
-
-                goTo(context, AchieveScrean());
-              }),
             ],
           )
         ],
@@ -1190,9 +1196,13 @@ Widget buldinputContainer({
                             controller: controller,
                             onChanged: onChange,
                             cursorColor: kprimary,
-                            maxLength: text == "Weight" ? 3 : null,
+                            maxLength: (text == "Weight") || (text == "Height")
+                                ? 3
+                                : null,
                             keyboardType:
-                                text == "Weight" ? TextInputType.number : null,
+                                (text == "Weight") || (text == "Height")
+                                    ? TextInputType.number
+                                    : null,
                             style: TextStyle(
                                 color: kprimary,
                                 fontSize: 20,

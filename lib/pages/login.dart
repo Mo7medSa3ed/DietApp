@@ -1,4 +1,3 @@
-
 import 'package:delayed_display/delayed_display.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +33,7 @@ class _LoginScreanState extends State<LoginScrean>
   var _selectedDate;
   @override
   void initState() {
-    super.initState();
+    super.initState();  
 
     _controller = AnimationController(
       vsync: this,
@@ -443,8 +442,9 @@ class _LoginScreanState extends State<LoginScrean>
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 16),
+            Container(
+              width: response.screenWidth * 0.9,
+              padding: const EdgeInsets.symmetric(vertical: 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [

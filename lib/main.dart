@@ -11,7 +11,7 @@ void main() {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
     runApp(
-      //DevicePreview(
+      // dp.DevicePreview(
       // builder: (context) =>
       MyApp(), // Wrap your app
       // ),
@@ -32,8 +32,8 @@ class MyApp extends StatelessWidget {
         child: GestureDetector(
           onTap: () => FocusScope.of(context).requestFocus(new FocusNode()),
           child: MaterialApp(
-            //locale: DevicePreview.of(context).locale,
-            //builder: DevicePreview.appBuilder,
+            //locale: dp.DevicePreview.of(context).locale,
+            //
             title: 'Diet App',
             debugShowCheckedModeBanner: false,
             theme: ThemeData(

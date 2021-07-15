@@ -19,7 +19,7 @@ class _HomeScreanState extends State<HomeScrean> {
     courseList = allCourseList;
     _scrollController.addListener(() {
       if (_scrollController.position.maxScrollExtent ==
-          _scrollController.offset) print("object");  
+          _scrollController.offset) print("object");
     });
     super.initState();
   }
@@ -27,11 +27,11 @@ class _HomeScreanState extends State<HomeScrean> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
+    print(allCourseList.length);
     final response = ResponseUI.instance;
     return SafeArea(
       child: Scaffold(
           key: scaffoldKey,
-          //resizeToAvoidBottomInset: false,
           drawer: buildDrawer(context),
           body: Container(
             width: double.infinity,
