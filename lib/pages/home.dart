@@ -12,21 +12,26 @@ class HomeScrean extends StatefulWidget {
 class _HomeScreanState extends State<HomeScrean> {
   List courseList = [];
   List allCourseList = [];
+  var _scrollController = ScrollController();
   @override
   void initState() {
     allCourseList = List.generate(10, (index) => "FIT ${15 + index}");
     courseList = allCourseList;
+    _scrollController.addListener(() {
+      if (_scrollController.position.maxScrollExtent ==
+          _scrollController.offset) print("object");
+    });
     super.initState();
   }
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
+    print(allCourseList.length);
     final response = ResponseUI.instance;
     return SafeArea(
       child: Scaffold(
           key: scaffoldKey,
-          //resizeToAvoidBottomInset: false,
           drawer: buildDrawer(context),
           body: Container(
             width: double.infinity,
@@ -157,9 +162,9 @@ class _HomeScreanState extends State<HomeScrean> {
                 Container(
                   height: response.screenHeight * 0.25,
                   child: ListView.builder(
+                      controller: _scrollController,
                       itemCount: courseList.length,
                       scrollDirection: Axis.horizontal,
-                      primary: true,
                       itemBuilder: (ctx, i) => Stack(children: [
                             Container(
                               margin: EdgeInsets.only(left: 16),

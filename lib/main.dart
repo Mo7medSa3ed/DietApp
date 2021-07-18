@@ -11,7 +11,7 @@ void main() {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
     runApp(
-      //DevicePreview(
+      // dp.DevicePreview(
       // builder: (context) =>
       MyApp(), // Wrap your app
       // ),
@@ -29,27 +29,31 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: Response(
-        child: MaterialApp(
-          //locale: DevicePreview.of(context).locale,
-          //builder: DevicePreview.appBuilder,
-          title: 'Diet App',
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            fontFamily: 'Nexa',
-            primaryColor: kprimary,
-            splashColor: kprimary,
-            accentColor:kprimary,
-            inputDecorationTheme: InputDecorationTheme(
-                labelStyle: TextStyle(
-                    color: kprimary, fontSize: 16, fontWeight: FontWeight.w700),
-                hintStyle: TextStyle(fontSize: 14)),
-            textSelectionTheme: TextSelectionThemeData(
+        child: GestureDetector(
+          onTap: () => FocusScope.of(context).requestFocus(new FocusNode()),
+          child: MaterialApp(
+                title: 'Diet App',
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+              fontFamily: 'Nexa',
+              primaryColor: kprimary,
+              splashColor: kprimary,
+              accentColor: kprimary,
+              inputDecorationTheme: InputDecorationTheme(
+                  labelStyle: TextStyle(
+                      color: kprimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700),
+                  hintStyle: TextStyle(fontSize: 14)),
+              textSelectionTheme: TextSelectionThemeData(
                 selectionHandleColor: kprimary,
                 cursorColor: kprimary,
-                selectionColor: kprimary),
-            scaffoldBackgroundColor: kcolor1, colorScheme: ColorScheme.fromSwatch().copyWith(secondary: kprimary),
+                //selectionColor: kprimary,
+              ),
+              scaffoldBackgroundColor: kcolor1,
+            ),
+            home: LoginScrean(),
           ),
-          home: LoginScrean(),
         ),
       ),
     );

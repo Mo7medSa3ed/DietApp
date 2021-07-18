@@ -44,14 +44,10 @@ class _HeightScreanState extends State<HeightScrean> {
                             fontSize: response.setFontSize(28),
                             fontWeight: FontWeight.w800),
                       ),
-                      CircleAvatar(
-                          backgroundColor: Colors.white,
-                          radius: 15,
-                          child: Image.asset(
-                            "assets/images/greendone.png",
-                            height: 25,
-                            width: 25,
-                          ))
+                      SvgPicture.asset(
+                        "assets/images/Group 549.svg",
+                        height: 70,
+                      )
                     ],
                   ),
                 ),
@@ -64,9 +60,9 @@ class _HeightScreanState extends State<HeightScrean> {
                     width: 40,
                   ),
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       setState(() {
-                        img="male 1";
+                        img = "male 1";
                       });
                     },
                     child: Container(
@@ -74,16 +70,18 @@ class _HeightScreanState extends State<HeightScrean> {
                       height: 45,
                       padding: EdgeInsets.all(6),
                       decoration: BoxDecoration(
-                           border:img=="male 1"?  Border.all(color:kprimary2,width: 2):null,
+                          border: img == "male 1"
+                              ? Border.all(color: kprimary2, width: 2)
+                              : null,
                           borderRadius: BorderRadius.circular(25),
                           color: Colors.white),
                       child: SvgPicture.asset("assets/images/male.svg"),
                     ),
                   ),
                   GestureDetector(
-                     onTap: (){
+                    onTap: () {
                       setState(() {
-                        img="female 1";
+                        img = "female 1";
                       });
                     },
                     child: Container(
@@ -91,10 +89,14 @@ class _HeightScreanState extends State<HeightScrean> {
                       height: 45,
                       padding: EdgeInsets.all(6),
                       decoration: BoxDecoration(
-                          border:img!="male 1"?  Border.all(color:kprimary2,width: 2):null,
+                          border: img != "male 1"
+                              ? Border.all(color: kprimary2, width: 2)
+                              : null,
                           borderRadius: BorderRadius.circular(25),
                           color: Colors.white),
-                      child: SvgPicture.asset("assets/images/female.svg"),
+                      child: SvgPicture.asset(
+                        "assets/images/female.svg",
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -106,22 +108,49 @@ class _HeightScreanState extends State<HeightScrean> {
                 height: 20,
               ),
               Expanded(
-                child: HeightSlider(
-                  height: height,
-
-                  personImagePath: 'assets/images/$img.svg',
-                  onChange: (val) => setState(() => height = val),
-                  unit: 'cm', // optional
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: HeightSlider(
+                        height: height,
+                        personImagePath: 'assets/images/$img.svg',
+                        onChange: (val) => setState(() => height = val),
+                        unit: 'cm',
+                      ),
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: List.generate(
+                          46,
+                          (index) => SizedBox(
+                                width: index % 5 == 0
+                                    ? 20
+                                    : index % 2 == 0
+                                        ? 15
+                                        : 10,
+                                child: Divider(
+                                  color: kprimary,
+                                  height: 7.5,
+                                  thickness: index % 5 == 0 ? 1.8 : 1.2,
+                                ),
+                              )),
+                    ),
+                    SizedBox(
+                      width: 8,
+                    )
+                  ],
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(32.0),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 20.0, vertical: 16.0),
                 child: WeightSlider(
                   weight: weight,
                   minWeight: 40,
                   maxWeight: 120,
                   onChange: (val) => setState(() => weight = val),
-                  unit: 'kg', // optional
+                  unit: 'kg',
                 ),
               ),
               Padding(

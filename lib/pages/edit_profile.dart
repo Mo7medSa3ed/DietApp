@@ -10,10 +10,17 @@ class EditProfileScrean extends StatefulWidget {
 }
 
 class _EditProfileScreanState extends State<EditProfileScrean> {
-   final scaffoldkey =GlobalKey<ScaffoldState>(); 
+  final scaffoldkey = GlobalKey<ScaffoldState>();
   bool isVisible = true;
+  var nameController = TextEditingController(text: '');
+  var emailController = TextEditingController(text: '');
+  var phoneController = TextEditingController(text: '');
+  var locationController = TextEditingController(text: '');
+  var weightController = TextEditingController(text: '');
+  var passController = TextEditingController(text: '');
+  var confirController = TextEditingController(text: '');
+
   bool isConfirmVisible = true;
-  List gengerList = ["Male", "Female"];
   var _selectedDate;
 
   @override
@@ -25,7 +32,9 @@ class _EditProfileScreanState extends State<EditProfileScrean> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              buildAppBarForPages(context, "Edit Profile", ()=>scaffoldkey.currentState.openDrawer(), showProfile: false),
+              buildAppBarForPages(context, "Edit Profile",
+                  () => scaffoldkey.currentState.openDrawer(),
+                  showProfile: false),
               Stack(
                 children: [
                   Container(
@@ -65,45 +74,42 @@ class _EditProfileScreanState extends State<EditProfileScrean> {
                 height: 20,
               ),
               buldinputContainer(
+                  onChange: (v) {
+                    if (v.length == 0 || v.length == 1) setState(() {});
+                  },
                   text: "Name",
                   hint: 'Enter client name ...',
-                  controller: TextEditingController(text: '')),
+                  controller: nameController),
               buldinputContainer(
+                  onChange: (v) {
+                    if (v.length == 0 || v.length == 1) setState(() {});
+                  },
                   text: "Email",
                   hint: 'Enter your email ...',
-                  controller: TextEditingController(text: '')),
+                  controller: emailController),
               buldinputContainer(
+                  onChange: (v) {
+                    if (v.length == 0 || v.length == 1) setState(() {});
+                  },
                   text: "Phone Number",
                   widget: "phone",
-                  controller: TextEditingController(text: '')),
-              Row(
-                children: [
-                  Spacer(),
-                  Container(
-                    margin:EdgeInsets.symmetric(horizontal: 20),
-                    width: 200,
-                    child: buildFillElevatedButton(
-                      text: "Send Code",
-                      onpressed: () {},
-                    ),
-                  ),
-                ],
-              ),
+                  controller: phoneController),
+              
               buldinputContainer(
-                  text: "Confirmation Code",
-                  hint: 'Enter confirmation code ...',
-                  controller: TextEditingController(text: '')),
-              buldinputContainer(
+                  onChange: (v) {
+                    if (v.length == 0 || v.length == 1) setState(() {});
+                  },
                   hint: "Enter your location ...",
                   text: "Location",
                   onpressed: () async {
                     await getCurrantLocation(context);
                   },
-                  controller: TextEditingController(text: '')),
+                  controller: locationController),
               buldinputContainer(
                   text: "Birth date",
                   widget: InkWell(
                       onTap: () async {
+                        FocusScope.of(context).requestFocus(new FocusNode());
                         _selectedDate = await showDatePicker(
                             context: context,
                             initialDate: DateTime(2000),
@@ -158,15 +164,22 @@ class _EditProfileScreanState extends State<EditProfileScrean> {
                 ),
               ),
               buldinputContainer(
+                  onChange: (v) {
+                    if (v.length == 0 || v.length == 1) setState(() {});
+                  },
                   text: "Weight",
                   hint: 'Enter your weight ...',
-                  controller: TextEditingController(text: '')),
+                  controller: weightController),
               buldinputContainer(
                 text: "Password",
-                controller: TextEditingController(text: ''),
+                controller: passController,
                 widget: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: TextField(
+                    controller: passController,
+                    onChanged: (v) {
+                      setState(() {});
+                    },
                     obscureText: isVisible,
                     cursorColor: kprimary,
                     style: TextStyle(
@@ -197,10 +210,14 @@ class _EditProfileScreanState extends State<EditProfileScrean> {
               ),
               buldinputContainer(
                 text: "Confirm Password",
-                controller: TextEditingController(text: ''),
+                controller: confirController,
                 widget: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: TextField(
+                    onChanged: (v) {
+                      if (v.length == 0 || v.length == 1) setState(() {});
+                    },
+                    controller: confirController,
                     obscureText: isConfirmVisible,
                     cursorColor: kprimary,
                     style: TextStyle(

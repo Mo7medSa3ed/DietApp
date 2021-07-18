@@ -51,7 +51,7 @@ class _CartScreanState extends State<CartScrean> {
               ),
               Expanded(
                 child: ListView.builder(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  padding: EdgeInsets.only(left: 16, right: 8 ),
                   itemBuilder: (c, i) => buildCartItem(),
                   itemCount: 5,
                 ),

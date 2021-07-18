@@ -9,20 +9,22 @@ class ProfileScrean extends StatefulWidget {
 }
 
 class _ProfileScreanState extends State<ProfileScrean> {
-   final scaffoldkey =GlobalKey<ScaffoldState>(); 
+  final scaffoldkey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        key: scaffoldkey,
-        drawer: buildDrawer(context),
+          key: scaffoldkey,
+          drawer: buildDrawer(context),
           resizeToAvoidBottomInset: false,
           body: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                buildAppBarForPages(context, "Profile",  ()=>scaffoldkey.currentState.openDrawer(),showProfile: false),
+                buildAppBarForPages(context, "Profile",
+                    () => scaffoldkey.currentState.openDrawer(),
+                    showProfile: false),
                 Container(
                     width: 160,
                     height: 160,
@@ -72,6 +74,10 @@ class _ProfileScreanState extends State<ProfileScrean> {
                   subtitle: "Male",
                 ),
                 buildContainerForPRoileData(
+                  title: "Height",
+                  subtitle: "170 cm",
+                ),
+                buildContainerForPRoileData(
                     title: "Weight", subtitle: "80 KG", last: true),
                 SizedBox(
                   height: 20,
@@ -80,8 +86,8 @@ class _ProfileScreanState extends State<ProfileScrean> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     SizedBox(
-                      width: 140,
-                      height: 55,
+                      // width: 150,
+                      // height: 50,
                       child: buildIconElevatedButton(
                         bg: Colors.white.withOpacity(0.8),
                         color: kprimary,
