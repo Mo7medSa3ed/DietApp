@@ -56,13 +56,13 @@ class _LoginScreanState extends State<LoginScrean>
   @override
   void dispose() {
     _controller.dispose();
+    _controller2.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final response = ResponseUI.instance;
-    print(_controller2.value);
     return SafeArea(
         child: Scaffold(
             body: ListView(
@@ -121,7 +121,7 @@ class _LoginScreanState extends State<LoginScrean>
                       opacity: _controller.value,
                       child: SvgPicture.asset(
                         "assets/images/hold.svg",
-                           height: _controller.value > 0 ? 50 : 0,
+                        height: _controller.value > 0 ? 50 : 0,
                       ),
                     ))
               ],
