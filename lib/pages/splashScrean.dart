@@ -25,10 +25,11 @@ class _SplashScreanState extends State<SplashScrean> {
   }
 
   getData() async {
-    final user = jsonDecode(await getValue(key: 'user'));
-    final token = jsonDecode(await getValue(key: 'token'));
+    final user = await getValue(key: 'user');
+    final token = await getValue(key: 'token');
     if (user != null && token != null) {
-      Provider.of<AppProvider>(context, listen: false).initUser(user);
+      Provider.of<AppProvider>(context, listen: false)
+          .initUser(jsonDecode(user));
       goToWithRemoveUntill(context, HomeScrean());
     } else {
       goToWithRemoveUntill(context, LoginScrean());
@@ -49,11 +50,11 @@ class _SplashScreanState extends State<SplashScrean> {
                   children: [
                     SvgPicture.asset(
                       "assets/images/diet.svg",
-                      width: 200,
-                      height: 200,
+                      width: MediaQuery.of(context).size.width*0.2,
+                      height: MediaQuery.of(context).size.height*0.2,
                     ),
                     SizedBox(
-                      height: 50,
+                      height: 30,
                     ),
                     buildText("Diet App", fontsize: 22.0),
                   ],

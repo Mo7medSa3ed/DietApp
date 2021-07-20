@@ -6,6 +6,7 @@ import 'package:flutter_test_app/models/product.dart';
 import 'package:flutter_test_app/pages/cart.dart';
 import 'package:flutter_test_app/pages/course.dart';
 import 'package:flutter_test_app/pages/home.dart';
+import 'package:flutter_test_app/pages/login.dart';
 import 'package:flutter_test_app/pages/orders.dart';
 import 'package:flutter_test_app/pages/profile.dart';
 import 'package:flutter_test_app/pages/shop.dart';
@@ -1079,6 +1080,15 @@ Widget buildDrawer(context) {
                         app.changeIndex(5);
                         Navigator.of(context).pop();
                       }),
+                      SizedBox(
+                        height: response.setHeight(20),
+                      ),
+                      buildDrawerItem("Logout", 6, i, 6, () async {
+                        app.changeIndex(6);
+                        Navigator.of(context).pop();
+                        if (await clear())
+                          goToWithRemoveUntill(context, LoginScrean());
+                      }),
                     ],
                   ),
                 ),
@@ -1109,7 +1119,9 @@ Widget buildDrawerItem(text, index, currant, icon, onTap) {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Image.asset("assets/images/icon$icon.png"),
+          index == 6
+              ? Icon(Icons.exit_to_app, color: kwhite)
+              : Image.asset("assets/images/icon$icon.png"),
           SizedBox(
             width: response.setWidth(15),
           ),
@@ -1329,11 +1341,10 @@ Widget buldinputContainer(
                         ),
                         Spacer(),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: Image.asset(
                             "assets/images/check.png",
-                            height: 25,
-                            width: 25,
+                            height: 22,
                             color: controller.text.isNotEmpty
                                 ? kprimary2
                                 : ksecondary,
@@ -1344,15 +1355,14 @@ Widget buldinputContainer(
                     ),
                   )
                 : Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20.0),
+                    padding: EdgeInsets.only(right: 8.0),
                     child: isLoading
                         ? CircularProgressIndicator(
                             color: kprimary,
                           )
                         : Image.asset(
                             "assets/images/check.png",
-                            height: 25,
-                            width: 25,
+                            height: 22,
                             color: controller.text.isNotEmpty
                                 ? kprimary2
                                 : ksecondary,

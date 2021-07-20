@@ -34,6 +34,11 @@ Future<dynamic> getValue({key}) async {
   final value = prfs.get(key);
   return value;
 }
+Future<dynamic> clear() async {
+  SharedPreferences prfs = await SharedPreferences.getInstance();
+  prfs.clear();
+  return true;
+}
 
 Future<dynamic> getCurrantaddress() async {
   loc.Location location = new loc.Location();
