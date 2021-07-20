@@ -1,10 +1,15 @@
+import 'dart:convert';
+
 import 'package:delayed_display/delayed_display.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_test_app/API.dart';
+import 'package:flutter_test_app/Alert.dart';
 import 'package:flutter_test_app/constants/config.dart';
-import 'package:flutter_test_app/pages/home.dart';
+import 'package:flutter_test_app/provider/app_provider.dart';
 import 'package:flutter_test_app/widgets/custum.dart';
 import 'package:height_slider/height_slider.dart';
+import 'package:provider/provider.dart';
 import 'package:response/response.dart';
 import 'package:weight_slider/weight_slider.dart';
 
@@ -17,6 +22,13 @@ class _HeightScreanState extends State<HeightScrean> {
   int height = 170;
   int weight = 70;
   String img = "male 1";
+  var user;
+  @override
+  void initState() {
+    user = Provider.of<AppProvider>(context, listen: false).user;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final response = ResponseUI.instance;
@@ -108,39 +120,33 @@ class _HeightScreanState extends State<HeightScrean> {
                 height: 20,
               ),
               Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: HeightSlider(
-                        height: height,
-                        personImagePath: 'assets/images/$img.svg',
-                        onChange: (val) => setState(() => height = val),
-                        unit: 'cm',
-                      ),
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: List.generate(
-                          46,
-                          (index) => SizedBox(
-                                width: index % 5 == 0
-                                    ? 20
-                                    : index % 2 == 0
-                                        ? 15
-                                        : 10,
-                                child: Divider(
-                                  color: kprimary,
-                                  height: 7.5,
-                                  thickness: index % 5 == 0 ? 1.8 : 1.2,
-                                ),
-                              )),
-                    ),
-                    SizedBox(
-                      width: 8,
-                    )
-                  ],
+                child: HeightSlider(
+                  height: height,
+                  personImagePath: 'assets/images/$img.svg',
+                  onChange: (val) => setState(() => height = val),
+                  unit: 'cm',
                 ),
+              ),
+              // Column(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   crossAxisAlignment: CrossAxisAlignment.end,
+              //   children: List.generate(
+              //       46,
+              //       (index) => SizedBox(
+              //             width: index % 5 == 0
+              //                 ? 20
+              //                 : index % 2 == 0
+              //                     ? 15
+              //                     : 10,
+              //             child: Divider(
+              //               color: kprimary,
+              //               height: 7.5,
+              //               thickness: index % 5 == 0 ? 1.8 : 1.2,
+              //             ),
+              //           )),
+              // ),
+              SizedBox(
+                width: 8,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(
@@ -162,14 +168,9 @@ class _HeightScreanState extends State<HeightScrean> {
                       elevation: 8,
                       backgroundColor: kwhite,
                       onPressed: () async {
-                        /*  if (formKey.currentState.validate()) {
-                          if (loginPressed) {
-                            await login();
-                          } else {
-                            await signUp();
-                          }
-                        } */
-                        goTo(context, HomeScrean());
+                        user = Provider.of<AppProvider>(context, listen: false)
+                            .user;
+                        await updateUser();
                       },
                       child: Icon(
                         Icons.arrow_forward_sharp,
@@ -184,5 +185,22 @@ class _HeightScreanState extends State<HeightScrean> {
         ),
       ),
     );
+  }
+
+  updateUser() async {
+    Alert.loadingAlert(ctx: context);
+    user['height'] = height;
+    user['weight'] = weight;
+    final res = await API.updateProfile(user);
+    final resBody = res.data;
+   
+    Navigator.of(context).pop();
+    if ((res.statusCode == 200 || res.statusCode == 201) &&
+        resBody['success']) {
+      await setValue(key: 'user', value: json.encode(resBody['data']));
+      Provider.of<AppProvider>(context, listen: false)
+          .initUser(resBody['data']);
+    }
+    goToWithRemoveUntill(context, HeightScrean());
   }
 }

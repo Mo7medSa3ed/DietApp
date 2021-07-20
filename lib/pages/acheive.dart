@@ -1,16 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test_app/constants/config.dart';
+import 'package:flutter_test_app/pages/timeline.dart';
+import 'package:flutter_test_app/provider/app_provider.dart';
 import 'package:flutter_test_app/widgets/custum.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:provider/provider.dart';
 
 class AchieveScrean extends StatefulWidget {
+  final percent;
+  final end;
+  final id;
+  AchieveScrean(this.percent, this.id, this.end);
   @override
   _AchieveScreanState createState() => _AchieveScreanState();
 }
 
 class _AchieveScreanState extends State<AchieveScrean> {
-  final scaffoldkey =GlobalKey<ScaffoldState>(); 
+  final scaffoldkey = GlobalKey<ScaffoldState>();
   bool isBoy = false;
+
+  @override
+  void initState() {
+    isBoy = Provider.of<AppProvider>(context, listen: false).user['gender'] ==
+            "male"
+        ? true
+        : false;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -48,7 +65,7 @@ class _AchieveScreanState extends State<AchieveScrean> {
           Align(
               alignment: Alignment(0, 0.68),
               child: Text(
-                "65%",
+                "${widget.percent} %",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontFamily: 'RifficFree',
@@ -75,9 +92,8 @@ class _AchieveScreanState extends State<AchieveScrean> {
                 child: FloatingActionButton(
                   mini: false,
                   onPressed: () {
-                    setState(() {
-                      isBoy = !isBoy;
-                    });
+                    return goTo(
+                        context, TimeLineScrean(widget.id, widget.end + 1));
                   },
                   backgroundColor: kwhite,
                   child: Icon(
@@ -101,7 +117,11 @@ class _AchieveScreanState extends State<AchieveScrean> {
                 children: [
                   Align(
                     alignment: Alignment.topCenter,
-                    child: buildAppBarForPages(context, 'Clean 9',()=>scaffoldkey.currentState.openDrawer(),),
+                    child: buildAppBarForPages(
+                      context,
+                      'Clean 9',
+                      () => scaffoldkey.currentState.openDrawer(),
+                    ),
                   ),
                   Align(
                     alignment: Alignment(0, -0.75),
@@ -120,8 +140,8 @@ class _AchieveScreanState extends State<AchieveScrean> {
                       alignment: Alignment(-0.13, -0.26),
                       child: CircularPercentIndicator(
                         radius: response.screenWidth * 0.65,
-                        lineWidth: response.screenWidth *0.1 /3*2.2,
-                        percent: 0.7,
+                        lineWidth: response.screenWidth * 0.1 / 3 * 2.2,
+                        percent: double.parse(widget.percent) / 100,
                         arcType: ArcType.HALF,
                         arcBackgroundColor: kcolor1,
                         circularStrokeCap: CircularStrokeCap.round,

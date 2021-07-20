@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_test_app/API.dart';
 import 'package:flutter_test_app/constants/config.dart';
 import 'package:flutter_test_app/pages/cart.dart';
 // ignore: unused_import
 import 'package:flutter_test_app/pages/shop.dart';
 import 'package:flutter_test_app/pages/timeline.dart';
+import 'package:flutter_test_app/provider/app_provider.dart';
 import 'package:flutter_test_app/widgets/custum.dart';
+import 'package:provider/provider.dart';
 import 'package:response/response.dart';
 
 class CouresScrean extends StatefulWidget {
@@ -14,6 +17,26 @@ class CouresScrean extends StatefulWidget {
 
 class _CouresScreanState extends State<CouresScrean> {
   final scaffoldkey = GlobalKey<ScaffoldState>();
+  var course;
+  var status = false;
+  getData() async {
+    var id = Provider.of<AppProvider>(context, listen: false)
+        .user['course_recommended'];
+
+    final res = await API.getOneCourse(id);
+    if (res != null) {
+      status = res['success'];
+      course = res['data'];
+      setState(() {});
+    }
+  }
+
+  @override
+  void initState() {
+    getData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final response = ResponseUI.instance;
@@ -26,124 +49,128 @@ class _CouresScreanState extends State<CouresScrean> {
               gradient:
                   LinearGradient(colors: [kcolor1, Colors.grey[200], kcolor1])),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(
-                child: ListView(
-                  children: [
-                    buildAppBarForPages(
-                      context,
-                      'Clean 9',
-                      () => scaffoldkey.currentState.openDrawer(),
-                    ),
-                    SizedBox(
-                      height: response.setHeight(30),
-                    ),
-                    Container(
-                      height: response.screenHeight * 0.23 + 5,
-                      width: double.infinity,
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            left: 25,
-                            right: 25,
-                            child: Container(
-                              width: response.screenWidth - 50,
-                              height: response.screenHeight * 0.23,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(25),
-                                  gradient: LinearGradient(
-                                      //stops: [0.5, 0.8, 0.0],
-                                      begin: Alignment.topRight,
-                                      end: Alignment.bottomLeft,
-                                      colors: [
-                                        Color(0xff232749),
-                                        Color(0xff34386e),
-                                        Color(0xff232749),
-                                      ])),
-                            ),
-                          ),
-                          Positioned(
-                              right: 25,
-                              left: 25,
-                              bottom: -10,
-                              top: 60,
-                              child: Container(
-                                width: double.infinity,
-                                height: response.screenHeight * 0.23,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(25),
-                                    image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: AssetImage(
-                                            "assets/images/image3.png"))),
-                              )),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: Image.asset(
-                              "assets/images/curve.png",
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 12.0),
-                              child: Text(
-                                "20 Days",
-                                style: TextStyle(
-                                    color: kwhite,
-                                    fontWeight: FontWeight.w900,
-                                    fontSize: response.setFontSize(17)),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: response.setHeight(20),
-                    ),
-                    Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                        child: buildText2(
-                            '20 Days ndakjndksank asdsadsa sadhsaldlsk')),
-                    SizedBox(
-                      height: response.setHeight(5),
-                    ),
-                    Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                        child: Row(
-                          children: List.generate(
-                              5,
-                              (index) => Icon(
-                                    Icons.star,
-                                    size: 20,
-                                    color: Colors.amber[400],
-                                  )),
-                        )),
-                    SizedBox(
-                      height: response.setHeight(10),
-                    ),
-                    Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                        child: buildText('Components')),
-                    SizedBox(
-                      height: response.setHeight(10),
-                    ),
-                    buildCourseItem(),
-                    buildCourseItem(),
-                    buildCourseItem(),
-                    buildCourseItem(),
-                    buildCourseItem(),
-                    buildCourseItem(),
-                    buildCourseItem(),
-                    buildCourseItem(),
-                    buildCourseItem(),
-                    buildCourseItem(),
-                    buildCourseItem(),
-                    // Spacer(),
-                  ],
-                ),
+              buildAppBarForPages(
+                context,
+                course == null ? '' : course['name'],
+                () => scaffoldkey.currentState.openDrawer(),
               ),
+              SizedBox(
+                height: response.setHeight(30),
+              ),
+              !status
+                  ? Center(
+                      child: CircularProgressIndicator(color: kprimary),
+                    )
+                  : course == null
+                      ? Center(
+                          child: buildText("No Data Found ...."),
+                        )
+                      : Expanded(
+                          child: ListView(
+                            children: [
+                              Container(
+                                height: response.screenHeight * 0.23 + 5,
+                                width: double.infinity,
+                                child: Stack(
+                                  children: [
+                                    Positioned(
+                                      left: 25,
+                                      right: 25,
+                                      child: Container(
+                                        width: response.screenWidth - 50,
+                                        height: response.screenHeight * 0.23,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(25),
+                                            gradient: LinearGradient(
+                                                //stops: [0.5, 0.8, 0.0],
+                                                begin: Alignment.topRight,
+                                                end: Alignment.bottomLeft,
+                                                colors: [
+                                                  Color(0xff232749),
+                                                  Color(0xff34386e),
+                                                  Color(0xff232749),
+                                                ])),
+                                      ),
+                                    ),
+                                    Positioned(
+                                        right: 25,
+                                        left: 25,
+                                        bottom: -10,
+                                        top: 60,
+                                        child: Container(
+                                          width: double.infinity,
+                                          height: response.screenHeight * 0.23,
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(25),
+                                              image: DecorationImage(
+                                                  fit: BoxFit.cover,
+                                                  image: NetworkImage(
+                                                      course['photo']))),
+                                        )),
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Image.asset(
+                                        "assets/images/curve.png",
+                                      ),
+                                    ),
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 12.0),
+                                        child: Text(
+                                          "${course['days']} Days",
+                                          style: TextStyle(
+                                              color: kwhite,
+                                              fontWeight: FontWeight.w900,
+                                              fontSize:
+                                                  response.setFontSize(17)),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: response.setHeight(20),
+                              ),
+                              Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 25.0),
+                                  child: buildText2(course['description'])),
+                              SizedBox(
+                                height: response.setHeight(5),
+                              ),
+                              // Padding(
+                              //     padding: const EdgeInsets.symmetric(
+                              //         horizontal: 25.0),
+                              //     child: Row(
+                              //       children: List.generate(
+                              //           5,
+                              //           (index) => Icon(
+                              //                 Icons.star,
+                              //                 size: 20,
+                              //                 color: Colors.amber[400],
+                              //               )),
+                              //     )),
+                              // SizedBox(
+                              //   height: response.setHeight(10),
+                              // ),
+                              // Padding(
+                              //     padding: const EdgeInsets.symmetric(
+                              //         horizontal: 25.0),
+                              //     child: buildText('Components')),
+                              // SizedBox(
+                              //   height: response.setHeight(10),
+                              // ),
+                              // buildCourseItem(),
+                            ],
+                          ),
+                        ),
               Container(
                 padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -174,7 +201,8 @@ class _CouresScreanState extends State<CouresScrean> {
                         child: buildIconElevatedButton(
                             icon: Icon(Icons.play_arrow),
                             label: 'Start Now',
-                            onpressed: () => goTo(context, TimeLineScrean())))
+                            onpressed: () =>
+                                goTo(context, TimeLineScrean(course['id'],0))))
                   ],
                 ),
               )

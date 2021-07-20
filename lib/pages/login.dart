@@ -1,12 +1,18 @@
+import 'dart:convert';
+
 import 'package:delayed_display/delayed_display.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_test_app/API.dart';
+import 'package:flutter_test_app/Alert.dart';
 import 'package:flutter_test_app/constants/config.dart';
-import 'package:flutter_test_app/pages/forgetPassword.dart';
+import 'package:flutter_test_app/pages/height.dart';
 import 'package:flutter_test_app/pages/home.dart';
+import 'package:flutter_test_app/provider/app_provider.dart';
 import 'package:flutter_test_app/widgets/custum.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:response/response.dart';
 
 class LoginScrean extends StatefulWidget {
@@ -20,20 +26,22 @@ class _LoginScreanState extends State<LoginScrean>
   Animation<Offset> _offsetFloat, _offsetFloat2;
   final formKey = GlobalKey<FormState>();
   final formKey2 = GlobalKey<FormState>();
-
+  bool isLoading = false;
   bool isVisible = true;
   var nameController = TextEditingController(text: '');
-  var emailController = TextEditingController(text: '');
+  //var ageController = TextEditingController(text: '');
+  //var emailController = TextEditingController(text: '');
   var phoneController = TextEditingController(text: '');
+  var genderController = TextEditingController(text: 'Male');
   var locationController = TextEditingController(text: '');
   var passController = TextEditingController(text: '');
   var confirController = TextEditingController(text: '');
-
+  bool isEgypt = true;
   bool isConfirmVisible = true;
-  var _selectedDate;
+  var selectedDate;
   @override
   void initState() {
-    super.initState();  
+    super.initState();
 
     _controller = AnimationController(
       vsync: this,
@@ -191,22 +199,36 @@ class _LoginScreanState extends State<LoginScrean>
                       mainAxisSize: MainAxisSize.min,
                       children: _controller.value > 0.0
                           ? [
+                              // buldinputContainer(
+                              //     onChange: (v) {
+                              //       if (v.length == 0 || v.length == 1)
+                              //         setState(() {});
+                              //     },
+                              //     text: "Email",
+                              //     hint: 'Enter your email ...',
+                              //     controller: emailController),
                               buldinputContainer(
                                   onChange: (v) {
                                     if (v.length == 0 || v.length == 1)
                                       setState(() {});
                                   },
-                                  text: "Email",
-                                  hint: 'Enter your email ...',
-                                  controller: emailController),
+                                  text: "Phone",
+                                  hint: 'enter mobile phone ...',
+                                  controller: phoneController),
                               buldinputContainer(
                                 text: "Password",
                                 controller: passController,
                                 widget: Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 20.0),
-                                  child: TextField(
+                                  child: TextFormField(
                                     controller: passController,
+                                    validator: (String v) {
+                                      if (v.trim().isEmpty || v == null) {
+                                        return 'please enter your password...';
+                                      }
+                                      return null;
+                                    },
                                     onChanged: (v) {
                                       setState(() {});
                                     },
@@ -246,23 +268,23 @@ class _LoginScreanState extends State<LoginScrean>
                                       setState(() {});
                                   },
                                   text: "Name",
-                                  hint: 'Enter client name ...',
+                                  hint: 'enter client name ...',
                                   controller: nameController),
+                              // buldinputContainer(
+                              //     onChange: (v) {
+                              //       if (v.length == 0 || v.length == 1)
+                              //         setState(() {});
+                              //     },
+                              //     text: "Email",
+                              //     hint: 'Enter your email ...',
+                              //     controller: emailController),
                               buldinputContainer(
                                   onChange: (v) {
                                     if (v.length == 0 || v.length == 1)
                                       setState(() {});
                                   },
-                                  text: "Email",
-                                  hint: 'Enter your email ...',
-                                  controller: emailController),
-                              buldinputContainer(
-                                  onChange: (v) {
-                                    if (v.length == 0 || v.length == 1)
-                                      setState(() {});
-                                  },
-                                  text: "Phone Number",
-                                  widget: "phone",
+                                  text: "Phone",
+                                  hint: 'enter mobile phone ...',
                                   controller: phoneController),
                               /*   Row(
                 children: [
@@ -286,10 +308,19 @@ class _LoginScreanState extends State<LoginScrean>
                                     if (v.length == 0 || v.length == 1)
                                       setState(() {});
                                   },
-                                  hint: "Enter your location ...",
+                                  hint: "enter your location ...",
                                   text: "Location",
+                                  isLoading: isLoading,
                                   onpressed: () async {
-                                    await getCurrantLocation(context);
+                                    setState(() {
+                                      isLoading = true;
+                                    });
+                                    final add = await getCurrantaddress();
+                                    locationController.text = add.addressLine;
+
+                                    setState(() {
+                                      isLoading = false;
+                                    });
                                   },
                                   controller: locationController),
                               buldinputContainer(
@@ -298,7 +329,7 @@ class _LoginScreanState extends State<LoginScrean>
                                       onTap: () async {
                                         FocusScope.of(context)
                                             .requestFocus(new FocusNode());
-                                        _selectedDate = await showDatePicker(
+                                        selectedDate = await showDatePicker(
                                             context: context,
                                             initialDate: DateTime(2000),
                                             firstDate: DateTime(1970),
@@ -309,27 +340,26 @@ class _LoginScreanState extends State<LoginScrean>
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 20.0, vertical: 16),
                                         child: Text(
-                                            _selectedDate != null
+                                            selectedDate != null
                                                 ? DateFormat('dd/MM/yyyy')
-                                                    .format(_selectedDate)
+                                                    .format(selectedDate)
                                                     .toString()
                                                 : 'select your birthdate',
                                             style: TextStyle(
-                                                color: _selectedDate != null
+                                                color: selectedDate != null
                                                     ? kprimary
                                                     : ksecondary,
-                                                fontWeight:
-                                                    _selectedDate != null
-                                                        ? FontWeight.w900
-                                                        : FontWeight.w600,
-                                                fontSize: _selectedDate != null
+                                                fontWeight: selectedDate != null
+                                                    ? FontWeight.w900
+                                                    : FontWeight.w600,
+                                                fontSize: selectedDate != null
                                                     ? 20
                                                     : 18)),
                                       )),
                                   controller: TextEditingController(text: '')),
                               buldinputContainer(
                                 text: "Gender",
-                                controller: TextEditingController(text: ''),
+                                controller: genderController,
                                 widget: Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 20),
@@ -351,22 +381,41 @@ class _LoginScreanState extends State<LoginScrean>
                                           ),
                                       items: ['Male', 'Female'],
                                       popupBackgroundColor: kcolor1,
-                                      maxHeight: 110,
-                                      hint: "Choose your gender ...",
-                                      onChanged: print,
+                                      maxHeight: 100,
+                                      hint: "choose your gender ...",
+                                      onChanged: (v) {
+                                        genderController.text = v;
+                                      },
                                       selectedItem: "Male"),
                                 ),
                               ),
+                              // buldinputContainer(
+                              //     onChange: (v) {
+                              //       if (v.length == 0 || v.length == 1)
+                              //         setState(() {});
+                              //     },
+                              //     text: "Age",
+                              //     hint: "enter your age ...",
+                              //     controller: ageController),
                               buldinputContainer(
                                 text: "Password",
                                 controller: passController,
                                 widget: Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 20.0),
-                                  child: TextField(
+                                  child: TextFormField(
                                     controller: passController,
                                     onChanged: (v) {
                                       setState(() {});
+                                    },
+                                    validator: (String v) {
+                                      if (v.trim().isEmpty || v == null) {
+                                        return 'please enter your password...';
+                                      }
+                                      if (v.trim().length < 6) {
+                                        return 'password must be at least 6 character !!';
+                                      }
+                                      return null;
                                     },
                                     obscureText: isVisible,
                                     cursorColor: kprimary,
@@ -402,10 +451,21 @@ class _LoginScreanState extends State<LoginScrean>
                                 widget: Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 20.0),
-                                  child: TextField(
+                                  child: TextFormField(
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
                                     onChanged: (v) {
                                       if (v.length == 0 || v.length == 1)
                                         setState(() {});
+                                    },
+                                    validator: (String v) {
+                                      if (v.trim().isEmpty || v == null) {
+                                        return 'please enter your Confirm password...';
+                                      }
+                                      if (v.trim() != passController.text) {
+                                        return 'confirm password not a same !!';
+                                      }
+                                      return null;
                                     },
                                     controller: confirController,
                                     obscureText: isConfirmVisible,
@@ -442,33 +502,33 @@ class _LoginScreanState extends State<LoginScrean>
                 ),
               ),
             ),
-            Container(
-              width: response.screenWidth * 0.9,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  InkWell(
-                    onTap: () => goTo(context, ForgetPasswordScrean()),
-                    child: Text(
-                      "Forget password ?",
-                      textAlign: TextAlign.end,
-                      style: TextStyle(
-                          color: kprimary,
-                          fontSize: response.setFontSize(13),
-                          fontWeight: FontWeight.w700),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            // Container(
+            //   width: response.screenWidth * 0.9,
+            //   padding: const EdgeInsets.symmetric(vertical: 16),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.end,
+            //     children: [
+            //       InkWell(
+            //         onTap: () => goTo(context, ForgetPasswordScrean()),
+            //         child: Text(
+            //           "Forget password ?",
+            //           textAlign: TextAlign.end,
+            //           style: TextStyle(
+            //               color: kprimary,
+            //               fontSize: response.setFontSize(13),
+            //               fontWeight: FontWeight.w700),
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: FloatingActionButton(
                 elevation: 8,
                 backgroundColor: kwhite,
                 onPressed: () async {
-                  /* if (_controller.value > 0.0) {
+                  if (_controller.value > 0.0) {
                     if (formKey.currentState.validate()) {
                       await login();
                     }
@@ -476,8 +536,8 @@ class _LoginScreanState extends State<LoginScrean>
                     if (formKey2.currentState.validate()) {
                       await signUp();
                     }
-                  } */
-                  goTo(context, HomeScrean());
+                  }
+                  //goTo(context, HomeScrean());
                 },
                 child: Icon(
                   Icons.arrow_forward_sharp,
@@ -490,27 +550,33 @@ class _LoginScreanState extends State<LoginScrean>
       ],
     )));
   }
-/* 
+
   signUp() async {
+    if (confirController.text.trim() != passController.text.trim()) return;
     Alert.loadingAlert(ctx: context);
     final body = {
       "name": nameController.text,
-      "mobile": ,
-      "password": pass,
-      "gender": isMale,
-      "age": age,
+      "mobile": "+2" + phoneController.text,
+      "password": passController.text,
+      "gender": genderController.text.toLowerCase(),
+      "birth_date": DateFormat('dd/MM/yyyy').format(selectedDate).toString(),
+      "location": locationController.text,
     };
 
     final res = await API.signupUser(body);
     final resBody = json.decode(res.body);
+   
     Navigator.of(context).pop();
-    if (res.statusCode == 200 && resBody['success']) {
+    if ((res.statusCode == 200 || res.statusCode == 201) &&
+        resBody['success']) {
       await setValue(key: 'user', value: json.encode(resBody['data']));
+      Provider.of<AppProvider>(context, listen: false)
+          .initUser(resBody['data']);
       return Alert.sucessAlert(
           ctx: context,
           text: "User Registered Successfully",
           title: "Sing Up",
-          ontap: () => goToWithRemoveUntill(context, HomeScrean()));
+          ontap: () => goToWithRemoveUntill(context, HeightScrean()));
     } else if (res.statusCode != 200 || !resBody['success']) {
       return Alert.errorAlert(ctx: context, title: resBody['message']);
     } else {
@@ -520,8 +586,11 @@ class _LoginScreanState extends State<LoginScrean>
 
   login() async {
     Alert.loadingAlert(ctx: context);
-    final body = {"mobile": mobile, "password": pass};
-
+    final body = {
+      "mobile": "+2" + phoneController.text,
+      "password": passController.text
+    };
+   
     final res = await API.loginUser(body);
     final resBody = json.decode(res.body);
     Navigator.of(context).pop();
@@ -529,7 +598,8 @@ class _LoginScreanState extends State<LoginScrean>
       await setValue(
           key: 'token', value: json.encode(resBody['data']['access_token']));
       await setValue(key: 'user', value: json.encode(resBody['data']['user']));
-
+      Provider.of<AppProvider>(context, listen: false)
+          .initUser(resBody['data']['user']);
       return Alert.sucessAlert(
           ctx: context,
           text: "User Login Successfully",
@@ -541,5 +611,4 @@ class _LoginScreanState extends State<LoginScrean>
       return Alert.errorAlert(ctx: context, title: "Something went wrong...");
     }
   }
- */
 }

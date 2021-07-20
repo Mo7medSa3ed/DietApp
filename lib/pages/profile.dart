@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test_app/constants/config.dart';
 import 'package:flutter_test_app/pages/edit_profile.dart';
+import 'package:flutter_test_app/provider/app_provider.dart';
 import 'package:flutter_test_app/widgets/custum.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class ProfileScrean extends StatefulWidget {
   @override
@@ -10,6 +13,13 @@ class ProfileScrean extends StatefulWidget {
 
 class _ProfileScreanState extends State<ProfileScrean> {
   final scaffoldkey = GlobalKey<ScaffoldState>();
+  var user;
+  @override
+  void initState() {
+    user = Provider.of<AppProvider>(context, listen: false).user;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -39,46 +49,63 @@ class _ProfileScreanState extends State<ProfileScrean> {
                     ),
                     child: CircleAvatar(
                       backgroundColor: ksecondary,
-                      backgroundImage: AssetImage("assets/images/profile.jpg"),
+                      backgroundImage: NetworkImage(user['photo']),
                     )),
                 SizedBox(height: 15),
-                Text('Elon Mask',
+                Text(user['name'],
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontSize: 28,
                         color: kprimary,
                         fontWeight: FontWeight.w900)),
-                Text('@mohaed',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: ksecondary,
-                        fontWeight: FontWeight.w900)),
+                // Text('@mohaed',
+                //     textAlign: TextAlign.center,
+                //     style: TextStyle(
+                //         fontSize: 20,
+                //         color: ksecondary,
+                //         fontWeight: FontWeight.w900)),
                 SizedBox(height: 20),
-                buildContainerForPRoileData(
-                    title: "Name", subtitle: "Mohamed Saeed", first: true),
-                buildContainerForPRoileData(
-                  title: "Email",
-                  subtitle: "MohamedSaeed@gmail.com",
-                ),
-                buildContainerForPRoileData(
-                  title: "Location",
-                  subtitle: "Egypt,MinyaAlQamh",
-                ),
-                buildContainerForPRoileData(
-                  title: "Birthdate",
-                  subtitle: "4/2/2021",
-                ),
-                buildContainerForPRoileData(
-                  title: "Gender",
-                  subtitle: "Male",
-                ),
-                buildContainerForPRoileData(
-                  title: "Height",
-                  subtitle: "170 cm",
-                ),
-                buildContainerForPRoileData(
-                    title: "Weight", subtitle: "80 KG", last: true),
+                user['name'] != null
+                    ? buildContainerForPRoileData(
+                        title: "Name", subtitle: user['name'], first: true)
+                    : Container(),
+                // buildContainerForPRoileData(
+                //   title: "Email",
+                //   subtitle: "MohamedSaeed@gmail.com",
+                // ),
+                user['location'] != null
+                    ? buildContainerForPRoileData(
+                        title: "Location",
+                        subtitle: user['location'],
+                      )
+                    : Container(),
+                user['birth_date'] != null
+                    ? buildContainerForPRoileData(
+                        title: "Birthdate",
+                        subtitle: DateFormat('dd/MM/yyyy')
+                            .format(DateTime.parse(user['birth_date']))
+                            .toString(),
+                      )
+                    : Container(),
+                user['gender'] != null
+                    ? buildContainerForPRoileData(
+                        title: "Gender",
+                        subtitle:
+                            '${user['gender'][0].toUpperCase()}${user['gender'].substring(1)}',
+                      )
+                    : Container(),
+                user['height'] != null
+                    ? buildContainerForPRoileData(
+                        title: "Height",
+                        subtitle: "${user['height']} cm",
+                      )
+                    : Container(),
+                user['weight'] != null
+                    ? buildContainerForPRoileData(
+                        title: "Weight",
+                        subtitle: "${user['weight']} KG",
+                        last: true)
+                    : Container(),
                 SizedBox(
                   height: 20,
                 ),

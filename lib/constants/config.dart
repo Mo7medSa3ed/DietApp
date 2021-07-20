@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test_app/pages/map.dart';
 import 'package:flutter_test_app/widgets/custum.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:location/location.dart' as loc;
 import 'package:shared_preferences/shared_preferences.dart';
 
 const ksecondary = Color.fromARGB(255, 142, 156, 182);
@@ -18,54 +20,83 @@ const kcolor3 = Color.fromARGB(255, 35, 39, 73);
 const kwhite = Colors.white;
 const kgreen = Color(0xff00c488);
 const kblue = Color(0xff3f4075);
-const APIKEY ="AIzaSyDXgbuvH4h_A7OkEbqAucUKQSLUfJs8i2Y";
-const img ="https://digitaldefynd.com/wp-content/uploads/2020/04/Best-Food-Styling-course-tutorial-class-certification-training-online-1024x625.jpg";
+const APIKEY = "AIzaSyDXgbuvH4h_A7OkEbqAucUKQSLUfJs8i2Y";
+const img =
+    "https://digitaldefynd.com/wp-content/uploads/2020/04/Best-Food-Styling-course-tutorial-class-certification-training-online-1024x625.jpg";
 
-
-setValue({key , value})async{
+setValue({key, value}) async {
   SharedPreferences prfs = await SharedPreferences.getInstance();
   prfs.setString(key, value);
 }
 
-Future<dynamic> getValue({key})async{
+Future<dynamic> getValue({key}) async {
   SharedPreferences prfs = await SharedPreferences.getInstance();
   final value = prfs.get(key);
   return value;
 }
 
-getCurrantLocation(context) async {
-    await Geolocator.checkPermission().then((value) {
-      if (value == LocationPermission.always ||
-          value == LocationPermission.whileInUse) {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => MapScrean()));
-      } else {
-        buildDialogforNotification(
-            context: context,
-            test: false,
-            text: "Allow your Location",
-            desc: "we will need your location to give you better experience.",
-            img: "location.png",
-            conTap: () {
-              Navigator.of(context).pop();
-              Geolocator.requestPermission().then((value) {
-                if (value == LocationPermission.always ||
-                    value == LocationPermission.whileInUse) {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (_) => MapScrean()));
-                } else {
-                  Navigator.of(context).pop();
-                }
-              });
-            },
-            backTap: () {
-              Navigator.of(context).pop();
-            },
-            conText: "Sure, I'd Like that",
-            backText: "Not now");
-      }
-    });
+Future<dynamic> getCurrantaddress() async {
+  loc.Location location = new loc.Location();
+
+  bool _serviceEnabled;
+  loc.PermissionStatus _permissionGranted;
+
+  _serviceEnabled = await location.serviceEnabled();
+  if (!_serviceEnabled) {
+    _serviceEnabled = await location.requestService();
+    if (!_serviceEnabled) {
+      return;
+    }
   }
+
+  _permissionGranted = await location.hasPermission();
+  if (_permissionGranted == loc.PermissionStatus.DENIED) {
+    _permissionGranted = await location.requestPermission();
+    if (_permissionGranted != loc.PermissionStatus.GRANTED) {
+      return;
+    }
+  }
+  final l = await location.getLocation();
+
+  List<Address> add = await Geocoder.local
+      .findAddressesFromCoordinates(Coordinates(l.latitude, l.longitude));
+
+  return add.first;
+}
+
+getCurrantLocation(context) async {
+  await Geolocator.checkPermission().then((value) {
+    if (value == LocationPermission.always ||
+        value == LocationPermission.whileInUse) {
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (_) => MapScrean()));
+    } else {
+      buildDialogforNotification(
+          context: context,
+          test: false,
+          text: "Allow your Location",
+          desc: "we will need your location to give you better experience.",
+          img: "location.png",
+          conTap: () {
+            Navigator.of(context).pop();
+            Geolocator.requestPermission().then((value) {
+              if (value == LocationPermission.always ||
+                  value == LocationPermission.whileInUse) {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (_) => MapScrean()));
+              } else {
+                Navigator.of(context).pop();
+              }
+            });
+          },
+          backTap: () {
+            Navigator.of(context).pop();
+          },
+          conText: "Sure, I'd Like that",
+          backText: "Not now");
+    }
+  });
+}
 
 class CustumLinearclipper extends CustomClipper<Path> {
   @override

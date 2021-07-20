@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_test_app/API.dart';
 import 'package:flutter_test_app/constants/config.dart';
-import 'package:flutter_test_app/pages/acheive.dart';
+import 'package:flutter_test_app/models/product.dart';
 import 'package:flutter_test_app/pages/cart.dart';
 import 'package:flutter_test_app/pages/course.dart';
 import 'package:flutter_test_app/pages/home.dart';
@@ -9,7 +10,6 @@ import 'package:flutter_test_app/pages/orders.dart';
 import 'package:flutter_test_app/pages/profile.dart';
 import 'package:flutter_test_app/pages/shop.dart';
 import 'package:flutter_test_app/provider/app_provider.dart';
-import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:provider/provider.dart';
 import 'package:response/response.dart';
 import 'package:toast/toast.dart';
@@ -168,12 +168,19 @@ buildDialog({context, text, desc, img, test = true}) {
                     height: 12,
                   ),
                   buildOutElevatedButton(
-                      text: "Continue Shopping", onpressed: () {}, test: test),
+                      text: "Continue Shopping",
+                      onpressed: () {
+                        goToWithRemoveUntill(context, ShopScrean());
+                      },
+                      test: test),
                   SizedBox(
                     height: 8,
                   ),
                   buildFillElevatedButton(
-                      text: "Go To Orders", onpressed: () {}),
+                      text: "Go To Orders",
+                      onpressed: () {
+                        goToWithRemoveUntill(context, OrderScrean());
+                      }),
                 ],
               ),
             ),
@@ -234,7 +241,7 @@ buildDialogforNotification(
           ));
 }
 
-buildCartItem() {
+buildCartItem(ProductModel p, ondelete) {
   return Container(
     margin: EdgeInsets.only(bottom: 16),
     child: Row(
@@ -255,8 +262,8 @@ buildCartItem() {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(25),
                       color: Colors.grey[200]),
-                  child: Image.asset(
-                    "assets/images/image4.png",
+                  child: Image.network(
+                    p.photo,
                     fit: BoxFit.contain,
                   ),
                 ),
@@ -268,7 +275,7 @@ buildCartItem() {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("Continu Shopping",
+                      Text(p.name,
                           overflow: TextOverflow.fade,
                           softWrap: false,
                           style: TextStyle(
@@ -279,7 +286,7 @@ buildCartItem() {
                         height: response.setHeight(4),
                       ),
                       Text(
-                        "Continu Shoppingsadasdasdsa",
+                        p.description,
                         softWrap: false,
                         style: TextStyle(
                             color: ksecondary,
@@ -296,37 +303,57 @@ buildCartItem() {
                           children: [
                             SizedBox(
                               child: Text(
-                                "\$ 125",
+                                "\$ ${p.price}",
                                 softWrap: false,
                                 overflow: TextOverflow.fade,
                                 style: TextStyle(
                                     color: kprimary,
                                     fontWeight: FontWeight.w900,
-                                    fontSize: response.setFontSize(16.5)),
+                                    fontSize: response.setFontSize(16)),
                               ),
                             ),
                             Container(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  buildIconButton(
-                                      icon: Icons.remove, onpressed: () {}),
-                                  SizedBox(
-                                    child: Text(
-                                      "4644545",
-                                      softWrap: false,
-                                      overflow: TextOverflow.fade,
-                                      style: TextStyle(
-                                          color: kprimary,
-                                          fontWeight: FontWeight.w900,
-                                          fontSize: response.setFontSize(14)),
+                              margin: EdgeInsets.only(right: 5),
+                              child: StatefulBuilder(
+                                builder: (ctx, s) => Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    buildIconButton(
+                                        icon: Icons.remove,
+                                        onpressed: () async {
+                                          if (p.amount == 1) return;
+                                          final amount =
+                                              await API.decreaseQtyCart(p.id);
+                                          s(() {
+                                            p.amount = amount ?? 0;
+                                          });
+                                        }),
+                                    Container(
+                                      margin:
+                                          EdgeInsets.symmetric(horizontal: 8),
+                                      child: Text(
+                                        p.amount.toString(),
+                                        softWrap: false,
+                                        overflow: TextOverflow.fade,
+                                        style: TextStyle(
+                                            color: kprimary,
+                                            fontWeight: FontWeight.w900,
+                                            fontSize: response.setFontSize(14)),
+                                      ),
                                     ),
-                                  ),
-                                  buildIconButton(
-                                      icon: Icons.add, onpressed: () {}),
-                                ],
+                                    buildIconButton(
+                                        icon: Icons.add,
+                                        onpressed: () async {
+                                          final amount =
+                                              await API.increaseQtyCart(p.id);
+                                          s(() {
+                                            p.amount = amount ?? 0;
+                                          });
+                                        }),
+                                  ],
+                                ),
                               ),
                             )
                           ],
@@ -340,7 +367,7 @@ buildCartItem() {
           ),
         ),
         IconButton(
-            onPressed: () {},
+            onPressed: ondelete,
             icon: Icon(
               Icons.delete_forever,
               color: kprimary,
@@ -416,7 +443,7 @@ buildCourseItem() {
   );
 }
 
-buildShopItem(context) {
+buildShopItem({context, ProductModel product}) {
   return Stack(
     children: [
       Container(
@@ -428,7 +455,6 @@ buildShopItem(context) {
           children: [
             Container(
               padding: EdgeInsets.all(10),
-              height: response.setHeight(96),
               width: response.screenWidth - 32,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30), color: kwhite),
@@ -443,7 +469,7 @@ buildShopItem(context) {
                       borderRadius: BorderRadius.circular(25),
                       color: kcolor1.withOpacity(0.5),
                     ),
-                    child: Image.asset("assets/images/image4.png"),
+                    child: Image.network(product.photo),
                   ),
                   SizedBox(
                     width: 15,
@@ -455,14 +481,19 @@ buildShopItem(context) {
                       children: [
                         Row(children: [
                           Expanded(
-                            child: Text("Forevver Therm",
+                            child: Text(product.name,
                                 overflow: TextOverflow.fade,
                                 style: TextStyle(
                                     color: kprimary,
                                     fontWeight: FontWeight.w900,
                                     fontSize: response.setFontSize(16))),
                           ),
-                          buildText("\$ 55", color: kprimary2, fontsize: 22.0),
+                          buildText(
+                              "\$ " +
+                                  double.parse(product.price.toString())
+                                      .toStringAsFixed(1),
+                              color: kprimary2,
+                              fontsize: 18.0),
                           SizedBox(
                             width: 8,
                           )
@@ -470,7 +501,7 @@ buildShopItem(context) {
                         SizedBox(
                           height: 2,
                         ),
-                        Text("Forevver Therm",
+                        Text(product.description,
                             overflow: TextOverflow.fade,
                             style: TextStyle(
                                 color: ksecondary,
@@ -479,31 +510,44 @@ buildShopItem(context) {
                         SizedBox(
                           height: 2,
                         ),
-                        Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              buildIconButton(
-                                  icon: Icons.remove, onpressed: () {}),
-                              SizedBox(
-                                width: 16,
-                              ),
-                              Text(
-                                "2",
-                                style: TextStyle(
-                                    color: kprimary,
-                                    fontWeight: FontWeight.w900,
-                                    fontSize: response.setFontSize(14)),
-                              ),
-                              SizedBox(
-                                width: 16,
-                              ),
-                              buildIconButton(
-                                  icon: Icons.add, onpressed: () {}),
-                            ],
-                          ),
-                        ),
+                        // Expanded(
+                        //   child: StatefulBuilder(
+                        //       builder: (ctx, s) => Row(
+                        //             mainAxisAlignment:
+                        //                 MainAxisAlignment.spaceBetween,
+                        //             mainAxisSize: MainAxisSize.min,
+                        //             children: [
+                        //               buildIconButton(
+                        //                   icon: Icons.remove,
+                        //                   onpressed: () {
+                        //                     if (product.amount == 1) return;
+                        //                     s(() {
+                        //                       product.amount--;
+                        //                     });
+                        //                   }),
+                        //               SizedBox(
+                        //                 width: 16,
+                        //               ),
+                        //               Text(
+                        //                 '${product.amount}',
+                        //                 style: TextStyle(
+                        //                     color: kprimary,
+                        //                     fontWeight: FontWeight.w900,
+                        //                     fontSize: response.setFontSize(14)),
+                        //               ),
+                        //               SizedBox(
+                        //                 width: 16,
+                        //               ),
+                        //               buildIconButton(
+                        //                   icon: Icons.add,
+                        //                   onpressed: () {
+                        //                     s(() {
+                        //                       product.amount++;
+                        //                     });
+                        //                   }),
+                        //             ],
+                        //           )),
+                        // ),
                       ],
                     ),
                   ),
@@ -519,10 +563,18 @@ buildShopItem(context) {
         child: FloatingActionButton(
           mini: true,
           backgroundColor: kdrawer,
-          elevation: 2,
-          onPressed: () {
-            Toast.show("Product added to cart successfully", context,
-                duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+          elevation: 4,
+          onPressed: () async {
+            final res = await API.addToCart(product.id);
+            if (res != false) {
+              Provider.of<AppProvider>(context, listen: false)
+                  .changeCartCount(int.parse(res['amount'].toString()));
+              Toast.show("Product added to cart successfully", context,
+                  backgroundColor: kprimary,
+                  textColor: kwhite,
+                  gravity: Toast.BOTTOM,
+                  duration: Toast.LENGTH_SHORT);
+            }
           },
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -556,7 +608,7 @@ buildText2(text, {color = ksecondary, fontsize}) {
               : response.setFontSize(15)));
 }
 
-buildOrderItem() {
+buildOrderItem(o) {
   return Card(
     margin: EdgeInsets.all(10),
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
@@ -581,7 +633,7 @@ buildOrderItem() {
                 ),
                 Expanded(
                   flex: 20,
-                  child: buildText("Mohamed Saeed", fontsize: 15),
+                  child: buildText(o['user_name'], fontsize: 15),
                 ),
               ],
             ),
@@ -599,8 +651,7 @@ buildOrderItem() {
                 ),
                 Expanded(
                   flex: 20,
-                  child: buildText("Minya Alqamh sharkia wagih abaza",
-                      fontsize: 15),
+                  child: buildText(o['user_address'], fontsize: 15),
                 ),
               ],
             ),
@@ -618,7 +669,7 @@ buildOrderItem() {
                 ),
                 Expanded(
                   flex: 20,
-                  child: buildText("+02 01017030127", fontsize: 15),
+                  child: buildText(o['user_mobile'], fontsize: 15),
                 ),
               ],
             ),
@@ -641,7 +692,10 @@ buildOrderItem() {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: List.generate(
-                          10, (index) => buildText(" 2 x food ", fontsize: 15)),
+                          o['cart_data'].length,
+                          (index) => buildText(
+                              '${o['cart_data'][index]['quantity']} x ${o['cart_data'][index]['buyable']['name']}',
+                              fontsize: 15)),
                     )),
               ],
             ),
@@ -659,7 +713,9 @@ buildOrderItem() {
                 ),
                 Expanded(
                   flex: 20,
-                  child: buildText("50", fontsize: 15),
+                  child: buildText(
+                      "\$ ${double.parse(o['total']).toStringAsFixed(1)}",
+                      fontsize: 15),
                 ),
               ],
             ),
@@ -677,7 +733,7 @@ buildOrderItem() {
                 ),
                 Expanded(
                   flex: 20,
-                  child: buildText("05/05/2021", fontsize: 15),
+                  child: buildText(o['updated_at'], fontsize: 15),
                 ),
               ],
             ),
@@ -695,7 +751,7 @@ buildOrderItem() {
                 ),
                 Expanded(
                   flex: 20,
-                  child: buildText2("pending.....  ", fontsize: 14),
+                  child: buildText2(o['status'], fontsize: 14),
                 ),
               ],
             ),
@@ -728,7 +784,11 @@ buildOrderItem() {
   );
 }
 
-buildAppBar(ontap, context, {img = 'profile.jpg'}) {
+buildAppBar(
+  ontap,
+  context,
+) {
+  var user = Provider.of<AppProvider>(context, listen: false).user;
   return Container(
     child: Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -766,7 +826,7 @@ buildAppBar(ontap, context, {img = 'profile.jpg'}) {
             SizedBox(
               height: 3,
             ),
-            Text("Mohamed Saeed",
+            Text(user['name'] ?? '',
                 softWrap: false,
                 overflow: TextOverflow.fade,
                 style: TextStyle(
@@ -784,7 +844,7 @@ buildAppBar(ontap, context, {img = 'profile.jpg'}) {
             height: response.setHeight(45),
             decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage("assets/images/$img"),
+                  image: NetworkImage(user['photo']),
                   fit: BoxFit.fill,
                 ),
                 color: kwhite,
@@ -797,6 +857,7 @@ buildAppBar(ontap, context, {img = 'profile.jpg'}) {
 }
 
 buildAppBarForPages(context, text, press, {showProfile = true}) {
+  var user = Provider.of<AppProvider>(context, listen: false).user;
   return Container(
     padding: EdgeInsets.all(16),
     child: Row(
@@ -834,7 +895,7 @@ buildAppBarForPages(context, text, press, {showProfile = true}) {
                   height: response.setHeight(45),
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage("assets/images/profile.jpg"),
+                      image: NetworkImage(user['photo']),
                       fit: BoxFit.fill,
                     ),
                     color: kwhite,
@@ -893,6 +954,7 @@ buildSearch(
 
 Widget buildDrawer(context) {
   final app = Provider.of<AppProvider>(context, listen: false);
+  var user = Provider.of<AppProvider>(context, listen: false).user;
   return Selector<AppProvider, int>(
     selector: (context, app) => app.index,
     builder: (context, i, w) => Container(
@@ -937,7 +999,7 @@ Widget buildDrawer(context) {
                               borderRadius: BorderRadius.circular(200),
                               color: kwhite,
                               image: DecorationImage(
-                                image: AssetImage("assets/images/profile.jpg"),
+                                image: NetworkImage(user['photo']),
                                 fit: BoxFit.cover,
                               )),
                         ),
@@ -947,7 +1009,7 @@ Widget buildDrawer(context) {
                       ),
                       Container(
                         width: double.infinity,
-                        child: Text('mohaed saeed',
+                        child: Text(user['name'],
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 fontSize: response.setFontSize(16),
@@ -959,7 +1021,7 @@ Widget buildDrawer(context) {
                       ),
                       Container(
                         width: double.infinity,
-                        child: Text('@mohaed',
+                        child: Text('',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 fontSize: response.setFontSize(14),
@@ -1016,8 +1078,6 @@ Widget buildDrawer(context) {
                       buildDrawerItem("Settings", 5, i, 5, () {
                         app.changeIndex(5);
                         Navigator.of(context).pop();
-
-                        goTo(context, AchieveScrean());
                       }),
                     ],
                   ),
@@ -1106,14 +1166,17 @@ Widget buildBackButton(context) {
   );
 }
 
-Widget buldinputContainer({
-  text,
-  widget,
-  hint,
-  TextEditingController controller,
-  onpressed,
-  onChange,
-}) {
+Widget buldinputContainer(
+    {text,
+    widget,
+    hint,
+    TextEditingController controller,
+    onpressed,
+    onChange,
+    validator,
+    isLoading = false,
+    phoneMaxLength = 10,
+    onCountryChanged}) {
   return Container(
     margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     decoration: BoxDecoration(
@@ -1160,18 +1223,30 @@ Widget buldinputContainer({
         Row(
           children: [
             Expanded(
-              child: widget == "phone"
+              child: /*  widget == "phone"
                   ? Padding(
                       padding: const EdgeInsets.only(left: 10.0),
                       child: IntlPhoneField(
+                        validator: (v) {
+                          if (v.trim().isEmpty || v == null) {
+                            return "please enter your phone ....";
+                          } else if (phoneMaxLength != null) {
+                            if (v.length > phoneMaxLength)
+                              return "phone must be $phoneMaxLength numbers ....";
+                            return null;
+                          }
+                          return null;
+                        },
+                        autoValidate: false,
                         controller: controller,
                         style: TextStyle(
                             color: kprimary,
                             fontSize: 20,
                             fontWeight: FontWeight.w900),
                         initialCountryCode: "EG",
+                        onCountryChanged: onCountryChanged,
+                        maxLength: phoneMaxLength,
                         keyboardType: TextInputType.phone,
-                        autoValidate: true,
                         countryCodeTextColor: kprimary,
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.all(0),
@@ -1188,21 +1263,41 @@ Widget buldinputContainer({
                         onChanged: onChange,
                       ),
                     )
-                  : widget != null
+                  : */
+                  widget != null
                       ? widget
                       : Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          child: TextField(
+                          child: TextFormField(
                             controller: controller,
                             onChanged: onChange,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator: validator != null
+                                ? validator
+                                : (String v) {
+                                    if (v.trim().isEmpty || v == null) {
+                                      return 'please enter your ${text.toLowerCase()}...';
+                                    }
+                                    return null;
+                                  },
                             cursorColor: kprimary,
                             maxLength: (text == "Weight") || (text == "Height")
                                 ? 3
+                                : (text == "Age")
+                                    ? 2
+                                    : (text == "Phone")
+                                        ? 11
+                                        : null,
+                            inputFormatters: (text == "Age")
+                                ? [FilteringTextInputFormatter.digitsOnly]
                                 : null,
-                            keyboardType:
-                                (text == "Weight") || (text == "Height")
-                                    ? TextInputType.number
-                                    : null,
+                            keyboardType: (text == "Weight") ||
+                                    (text == "Height") ||
+                                    (text == "Age") ||
+                                    (text == "Phone")
+                                ? TextInputType.number
+                                : null,
                             style: TextStyle(
                                 color: kprimary,
                                 fontSize: 20,
@@ -1218,48 +1313,52 @@ Widget buldinputContainer({
                           ),
                         ),
             ),
-            text == "Address"
+            /*      text == "Address"
                 ? Container()
-                : text == "Weight"
-                    ? Expanded(
-                        flex: 3,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Kg",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w800, fontSize: 20),
-                            ),
-                            Spacer(),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20.0),
-                              child: Image.asset(
-                                "assets/images/check.png",
-                                height: 25,
-                                width: 25,
-                                color: controller.text.isNotEmpty
-                                    ? kprimary2
-                                    : ksecondary,
-                                fit: BoxFit.fill,
-                              ),
-                            )
-                          ],
+                :  */
+            (text == "Weight") || (text == "Height")
+                ? Expanded(
+                    flex: 3,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          (text == "Weight") ? "kg" : "cm",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w800, fontSize: 20),
                         ),
-                      )
-                    : Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: Image.asset(
-                          "assets/images/check.png",
-                          height: 25,
-                          width: 25,
-                          color: controller.text.isNotEmpty
-                              ? kprimary2
-                              : ksecondary,
-                          fit: BoxFit.fill,
-                        ),
-                      )
+                        Spacer(),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Image.asset(
+                            "assets/images/check.png",
+                            height: 25,
+                            width: 25,
+                            color: controller.text.isNotEmpty
+                                ? kprimary2
+                                : ksecondary,
+                            fit: BoxFit.fill,
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                : Container(
+                    padding: EdgeInsets.symmetric(horizontal: 20.0),
+                    child: isLoading
+                        ? CircularProgressIndicator(
+                            color: kprimary,
+                          )
+                        : Image.asset(
+                            "assets/images/check.png",
+                            height: 25,
+                            width: 25,
+                            color: controller.text.isNotEmpty
+                                ? kprimary2
+                                : ksecondary,
+                            fit: BoxFit.fill,
+                          ),
+                  )
           ],
         ),
       ],

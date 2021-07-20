@@ -1,18 +1,17 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_test_app/constants/config.dart';
 import 'package:http/http.dart' as http;
 
 class API {
-  static const String _BaseUrl = 'https://64.225.65.23/api/v1';
-  static const header = <String, String>{
-    "Accept": "application/json",
-    "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+
+  static const String _BaseUrl = 'https://clean.forever-affiliate.com/api/v1';
+ 
+  static final header = <String, String>{
+    'Content-Type': 'application/json;charset=UTF-8',
+    'Accept': 'application/json'
   };
-  // static const header = <String, String>{
-  //   'Content-Type': 'application/json;charset=UTF-8',
-  //   'Accept': 'application/json'
-  // };
   // Functions For User
 
   static Future<http.Response> signupUser(user) async {
@@ -20,6 +19,7 @@ class API {
         encoding: Encoding.getByName("utf-8"),
         headers: header,
         body: json.encode(user));
+
     return res;
   }
 
@@ -49,9 +49,179 @@ class API {
   }
 
   static Future<http.Response> logout() async {
-    header.addAll({"Authorization": "Bearer " + await getValue(key: 'token')});
+    final token = jsonDecode(await getValue(key: 'token'));
+
+    header.addAll({"Authorization": 'Bearer $token'});
     final res = await http.post(Uri.parse('$_BaseUrl/users/auth/logout'),
         encoding: Encoding.getByName("utf-8"), headers: header);
+    return res;
+  }
+
+  static Future<dynamic> getAllCourses() async {
+    final token = jsonDecode(await getValue(key: 'token'));
+    header.addAll({"Authorization": 'Bearer $token'});
+    print(header);
+    final res =
+        await http.get(Uri.parse('$_BaseUrl/users/courses'), headers: header);
+    final body = utf8.decode(res.bodyBytes);
+    final parsed = json.decode(body);
+
+    print(parsed);
+    if ((res.statusCode == 200 || res.statusCode == 201) && parsed['success']) {
+      return parsed;
+    }
+    return null;
+  }
+
+  static Future<dynamic> getAllProducts() async {
+    final token = jsonDecode(await getValue(key: 'token'));
+
+    header.addAll({"Authorization": 'Bearer $token'});
+    final res =
+        await http.get(Uri.parse('$_BaseUrl/users/products'), headers: header);
+    final body = utf8.decode(res.bodyBytes);
+    final parsed = json.decode(body);
+    if ((res.statusCode == 200 || res.statusCode == 201) && parsed['success']) {
+      return parsed;
+    }
+    return null;
+  }
+
+  static Future<dynamic> getCart() async {
+    final token = jsonDecode(await getValue(key: 'token'));
+
+    header.addAll({"Authorization": 'Bearer $token'});
+    final res =
+        await http.get(Uri.parse('$_BaseUrl/users/cart'), headers: header);
+    final body = utf8.decode(res.bodyBytes);
+    final parsed = json.decode(body);
+    if ((res.statusCode == 200 || res.statusCode == 201) && parsed['success']) {
+      return parsed;
+    }
+    return null;
+  }
+
+  static Future<dynamic> increaseQtyCart(id) async {
+    final token = jsonDecode(await getValue(key: 'token'));
+
+    header.addAll({"Authorization": 'Bearer $token'});
+    final res = await http.get(
+        Uri.parse('$_BaseUrl/users/cart/increaseQty/$id'),
+        headers: header);
+    final body = utf8.decode(res.bodyBytes);
+    final parsed = json.decode(body);
+    print(parsed);
+    if ((res.statusCode == 200 || res.statusCode == 201) && parsed['success']) {
+      final item = parsed['data']['items'].firstWhere((e) => e["id"] == id);
+      print(item);
+    }
+    return null;
+  }
+
+  static Future<dynamic> addToCart(id) async {
+    final token = jsonDecode(await getValue(key: 'token'));
+
+    header.addAll({"Authorization": 'Bearer $token'});
+    final res = await http.get(Uri.parse('$_BaseUrl/users/cart/addProduct/$id'),
+        headers: header);
+    final body = utf8.decode(res.bodyBytes);
+    final parsed = json.decode(body);
+
+    if ((res.statusCode == 200 || res.statusCode == 201) && parsed['success']) {
+      return {"success": true, "amount": parsed['data']['items_count']};
+    }
+    return false;
+  }
+
+  static Future<dynamic> decreaseQtyCart(id) async {
+    final token = jsonDecode(await getValue(key: 'token'));
+
+    header.addAll({"Authorization": 'Bearer $token'});
+    final res = await http.get(
+        Uri.parse('$_BaseUrl/users/cart/decreaseQty/$id'),
+        headers: header);
+    final body = utf8.decode(res.bodyBytes);
+    final parsed = json.decode(body);
+    if ((res.statusCode == 200 || res.statusCode == 201) && parsed['success']) {
+      final item = parsed['data']['items'].firstWhere((e) => e["id"] == id);
+      print(item);
+    }
+    return null;
+  }
+
+  static Future<dynamic> removeProductFromCart(id) async {
+    final token = jsonDecode(await getValue(key: 'token'));
+
+    header.addAll({"Authorization": 'Bearer $token'});
+    final res = await http.get(
+        Uri.parse('$_BaseUrl/users/cart/removeProduct/$id'),
+        headers: header);
+    final body = utf8.decode(res.bodyBytes);
+    final parsed = json.decode(body);
+    if ((res.statusCode == 200 || res.statusCode == 201) && parsed['success']) {
+      return parsed;
+    }
+    return null;
+  }
+
+  static Future<dynamic> getOneCourse(id) async {
+    final token = jsonDecode(await getValue(key: 'token'));
+
+    header.addAll({"Authorization": 'Bearer $token'});
+    final res = await http.get(Uri.parse('$_BaseUrl/users/courses/$id'),
+        headers: header);
+    final body = utf8.decode(res.bodyBytes);
+    final parsed = json.decode(body);
+    if ((res.statusCode == 200 || res.statusCode == 201) && parsed['success']) {
+      return parsed;
+    }
+    return null;
+  }
+  static Future<dynamic> getOneCourseDays(id) async {
+    final token = jsonDecode(await getValue(key: 'token'));
+
+    header.addAll({"Authorization": 'Bearer $token'});
+    final res = await http.get(Uri.parse('$_BaseUrl/users/courses/courses_days/$id'),
+        headers: header);
+    final body = utf8.decode(res.bodyBytes);
+    final parsed = json.decode(body);
+    if ((res.statusCode == 200 || res.statusCode == 201) && parsed['success']) {
+      return parsed;
+    }
+    return null;
+  }
+
+  static Future<dynamic> getOneOrders(id) async {
+    final token = jsonDecode(await getValue(key: 'token'));
+    header.addAll({"Authorization": 'Bearer $token'});
+    final res = await http.get(Uri.parse('$_BaseUrl/users/orders/$id'),
+        headers: header);
+    final body = utf8.decode(res.bodyBytes);
+    final parsed = json.decode(body);
+    if ((res.statusCode == 200 || res.statusCode == 201) && parsed['success']) {
+      return parsed;
+    }
+    return null;
+  }
+
+  static Future<Response> updateProfile(userUpdated) async {
+    final token = jsonDecode(await getValue(key: 'token'));
+    header.addAll({"Authorization": 'Bearer $token'});
+    final formData = FormData.fromMap(userUpdated);
+    final dio = Dio();
+    dio.options = BaseOptions(headers: header);
+    final res =
+        await dio.post('$_BaseUrl/users/account/updateProfile', data: formData);
+    return res;
+  }
+
+  static Future<Response> makeOrder(body) async {
+    final token = jsonDecode(await getValue(key: 'token'));
+    header.addAll({"Authorization": 'Bearer $token'});
+    final formData = FormData.fromMap(body);
+    final dio = Dio();
+    dio.options = BaseOptions(headers: header);
+    final res = await dio.post('$_BaseUrl/users/orders', data: formData);
     return res;
   }
 }

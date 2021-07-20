@@ -1,22 +1,61 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_test_app/API.dart';
 import 'package:flutter_test_app/constants/config.dart';
 import 'package:flutter_test_app/pages/acheive.dart';
 import 'package:flutter_test_app/widgets/custum.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class TimeLineScrean extends StatefulWidget {
+  final id;
+  final start;
+  TimeLineScrean(this.id, this.start);
   @override
   _TimeLineScreanState createState() => _TimeLineScreanState();
 }
 
 class _TimeLineScreanState extends State<TimeLineScrean> {
   final scaffoldkey = GlobalKey<ScaffoldState>();
-  int press = -1;
-  var idxList = [];
+  int press;
+
+  var courseDayList = [];
+  var status = false;
+
+  getData() async {
+    courseDayList.clear();
+    final res = await API.getOneCourseDays(widget.id);
+    if (res != null) {
+      res['data'].forEach((k, v) {
+        courseDayList.add({
+          "day": "1",
+          "value": v.map((e) => {"item": e, "done": false}).toList()
+        });
+        courseDayList.add({
+          "day": "2",
+          "value": v.map((e) => {"item": e, "done": false}).toList()
+        });
+        courseDayList.add({
+          "day": "3",
+          "value": v.map((e) => {"item": e, "done": false}).toList()
+        });
+        courseDayList.add({
+          "day": "4",
+          "value": v.map((e) => {"item": e, "done": false}).toList()
+        });
+      });
+      setState(() {});
+    }
+  }
+
+  @override
+  void initState() {
+    press = widget.start ?? 0;
+    //getData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    courseDayList.length;
     return SafeArea(
       child: Scaffold(
         key: scaffoldkey,
@@ -28,144 +67,221 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
           decoration: BoxDecoration(
               gradient:
                   LinearGradient(colors: [kcolor1, Colors.grey[200], kcolor1])),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                buildAppBarForPages(
-                  context,
-                  "Clean 9",
-                  () => scaffoldkey.currentState.openDrawer(),
-                ),
-                Container(
-                  height: 80,
-                  decoration: BoxDecoration(
-                    color: kscaffoldcolor,
-                    border: Border.symmetric(
-                        horizontal: BorderSide(width: 2, color: kwhite)),
-                  ),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                        children: List.generate(
-                            10,
-                            (index) => Container(
-                                  decoration: BoxDecoration(
-                                    color: press != index || index > 3
-                                        ? kscaffoldcolor
-                                        : kprimary2,
-                                    borderRadius: (press == index && index > 3)
-                                        ? BorderRadius.only(
-                                            topRight: Radius.circular(20),
-                                            bottomRight: Radius.circular(20))
-                                        : null,
-                                  ),
-                                  child: InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        press = index;
-                                      });
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: press == index
-                                            ? kblue
-                                            : index < 5
-                                                ? kprimary2
-                                                : kscaffoldcolor,
-                                        borderRadius: press == index
-                                            ? BorderRadius.circular(20)
-                                            : null,
-                                        border: press == index
-                                            ? Border.all(
-                                                width: 2, color: kwhite)
-                                            : null,
-                                      ),
-                                      child: Center(
-                                          child: Row(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(12.0),
-                                            child: Text(
-                                              "Day\n18",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w900,
-                                                  fontSize: 16,
-                                                  color: kwhite),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ),
-                                          (press == index ||
-                                                  index == press - 1 ||
-                                                  index == 9)
-                                              ? Container()
-                                              : Container(
-                                                  height: 30,
-                                                  child: VerticalDivider(
-                                                    thickness: 2,
-                                                    color:
-                                                        kwhite.withOpacity(0.6),
-                                                  ),
-                                                )
-                                        ],
-                                      )),
-                                    ),
-                                  ),
-                                ))),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.all(20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      buildExpandedForRow(
-                          text: "20 % Complete", color: kprimary2),
-                      buildExpandedForRow(text: "6 Days Left", color: kblue)
-                    ],
-                  ),
-                ),
-                Container(
-                    margin: EdgeInsets.symmetric(horizontal: 20),
-                    child: Text(
-                      "Today",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
-                    )),
-                Container(
-                  margin: EdgeInsets.all(10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      ...List.generate(
-                          3,
-                          (index) => Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  buildRowwithindicator(
-                                      index: index,
-                                      firsttext: "Breakfast",
-                                      seconttext: "12:00 AM"),
-                                  buldcardForcourseitem(
-                                      img: "assets/images/image4.png",
-                                      title: "Breakfast",
-                                      desc: "ohhh yaa",
-                                      time: '20',
-                                      index: index),
-                                ],
-                              )),
-                    ],
-                  ),
+          child: !status
+              ? Column(
+                  children: [
+                    buildAppBarForPages(
+                      context,
+                      "Clean 9",
+                      () => scaffoldkey.currentState.openDrawer(),
+                    ),
+                    Expanded(
+                      child: Center(
+                        child: CircularProgressIndicator(color: kprimary),
+                      ),
+                    ),
+                  ],
                 )
-              ],
-            ),
-          ),
+              : courseDayList.length == 0
+                  ? Column(
+                      children: [
+                        buildAppBarForPages(
+                          context,
+                          "Clean 9",
+                          () => scaffoldkey.currentState.openDrawer(),
+                        ),
+                        Expanded(
+                          child: Center(
+                            child: buildText("No Data Found ...."),
+                          ),
+                        ),
+                      ],
+                    )
+                  : SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          buildAppBarForPages(
+                            context,
+                            "Clean 9",
+                            () => scaffoldkey.currentState.openDrawer(),
+                          ),
+                          Container(
+                            height: 80,
+                            decoration: BoxDecoration(
+                              color: /* kprimary2, */ kscaffoldcolor,
+                              borderRadius: BorderRadius.circular(20),
+                              // border: Border.symmetric(
+                              //     horizontal: BorderSide(width: 2, color: kwhite)),
+                            ),
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                  children: List.generate(
+                                      courseDayList.length,
+                                      (index) => Container(
+                                            decoration: BoxDecoration(
+                                                color: /* press != index || index > 3
+                                        ? kscaffoldcolor
+                                        : */
+                                                    press > index
+                                                        ? kscaffoldcolor
+                                                        : kprimary2,
+                                                borderRadius: /*  (press ==
+                                            index /*  && index > 3 */)
+                                        ? */
+                                                    BorderRadius.only(
+                                                        topRight:
+                                                            Radius.circular(20),
+                                                        bottomRight:
+                                                            Radius.circular(
+                                                                20))),
+                                            child: InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  press = index;
+                                                });
+                                              },
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  color: press == index
+                                                      ? kblue
+                                                      /* : index < 5
+                                                ? kprimary2 */
+                                                      : index > press
+                                                          ? kscaffoldcolor
+                                                          : kprimary2, //kscaffoldcolor,
+                                                  borderRadius: press == index
+                                                      ? BorderRadius.circular(
+                                                          20)
+                                                      : index ==
+                                                              courseDayList
+                                                                      .length -
+                                                                  1
+                                                          ? BorderRadius.only(
+                                                              topRight: Radius
+                                                                  .circular(20),
+                                                              bottomRight:
+                                                                  Radius
+                                                                      .circular(
+                                                                          20))
+                                                          : null,
+                                                  border: press == index
+                                                      ? Border.all(
+                                                          width: 2,
+                                                          color: kwhite)
+                                                      : null,
+                                                ),
+                                                child: Center(
+                                                    child: Row(
+                                                  children: [
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              12.0),
+                                                      child: Text(
+                                                        "Day\n${courseDayList[index]['day']}",
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w900,
+                                                            fontSize: 16,
+                                                            color: kwhite),
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                      ),
+                                                    ),
+                                                    (press == index ||
+                                                            index ==
+                                                                press - 1 ||
+                                                            index ==
+                                                                courseDayList
+                                                                        .length -
+                                                                    1)
+                                                        ? Container()
+                                                        : Container(
+                                                            height: 30,
+                                                            child:
+                                                                VerticalDivider(
+                                                              thickness: 2,
+                                                              color: kwhite
+                                                                  .withOpacity(
+                                                                      0.6),
+                                                            ),
+                                                          )
+                                                  ],
+                                                )),
+                                              ),
+                                            ),
+                                          ))),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.all(20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                buildExpandedForRow(
+                                    text:
+                                        "${(((press) / courseDayList.length) * 100).toStringAsFixed(0)} % Complete",
+                                    color: kprimary2),
+                                buildExpandedForRow(
+                                    text: "$press Days Left", color: kblue)
+                              ],
+                            ),
+                          ),
+                          Container(
+                              margin: EdgeInsets.symmetric(horizontal: 20),
+                              child: Text(
+                                "Today",
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.w900),
+                              )),
+                          Container(
+                            margin: EdgeInsets.all(10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                ...List.generate(
+                                    courseDayList[press]['value'].length, (i) {
+                                  final m =
+                                      courseDayList[press]['value'][i]['item'];
+                                  return Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      buildRowwithindicator(
+                                          index: i,
+                                          firsttext: getMealName(int.parse(
+                                              m['time'].substring(0, 2))),
+                                          seconttext:
+                                              "${m['time'].substring(0, 5)} AM"),
+                                      buldcardForcourseitem(
+                                          img: m['photo'],
+                                          title: m['name'],
+                                          desc: m['description'],
+                                          index: i),
+                                    ],
+                                  );
+                                }),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
         ),
       ),
     );
+  }
+
+  getMealName(num) {
+    if (num > 1)
+      return "Launch";
+    else if (num < 1) return "BreakFast";
+    return "Dinner";
   }
 
   Widget buildRowforTimer({text}) {
@@ -195,7 +311,7 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
     return GestureDetector(
       onTap: ontap,
       child: Padding(
-        padding: const EdgeInsets.only(bottom: 10.0),
+        padding: const EdgeInsets.only(bottom: 16.0, top: 16.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -236,12 +352,16 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
           height: 25,
           decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: idxList.contains(index) ? kgreen : kbackcolor),
+              color: courseDayList[press]['value'][index]['done']
+                  ? kgreen
+                  : kbackcolor),
           child: Container(
             margin: EdgeInsets.all(6),
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: idxList.contains(index) ? kgreen : kcolor1),
+                color: courseDayList[press]['value'][index]['done']
+                    ? kgreen
+                    : kcolor1),
           ),
         ),
         Container(
@@ -272,37 +392,44 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
         alignment: TimelineAlign.start,
         hasIndicator: false,
         beforeLineStyle: LineStyle(
-            color:
-                idxList.contains(index) ? kgreen : ksecondary.withOpacity(0.5),
-            thickness: idxList.contains(index) ? 5 : 3),
+            color: courseDayList[press]['value'][index]['done']
+                ? kgreen
+                : ksecondary.withOpacity(0.5),
+            thickness: courseDayList[press]['value'][index]['done'] ? 5 : 3),
         endChild: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ...List.generate(
-                4,
-                (index) => Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        buildItemForCourse(img, title, desc, index),
-                        time != null
-                            ? buildRowforTimer(text: time.toString())
-                            : Container(),
-                      ],
-                    )),
+            /*  ...List.generate(
+                1,
+                (index) =>  */
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                buildItemForCourse(img, title, desc, index),
+                time != null
+                    ? buildRowforTimer(text: time.toString())
+                    : Container(),
+              ],
+            ),
+            // ),
             buildDonerow(
-                isDone: idxList.contains(index),
+                isDone: courseDayList[press]['value'][index]['done'],
                 ontap: () {
-                  setState(() {
-                    idxList.contains(index)
-                        ? idxList.remove(index)
-                        : idxList.add(index);
-                  });
-                  Timer.periodic(Duration(seconds: 1), (t) {
-                    t.cancel();
-                    goTo(context, AchieveScrean());
-                  });
+                  courseDayList[press]['value'][index]['done'] =
+                      !courseDayList[press]['value'][index]['done'];
+                  if (index == courseDayList[press]['value'].length - 1) {
+                    return goTo(
+                        context,
+                        AchieveScrean(
+                            (((press + 1) / courseDayList.length) * 100)
+                                .toStringAsFixed(0),
+                            widget.id,
+                            index));
+                  }
+
+                  setState(() {});
                 })
           ],
         ),
@@ -330,36 +457,37 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           buildrowForCousritem(img, title, desc),
-          ...index > 1
-              ? List.generate(
-                  3,
-                  (index) => Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: 125),
-                        child: index > 1
-                            ? Text(
-                                "Or",
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    color: kprimary2,
-                                    fontWeight: FontWeight.w900),
-                              )
-                            : Container(
-                                height: 23,
-                                padding: const EdgeInsets.only(bottom: 8.0),
-                                child: Image.asset(
-                                  "assets/images/plus.png",
-                                ),
-                              ),
-                      ),
-                      buildrowForCousritem(img, title, desc),
-                    ],
-                  ),
-                )
-              : []
+
+          // ...index > 1
+          //     ? List.generate(
+          //         3,
+          //         (index) => Column(
+          //           mainAxisAlignment: MainAxisAlignment.start,
+          //           crossAxisAlignment: CrossAxisAlignment.start,
+          //           children: [
+          //             Padding(
+          //               padding: EdgeInsets.only(left: 125),
+          //               child: index > 1
+          //                   ? Text(
+          //                       "Or",
+          //                       style: TextStyle(
+          //                           fontSize: 16,
+          //                           color: kprimary2,
+          //                           fontWeight: FontWeight.w900),
+          //                     )
+          //                   : Container(
+          //                       height: 23,
+          //                       padding: const EdgeInsets.only(bottom: 8.0),
+          //                       child: Image.asset(
+          //                         "assets/images/plus.png",
+          //                       ),
+          //                     ),
+          //             ),
+          //             buildrowForCousritem(img, title, desc),
+          //           ],
+          //         ),
+          //       )
+          //     : []
         ],
       ),
     );
@@ -376,7 +504,7 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               color: kcolor1.withOpacity(0.5)),
-          child: Image.asset(img),
+          child: Image.network(img),
         ),
         SizedBox(
           width: 15,

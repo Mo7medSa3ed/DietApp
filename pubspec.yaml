@@ -50,7 +50,8 @@ dependencies:
   shared_preferences:
   height_slider:
   weight_slider:
-
+  dio:
+  image_picker:
 dev_dependencies:
   flutter_test:
     sdk: flutter

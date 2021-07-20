@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test_app/constants/config.dart';
 import 'package:flutter_test_app/pages/login.dart';
+import 'package:flutter_test_app/pages/splashScrean.dart';
 import 'package:flutter_test_app/provider/app_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:response/response.dart';
@@ -32,28 +33,31 @@ class MyApp extends StatelessWidget {
         child: GestureDetector(
           onTap: () => FocusScope.of(context).requestFocus(new FocusNode()),
           child: MaterialApp(
-                title: 'Diet App',
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              fontFamily: 'Nexa',
-              primaryColor: kprimary,
-              splashColor: kprimary,
-              accentColor: kprimary,
-              inputDecorationTheme: InputDecorationTheme(
-                  labelStyle: TextStyle(
-                      color: kprimary,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700),
-                  hintStyle: TextStyle(fontSize: 14)),
-              textSelectionTheme: TextSelectionThemeData(
-                selectionHandleColor: kprimary,
-                cursorColor: kprimary,
-                //selectionColor: kprimary,
+              title: 'Diet App',
+              debugShowCheckedModeBanner: false,
+              theme: ThemeData(
+                fontFamily: 'Nexa',
+                primaryColor: kprimary,
+                splashColor: kprimary,
+                // ignore: deprecated_member_use
+                accentColor: kprimary,
+                inputDecorationTheme: InputDecorationTheme(
+                    labelStyle: TextStyle(
+                        color: kprimary,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700),
+                    hintStyle: TextStyle(fontSize: 14)),
+                textSelectionTheme: TextSelectionThemeData(
+                  selectionHandleColor: kprimary,
+                  cursorColor: kprimary,
+                ),
+                scaffoldBackgroundColor: kcolor1,
+                colorScheme:
+                    ColorScheme.fromSwatch().copyWith(secondary: kprimary),
               ),
-              scaffoldBackgroundColor: kcolor1,
-            ),
-            home: LoginScrean(),
-          ),
+              home:SplashScrean()
+                 
+              ),
         ),
       ),
     );

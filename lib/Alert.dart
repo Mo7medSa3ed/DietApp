@@ -16,8 +16,8 @@ class Alert {
         barrierDismissible: true,
         context: ctx,
         type: CoolAlertType.error,
-        text: "Oops...",
-        title: title);
+        title: "Oops...",
+        text: title);
   }
 
   static loadingAlert({ctx}) {
