@@ -22,7 +22,7 @@ class _CartScreanState extends State<CartScrean> {
     if (res != null) {
       status = res['success'];
       cartList = res['data']['items']
-          .map((e) => ProductModel.fromJsonForCart(e['buyable'], e['quantity']))
+          .map((e) => ProductModel.fromJsonForCart(e['buyable'], e['quantity'] ,res['data']['id']))
           .toList();
     }
     setState(() {});
@@ -91,14 +91,14 @@ class _CartScreanState extends State<CartScrean> {
                                   itemBuilder: (c, i) =>
                                       buildCartItem(cartList[i], () async {
                                     final res = await API
-                                        .removeProductFromCart(cartList[i].id);
+                                        .removeProductFromCart(cartList[i].cartId);
                                     if (res != null && res['success']) {
                                       setState(() {
                                         cartList = res['data']['items']
                                             .map((e) =>
                                                 ProductModel.fromJsonForCart(
                                                     e['buyable'],
-                                                    e['quantity']))
+                                                    e['quantity'], res['data']['id'] ))
                                             .toList();
                                       });
                                     }

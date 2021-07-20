@@ -325,8 +325,8 @@ buildCartItem(ProductModel p, ondelete) {
                                         icon: Icons.remove,
                                         onpressed: () async {
                                           if (p.amount == 1) return;
-                                          final amount =
-                                              await API.decreaseQtyCart(p.id);
+                                          final amount = await API
+                                              .decreaseQtyCart(p.cartId);
                                           s(() {
                                             p.amount = amount ?? 0;
                                           });
@@ -347,8 +347,8 @@ buildCartItem(ProductModel p, ondelete) {
                                     buildIconButton(
                                         icon: Icons.add,
                                         onpressed: () async {
-                                          final amount =
-                                              await API.increaseQtyCart(p.id);
+                                          final amount = await API
+                                              .increaseQtyCart(p.cartId);
                                           s(() {
                                             p.amount = amount ?? 0;
                                           });
