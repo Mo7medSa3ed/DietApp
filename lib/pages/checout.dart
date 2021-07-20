@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test_app/API.dart';
 import 'package:flutter_test_app/Alert.dart';
@@ -190,8 +189,8 @@ class _CheckoutScreanState extends State<CheckoutScrean> {
       "user_mobile": (_phone.text.trim().isEmpty)
           ? user['mobile'].toString().replaceAll("+2", '')
           : "+2" + _phone.text.trim(),
-      "user_country": addresses.countryName ?? '',
-      "user_city": addresses.subAdminArea ?? "",
+      "user_country": addresses != null ? addresses.countryName : 'Egypt',
+      "user_city": addresses != null ? addresses.subAdminArea : "Minya",
     };
     final res = await API.makeOrder(body);
     Navigator.of(context).pop();

@@ -38,6 +38,8 @@ class MyApp extends StatelessWidget {
                 fontFamily: 'Nexa',
                 primaryColor: kprimary,
                 splashColor: kprimary,
+                indicatorColor: kprimary,
+
                 // ignore: deprecated_member_use
                 accentColor: kprimary,
                 inputDecorationTheme: InputDecorationTheme(
@@ -54,9 +56,7 @@ class MyApp extends StatelessWidget {
                 colorScheme:
                     ColorScheme.fromSwatch().copyWith(secondary: kprimary),
               ),
-              home:SplashScrean()
-                 
-              ),
+              home: SplashScrean()),
         ),
       ),
     );

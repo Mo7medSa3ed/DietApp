@@ -257,7 +257,7 @@ class _AuthScreanState extends State<AuthScrean> {
                                           groupValue: isMale,
                                           value: 'male',
                                           onChanged: (v) {
-                                            print(v);
+                                          
                                             isMale = v;
                                             setState(() {});
                                           },

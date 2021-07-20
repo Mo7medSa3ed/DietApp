@@ -17,15 +17,19 @@ class _CartScreanState extends State<CartScrean> {
   var status = false;
 
   getData() async {
+    cartList.clear();
     final res = await API.getCart();
-    
     if (res != null) {
+      print(res);
       status = res['success'];
-      cartList = res['data']['items']
-          .map((e) => ProductModel.fromJsonForCart(e['buyable'], e['quantity'] ,res['data']['id']))
-          .toList();
+      if (res['data']['items'].length > 0) {
+        cartList = res['data']['items']
+            .map((e) => ProductModel.fromJsonForCart(
+                e['buyable'], e['quantity'], e['id']))
+            .toList();
+      }
+      setState(() {});
     }
-    setState(() {});
   }
 
   @override
@@ -63,11 +67,14 @@ class _CartScreanState extends State<CartScrean> {
                         )
                       : Expanded(
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 16.0),
                                 child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     SizedBox(
                                       height: response.setHeight(5),
@@ -86,24 +93,30 @@ class _CartScreanState extends State<CartScrean> {
                                 ),
                               ),
                               Expanded(
-                                child: ListView.builder(
-                                  padding: EdgeInsets.only(left: 16, right: 8),
-                                  itemBuilder: (c, i) =>
-                                      buildCartItem(cartList[i], () async {
-                                    final res = await API
-                                        .removeProductFromCart(cartList[i].cartId);
-                                    if (res != null && res['success']) {
-                                      setState(() {
-                                        cartList = res['data']['items']
-                                            .map((e) =>
-                                                ProductModel.fromJsonForCart(
-                                                    e['buyable'],
-                                                    e['quantity'], res['data']['id'] ))
-                                            .toList();
-                                      });
-                                    }
-                                  }),
-                                  itemCount: cartList.length,
+                                child: RefreshIndicator(
+                                  onRefresh: () async => await getData(),
+                                  child: ListView.builder(
+                                    padding:
+                                        EdgeInsets.only(left: 16, right: 8),
+                                    itemBuilder: (c, i) =>
+                                        buildCartItem(cartList[i], () async {
+                                      final res =
+                                          await API.removeProductFromCart(
+                                              cartList[i].cartId);
+                                      if (res != null && res['success']) {
+                                        setState(() {
+                                          cartList = res['data']['items']
+                                              .map((e) =>
+                                                  ProductModel.fromJsonForCart(
+                                                      e['buyable'],
+                                                      e['quantity'],
+                                                      e['id']))
+                                              .toList();
+                                        });
+                                      }
+                                    }),
+                                    itemCount: cartList.length,
+                                  ),
                                 ),
                               ),
                             ],
@@ -139,10 +152,12 @@ class _CartScreanState extends State<CartScrean> {
                     SizedBox(height: 8),
                     buildFillElevatedButton(
                         text: 'Checkout',
-                         bgcolor:cartList.length==0? Colors.grey:kprimary2,
+                        bgcolor: cartList.length == 0 ? Colors.grey : kprimary2,
                         onpressed: () {
-                          if(cartList.length==0)return;
-                          goTo(context, CheckoutScrean());
+                          if (cartList.length == 0) return;
+                          goTo(context, CheckoutScrean(), then: (v) async {
+                            await getData();
+                          });
                         })
                   ],
                 ),

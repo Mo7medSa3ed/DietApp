@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test_app/pages/map.dart';
 import 'package:flutter_test_app/widgets/custum.dart';
@@ -34,10 +36,21 @@ Future<dynamic> getValue({key}) async {
   final value = prfs.get(key);
   return value;
 }
+
 Future<dynamic> clear() async {
   SharedPreferences prfs = await SharedPreferences.getInstance();
   prfs.clear();
   return true;
+}
+
+Future<dynamic> getHeader() async {
+  final token = jsonDecode(await getValue(key: 'token'));
+  final header = <String, String>{
+    'Content-Type': 'application/json;charset=UTF-8',
+    'Accept': 'application/json',
+    'Authorization': 'Bearer $token'
+  };
+  return header;
 }
 
 Future<dynamic> getCurrantaddress() async {

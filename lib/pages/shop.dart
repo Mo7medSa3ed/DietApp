@@ -20,11 +20,14 @@ class _ShopScreanState extends State<ShopScrean> {
   var status = false;
 
   getData() async {
+    products.clear();
     final res = await API.getAllProducts();
 
     if (res != null) {
       status = res['success'];
-      products = res['data'].map((e) => ProductModel.fromJson(e)).toList();
+      if (res['data'].length > 0) {
+        products = res['data'].map((e) => ProductModel.fromJson(e)).toList();
+      }
     }
     final response = await API.getCart();
 
@@ -174,7 +177,16 @@ class _ShopScreanState extends State<ShopScrean> {
                     buildIconElevatedButton(
                         icon: Image.asset("assets/images/cart.png"),
                         label: 'Shopping Cart',
-                        onpressed: () => goTo(context, CartScrean()))
+                        onpressed: () =>
+                            goTo(context, CartScrean(), then: (v) async {
+                              final response = await API.getCart();
+                              if (response != null) {
+                                Provider.of<AppProvider>(context, listen: false)
+                                    .changeCartCount(int.parse(response['data']
+                                            ['items_count']
+                                        .toString()));
+                              }
+                            }))
                   ],
                 ),
               )

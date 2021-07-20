@@ -243,6 +243,7 @@ buildDialogforNotification(
 }
 
 buildCartItem(ProductModel p, ondelete) {
+ 
   return Container(
     margin: EdgeInsets.only(bottom: 16),
     child: Row(
@@ -1136,8 +1137,10 @@ Widget buildDrawerItem(text, index, currant, icon, onTap) {
   );
 }
 
-goTo(context, page) {
-  Navigator.of(context).push(MaterialPageRoute(builder: (_) => page));
+goTo(context, page, {then}) {
+  Navigator.of(context)
+      .push(MaterialPageRoute(builder: (_) => page))
+      .then(then ?? (v) {});
 }
 
 goToWithReplace(context, page) {

@@ -18,10 +18,8 @@ class _SplashScreanState extends State<SplashScrean> {
   @override
   void initState() {
     super.initState();
-    final d = DateTime.now();
-    if (d.day == 20 && d.month == 7 && d.year == 2021) {
-      Future.delayed(Duration(seconds: 3)).then((t) => getData());
-    }
+
+    getData();
   }
 
   getData() async {
@@ -50,8 +48,8 @@ class _SplashScreanState extends State<SplashScrean> {
                   children: [
                     SvgPicture.asset(
                       "assets/images/diet.svg",
-                      width: MediaQuery.of(context).size.width*0.2,
-                      height: MediaQuery.of(context).size.height*0.2,
+                      width: MediaQuery.of(context).size.width * 0.2,
+                      height: MediaQuery.of(context).size.height * 0.2,
                     ),
                     SizedBox(
                       height: 30,
