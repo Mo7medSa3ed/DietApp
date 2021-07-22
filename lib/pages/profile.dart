@@ -36,8 +36,8 @@ class _ProfileScreanState extends State<ProfileScrean> {
                     () => scaffoldkey.currentState.openDrawer(),
                     showProfile: false),
                 Container(
-                    width: 160,
-                    height: 160,
+                    width: 150,
+                    height: 150,
                     padding: EdgeInsets.all(6),
                     decoration: BoxDecoration(
                       boxShadow: [
@@ -94,13 +94,13 @@ class _ProfileScreanState extends State<ProfileScrean> {
                             '${user['gender'][0].toUpperCase()}${user['gender'].substring(1)}',
                       )
                     : Container(),
-                user['height'] != null
+                (user['height'] != null&&user['height'] != 0  )
                     ? buildContainerForPRoileData(
                         title: "Height",
                         subtitle: "${user['height']} cm",
                       )
                     : Container(),
-                user['weight'] != null
+                (user['weight'] != null&& user['weight'] != 0)
                     ? buildContainerForPRoileData(
                         title: "Weight",
                         subtitle: "${user['weight']} KG",
@@ -145,7 +145,10 @@ class _ProfileScreanState extends State<ProfileScrean> {
   Widget buildContainerForPRoileData(
       {title, subtitle, last = false, first = false}) {
     return Container(
+
+      width: double.infinity,
       margin: EdgeInsets.symmetric(horizontal: 32, vertical: 1.5),
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
           color: Colors.white24,
           borderRadius: first
@@ -156,18 +159,22 @@ class _ProfileScreanState extends State<ProfileScrean> {
                       bottomLeft: Radius.circular(15),
                       bottomRight: Radius.circular(15))
                   : null),
-      child: ListTile(
-        title: Text(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children:[
+     Text(
           title,
           style: TextStyle(
-              color: kprimary, fontSize: 20, fontWeight: FontWeight.w900),
+              color: kprimary, fontSize: 18, fontWeight: FontWeight.w900),
         ),
-        subtitle: Text(
+        Text(
           subtitle,
           style: TextStyle(
-              color: kprimary, fontSize: 18, fontWeight: FontWeight.w300),
+              color: kprimary, fontSize: 16, fontWeight: FontWeight.w300),
         ),
-      ),
+        ]),
     );
   }
 }

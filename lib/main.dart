@@ -53,8 +53,6 @@ class MyApp extends StatelessWidget {
                   cursorColor: kprimary,
                 ),
                 scaffoldBackgroundColor: kcolor1,
-                colorScheme:
-                    ColorScheme.fromSwatch().copyWith(secondary: kprimary),
               ),
               home: SplashScrean()),
         ),

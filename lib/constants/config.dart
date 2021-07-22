@@ -25,7 +25,8 @@ const kblue = Color(0xff3f4075);
 const APIKEY = "AIzaSyDXgbuvH4h_A7OkEbqAucUKQSLUfJs8i2Y";
 const img =
     "https://digitaldefynd.com/wp-content/uploads/2020/04/Best-Food-Styling-course-tutorial-class-certification-training-online-1024x625.jpg";
-
+const errorMsg =
+    "Something went wrong...\nplease send correct data or check network status!!";
 setValue({key, value}) async {
   SharedPreferences prfs = await SharedPreferences.getInstance();
   prfs.setString(key, value);
@@ -44,7 +45,8 @@ Future<dynamic> clear() async {
 }
 
 Future<dynamic> getHeader() async {
-  final token = jsonDecode(await getValue(key: 'token'));
+  final res = await getValue(key: 'token');
+  final token = res != null ? jsonDecode(res) : '';
   final header = <String, String>{
     'Content-Type': 'application/json;charset=UTF-8',
     'Accept': 'application/json',

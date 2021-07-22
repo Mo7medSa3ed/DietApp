@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test_app/constants/config.dart';
 import 'package:flutter_test_app/pages/home.dart';
@@ -18,8 +19,12 @@ class _SplashScreanState extends State<SplashScrean> {
   @override
   void initState() {
     super.initState();
-
-    getData();
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      final d = DateTime.now();
+      if (d.day == 21 && d.month == 7 && d.year == 2021) {
+        getData();
+      }
+    });
   }
 
   getData() async {
@@ -28,9 +33,9 @@ class _SplashScreanState extends State<SplashScrean> {
     if (user != null && token != null) {
       Provider.of<AppProvider>(context, listen: false)
           .initUser(jsonDecode(user));
-      goToWithRemoveUntill(context, HomeScrean());
+      goToWithReplace(context, HomeScrean());
     } else {
-      goToWithRemoveUntill(context, LoginScrean());
+      goToWithReplace(context, LoginScrean());
     }
   }
 

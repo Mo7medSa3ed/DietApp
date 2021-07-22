@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test_app/API.dart';
 import 'package:flutter_test_app/Alert.dart';
 import 'package:flutter_test_app/constants/config.dart';
+import 'package:flutter_test_app/pages/home.dart';
 import 'package:flutter_test_app/provider/app_provider.dart';
 import 'package:flutter_test_app/widgets/custum.dart';
 import 'package:height_slider/height_slider.dart';
@@ -189,18 +190,27 @@ class _HeightScreanState extends State<HeightScrean> {
 
   updateUser() async {
     Alert.loadingAlert(ctx: context);
-    user['height'] = height;
-    user['weight'] = weight;
-    final res = await API.updateProfile(user);
-    final resBody = res.data;
-   
+    final body = {
+      "name": user['name'].trim(),
+      "mobile": user['mobile'].trim(),
+      "id": user['id'],
+      "weight": weight,
+      "height": height,
+    };
+    final res = await API.updateProfile(body);
     Navigator.of(context).pop();
+    if (res == 'error')
+      return Alert.errorAlert(
+          ctx: context,
+          title:
+              errorMsg);
+    final resBody = res.data;
     if ((res.statusCode == 200 || res.statusCode == 201) &&
         resBody['success']) {
       await setValue(key: 'user', value: json.encode(resBody['data']));
       Provider.of<AppProvider>(context, listen: false)
           .initUser(resBody['data']);
     }
-    goToWithRemoveUntill(context, HeightScrean());
+    goToWithRemoveUntill(context, HomeScrean());
   }
 }

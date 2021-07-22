@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test_app/API.dart';
+import 'package:flutter_test_app/Alert.dart';
 import 'package:flutter_test_app/constants/config.dart';
 import 'package:flutter_test_app/pages/cart.dart';
 // ignore: unused_import
@@ -24,6 +25,11 @@ class _CouresScreanState extends State<CouresScrean> {
         .user['course_recommended'];
 
     final res = await API.getOneCourse(id);
+    if (res == 'error')
+      return Alert.errorAlert(
+          ctx: context,
+          title:
+              errorMsg);
     if (res != null) {
       status = res['success'];
       course = res['data'];
@@ -69,6 +75,7 @@ class _CouresScreanState extends State<CouresScrean> {
                         )
                       : Expanded(
                           child: ListView(
+                               physics: BouncingScrollPhysics(),
                             children: [
                               Container(
                                 height: response.screenHeight * 0.23 + 5,
@@ -98,8 +105,8 @@ class _CouresScreanState extends State<CouresScrean> {
                                     Positioned(
                                         right: 25,
                                         left: 25,
-                                        bottom: -10,
-                                        top: 60,
+                                        bottom: 0,
+                                        top: 0,
                                         child: Container(
                                           width: double.infinity,
                                           height: response.screenHeight * 0.23,
@@ -115,13 +122,14 @@ class _CouresScreanState extends State<CouresScrean> {
                                       alignment: Alignment.centerRight,
                                       child: Image.asset(
                                         "assets/images/curve.png",
+                                        height: 110,
                                       ),
                                     ),
                                     Align(
                                       alignment: Alignment.centerRight,
                                       child: Padding(
                                         padding:
-                                            const EdgeInsets.only(right: 12.0),
+                                            const EdgeInsets.only(right: 4.0),
                                         child: Text(
                                           "${course['days']} Days",
                                           style: TextStyle(
@@ -190,6 +198,7 @@ class _CouresScreanState extends State<CouresScrean> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     FloatingActionButton(
+                      heroTag: "btn3",
                       backgroundColor: kdrawer,
                       onPressed: () => goTo(context, CartScrean()),
                       child: Image.asset("assets/images/cart.png"),

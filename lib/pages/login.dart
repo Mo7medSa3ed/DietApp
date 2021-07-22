@@ -80,6 +80,7 @@ class _LoginScreanState extends State<LoginScrean>
     return SafeArea(
         child: Scaffold(
             body: ListView(
+                 physics: BouncingScrollPhysics(),
       children: [
         Container(
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 50),
@@ -192,7 +193,7 @@ class _LoginScreanState extends State<LoginScrean>
                   borderRadius: BorderRadius.circular(20)),
               child: Container(
                 width: response.screenWidth * 0.9,
-                padding: EdgeInsets.symmetric(vertical: 8),
+                padding: EdgeInsets.symmetric(vertical: 2),
                 child: Form(
                   key: _controller.value > 0.0 ? formKey : formKey2,
                   child: Column(
@@ -220,7 +221,7 @@ class _LoginScreanState extends State<LoginScrean>
                                 controller: passController,
                                 widget: Padding(
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0),
+                                      horizontal: 10.0),
                                   child: TextFormField(
                                     controller: passController,
                                     validator: (String v) {
@@ -236,7 +237,7 @@ class _LoginScreanState extends State<LoginScrean>
                                     cursorColor: kprimary,
                                     style: TextStyle(
                                         color: kprimary,
-                                        fontSize: 20,
+                                        fontSize: 18,
                                         fontWeight: FontWeight.w900),
                                     decoration: InputDecoration(
                                         suffixIcon: IconButton(
@@ -253,7 +254,7 @@ class _LoginScreanState extends State<LoginScrean>
                                             }),
                                         hintStyle: TextStyle(
                                             color: ksecondary,
-                                            fontSize: 18,
+                                            fontSize: 16,
                                             fontWeight: FontWeight.w700),
                                         border: InputBorder.none,
                                         hintText: "enter your password ..."),
@@ -338,7 +339,7 @@ class _LoginScreanState extends State<LoginScrean>
                                       },
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(
-                                            horizontal: 20.0, vertical: 16),
+                                            horizontal: 10.0, vertical: 16),
                                         child: Text(
                                             selectedDate != null
                                                 ? DateFormat('dd/MM/yyyy')
@@ -353,8 +354,8 @@ class _LoginScreanState extends State<LoginScrean>
                                                     ? FontWeight.w900
                                                     : FontWeight.w600,
                                                 fontSize: selectedDate != null
-                                                    ? 20
-                                                    : 18)),
+                                                    ? 18
+                                                    : 16)),
                                       )),
                                   controller: TextEditingController(text: '')),
                               buldinputContainer(
@@ -362,7 +363,7 @@ class _LoginScreanState extends State<LoginScrean>
                                 controller: genderController,
                                 widget: Padding(
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 20),
+                                      horizontal: 10),
                                   child: DropdownSearch<String>(
                                       searchBoxDecoration: InputDecoration(
                                         border: InputBorder.none,
@@ -377,7 +378,7 @@ class _LoginScreanState extends State<LoginScrean>
                                             selectedItem,
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w900,
-                                                fontSize: 20),
+                                                fontSize: 18),
                                           ),
                                       items: ['Male', 'Female'],
                                       popupBackgroundColor: kcolor1,
@@ -402,8 +403,10 @@ class _LoginScreanState extends State<LoginScrean>
                                 controller: passController,
                                 widget: Padding(
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0),
+                                      horizontal: 10.0),
                                   child: TextFormField(
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
                                     controller: passController,
                                     onChanged: (v) {
                                       setState(() {});
@@ -421,7 +424,7 @@ class _LoginScreanState extends State<LoginScrean>
                                     cursorColor: kprimary,
                                     style: TextStyle(
                                         color: kprimary,
-                                        fontSize: 20,
+                                        fontSize: 18,
                                         fontWeight: FontWeight.w900),
                                     decoration: InputDecoration(
                                         suffixIcon: IconButton(
@@ -438,7 +441,7 @@ class _LoginScreanState extends State<LoginScrean>
                                             }),
                                         hintStyle: TextStyle(
                                             color: ksecondary,
-                                            fontSize: 18,
+                                            fontSize: 16,
                                             fontWeight: FontWeight.w700),
                                         border: InputBorder.none,
                                         hintText: "enter your password ..."),
@@ -450,7 +453,7 @@ class _LoginScreanState extends State<LoginScrean>
                                 controller: confirController,
                                 widget: Padding(
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0),
+                                      horizontal: 10.0),
                                   child: TextFormField(
                                     autovalidateMode:
                                         AutovalidateMode.onUserInteraction,
@@ -472,7 +475,7 @@ class _LoginScreanState extends State<LoginScrean>
                                     cursorColor: kprimary,
                                     style: TextStyle(
                                         color: kprimary,
-                                        fontSize: 20,
+                                        fontSize: 18,
                                         fontWeight: FontWeight.w900),
                                     decoration: InputDecoration(
                                         suffixIcon: IconButton(
@@ -490,7 +493,7 @@ class _LoginScreanState extends State<LoginScrean>
                                             }),
                                         hintStyle: TextStyle(
                                             color: ksecondary,
-                                            fontSize: 18,
+                                            fontSize: 16,
                                             fontWeight: FontWeight.w700),
                                         border: InputBorder.none,
                                         hintText:
@@ -525,6 +528,7 @@ class _LoginScreanState extends State<LoginScrean>
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: FloatingActionButton(
+                heroTag: "btn4",
                 elevation: 8,
                 backgroundColor: kwhite,
                 onPressed: () async {
@@ -559,14 +563,20 @@ class _LoginScreanState extends State<LoginScrean>
       "mobile": "+2" + phoneController.text,
       "password": passController.text,
       "gender": genderController.text.toLowerCase(),
-      "birth_date": DateFormat('dd/MM/yyyy').format(selectedDate).toString(),
+      "birth_date": selectedDate.toString(),
       "location": locationController.text,
     };
 
     final res = await API.signupUser(body);
+    Navigator.of(context).pop(); 
+    if (res == 'error')
+      return Alert.errorAlert(
+          ctx: context,
+          title:
+              errorMsg);
     final resBody = json.decode(res.body);
-   
-    Navigator.of(context).pop();
+ 
+
     if ((res.statusCode == 200 || res.statusCode == 201) &&
         resBody['success']) {
       await setValue(key: 'user', value: json.encode(resBody['data']));
@@ -574,9 +584,9 @@ class _LoginScreanState extends State<LoginScrean>
           .initUser(resBody['data']);
       return Alert.sucessAlert(
           ctx: context,
-          text: "User Registered Successfully",
+          text: 'User Registered Successfully \nyou must login agin!',
           title: "Sing Up",
-          ontap: () => goToWithRemoveUntill(context, HeightScrean()));
+          ontap: () => goToWithRemoveUntill(context, LoginScrean()));
     } else if (res.statusCode != 200 || !resBody['success']) {
       return Alert.errorAlert(ctx: context, title: resBody['message']);
     } else {
@@ -590,7 +600,7 @@ class _LoginScreanState extends State<LoginScrean>
       "mobile": "+2" + phoneController.text,
       "password": passController.text
     };
-   
+
     final res = await API.loginUser(body);
     final resBody = json.decode(res.body);
     Navigator.of(context).pop();
@@ -604,7 +614,12 @@ class _LoginScreanState extends State<LoginScrean>
           ctx: context,
           text: "User Login Successfully",
           title: "Login",
-          ontap: () => goToWithRemoveUntill(context, HomeScrean()));
+          ontap: () => goToWithRemoveUntill(
+              context,
+              (resBody['data']['user']['height'] != null &&
+                      resBody['data']['user']['weight'] != null)
+                  ? HomeScrean()
+                  : HeightScrean()));
     } else if (res.statusCode != 200 || !resBody['success']) {
       return Alert.errorAlert(ctx: context, title: resBody['message']);
     } else {

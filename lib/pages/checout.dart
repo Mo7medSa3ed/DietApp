@@ -37,6 +37,11 @@ class _CheckoutScreanState extends State<CheckoutScrean> {
 
   getData() async {
     final res = await API.getCart();
+    if (res == 'error')
+      return Alert.errorAlert(
+          ctx: context,
+          title:
+              errorMsg);
     if (res != null) {
       final t =
           double.parse(res['data']['total'].toString()).toStringAsFixed(1);
@@ -64,6 +69,7 @@ class _CheckoutScreanState extends State<CheckoutScrean> {
                     child: Form(
                       key: formKey,
                       child: ListView(
+                           physics: BouncingScrollPhysics(),
                         children: [
                           buildAppBarForPages(
                             context,

@@ -1,6 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test_app/API.dart';
+import 'package:flutter_test_app/Alert.dart';
 import 'package:flutter_test_app/constants/config.dart';
 import 'package:flutter_test_app/pages/course.dart';
 import 'package:flutter_test_app/provider/app_provider.dart';
@@ -30,8 +30,12 @@ class _HomeScreanState extends State<HomeScrean> {
   }
 
   getData() async {
-   
     final res = await API.getAllCourses();
+    if (res == 'error')
+      return Alert.errorAlert(
+          ctx: context,
+          title:
+              errorMsg);
     if (res != null) {
       status = res['success'];
       allCourseList = res['data'] ?? [];
@@ -80,6 +84,7 @@ class _HomeScreanState extends State<HomeScrean> {
                         child: buildText("No Data Found ...."),
                       )
                     : ListView(
+                        physics: BouncingScrollPhysics(),
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(16.0),
@@ -129,7 +134,7 @@ class _HomeScreanState extends State<HomeScrean> {
                                 Align(
                                   alignment: Alignment.topLeft,
                                   child: Padding(
-                                    padding: const EdgeInsets.all(16.0),
+                                    padding: const EdgeInsets.all(12.0),
                                     child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
@@ -140,7 +145,7 @@ class _HomeScreanState extends State<HomeScrean> {
                                           allCourseList[0]['name'],
                                           style: TextStyle(
                                               fontSize:
-                                                  response.setFontSize(28),
+                                                  response.setFontSize(20),
                                               color: kwhite,
                                               fontWeight: FontWeight.w900),
                                           softWrap: false,
@@ -150,7 +155,7 @@ class _HomeScreanState extends State<HomeScrean> {
                                           "${allCourseList[0]['days']} Days",
                                           style: TextStyle(
                                               fontSize:
-                                                  response.setFontSize(18),
+                                                  response.setFontSize(15),
                                               color: kprimary2,
                                               fontWeight: FontWeight.w900),
                                           softWrap: false,
@@ -209,9 +214,9 @@ class _HomeScreanState extends State<HomeScrean> {
                           Container(
                             height: response.screenHeight * 0.25,
                             child: ListView.builder(
+                                physics: BouncingScrollPhysics(),
                                 // controller: _scrollController,
                                 itemCount: courseList.length,
-                                physics: BouncingScrollPhysics(),
                                 scrollDirection: Axis.horizontal,
                                 itemBuilder: (ctx, i) => Stack(children: [
                                       Container(
@@ -258,7 +263,7 @@ class _HomeScreanState extends State<HomeScrean> {
                                                       ? 16
                                                       : 0),
                                           padding: EdgeInsets.symmetric(
-                                              horizontal: 25),
+                                              horizontal: 12),
                                           height: response.setHeight(65),
                                           width: response.screenWidth * 0.6,
                                           decoration: BoxDecoration(
@@ -275,10 +280,10 @@ class _HomeScreanState extends State<HomeScrean> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               buildText(courseList[i]['name'],
-                                                  fontsize: 16.0),
+                                                  fontsize: 14.0),
                                               buildText2(
                                                   "${courseList[i]['days']} Days",
-                                                  fontsize: 13.0),
+                                                  fontsize: 12.0),
                                             ],
                                           ),
                                         ),

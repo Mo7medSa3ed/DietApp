@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test_app/API.dart';
+import 'package:flutter_test_app/Alert.dart';
 import 'package:flutter_test_app/constants/config.dart';
 import 'package:flutter_test_app/pages/acheive.dart';
 import 'package:flutter_test_app/widgets/custum.dart';
@@ -23,33 +24,28 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
   getData() async {
     courseDayList.clear();
     final res = await API.getOneCourseDays(widget.id);
+    if (res == 'error')
+      return Alert.errorAlert(
+          ctx: context,
+          title:
+              errorMsg);
     if (res != null) {
+      status = res['success'];
       res['data'].forEach((k, v) {
         courseDayList.add({
-          "day": "1",
-          "value": v.map((e) => {"item": e, "done": false}).toList()
-        });
-        courseDayList.add({
-          "day": "2",
-          "value": v.map((e) => {"item": e, "done": false}).toList()
-        });
-        courseDayList.add({
-          "day": "3",
-          "value": v.map((e) => {"item": e, "done": false}).toList()
-        });
-        courseDayList.add({
-          "day": "4",
+          "day": k,
           "value": v.map((e) => {"item": e, "done": false}).toList()
         });
       });
-      setState(() {});
     }
+    setState(() {});
   }
 
   @override
   void initState() {
+
     press = widget.start ?? 0;
-    //getData();
+    getData();
     super.initState();
   }
 
@@ -426,7 +422,7 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
                             (((press + 1) / courseDayList.length) * 100)
                                 .toStringAsFixed(0),
                             widget.id,
-                            index));
+                            press == courseDayList.length - 1 ? -1 : press));
                   }
 
                   setState(() {});

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test_app/API.dart';
+import 'package:flutter_test_app/Alert.dart';
 import 'package:flutter_test_app/constants/config.dart';
 import 'package:flutter_test_app/models/product.dart';
 import 'package:flutter_test_app/pages/cart.dart';
@@ -22,7 +23,11 @@ class _ShopScreanState extends State<ShopScrean> {
   getData() async {
     products.clear();
     final res = await API.getAllProducts();
-
+    if (res == 'error')
+      return Alert.errorAlert(
+          ctx: context,
+          title:
+              errorMsg);
     if (res != null) {
       status = res['success'];
       if (res['data'].length > 0) {
@@ -87,6 +92,7 @@ class _ShopScreanState extends State<ShopScrean> {
               //             borderRadius: BorderRadius.circular(20),
               //             border: Border.all(color: ksecondary, width: 1)),
               //         child: ListView(
+              //    physics: BouncingScrollPhysics(),
               //             scrollDirection: Axis.horizontal,
               //             children: List.generate(
               //                 5,
@@ -137,6 +143,7 @@ class _ShopScreanState extends State<ShopScrean> {
                         )
                       : Expanded(
                           child: ListView(
+                              physics: BouncingScrollPhysics(),
                               children: List.generate(
                                   products.length,
                                   (index) => buildShopItem(

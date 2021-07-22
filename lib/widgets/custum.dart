@@ -25,12 +25,12 @@ Widget buildFillElevatedButton(
         style: TextStyle(
             color: txtcolor ?? kwhite.withOpacity(0.9),
             fontWeight: FontWeight.w900,
-            fontSize: response.setFontSize(16))),
+            fontSize: response.setFontSize(14))),
     style: ButtonStyle(
         elevation:
             elevation != null ? MaterialStateProperty.all(elevation) : null,
         padding: MaterialStateProperty.all(
-            EdgeInsets.symmetric(vertical: 15, horizontal: 25)),
+            EdgeInsets.symmetric(vertical: 12, horizontal: 18)),
         backgroundColor: MaterialStateProperty.all<Color>(bgcolor),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
@@ -70,7 +70,8 @@ buildOutElevatedButton({text, onpressed, test: true}) {
     ),
     style: ButtonStyle(
         elevation: !test ? MaterialStateProperty.all(0) : null,
-        padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 15)),
+        padding: MaterialStateProperty.all(
+            EdgeInsets.symmetric(vertical: 12, horizontal: 18)),
         backgroundColor: MaterialStateProperty.all<Color>(kwhite),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
@@ -121,7 +122,7 @@ buildIconElevatedButtonOutLine(
     icon: icon,
     style: ButtonStyle(
         padding: MaterialStateProperty.all(
-            EdgeInsets.symmetric(vertical: 10, horizontal: 18)),
+            EdgeInsets.symmetric(vertical: 12, horizontal: 18)),
         backgroundColor: MaterialStateProperty.all<Color>(kwhite),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
@@ -243,7 +244,6 @@ buildDialogforNotification(
 }
 
 buildCartItem(ProductModel p, ondelete) {
- 
   return Container(
     margin: EdgeInsets.only(bottom: 16),
     child: Row(
@@ -252,17 +252,17 @@ buildCartItem(ProductModel p, ondelete) {
       children: [
         Expanded(
           child: Container(
-            padding: EdgeInsets.only(left: 10, right: 2, bottom: 10, top: 10),
+            padding: EdgeInsets.only(left: 8, right: 2, bottom: 8, top: 8),
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30), color: kwhite),
+                borderRadius: BorderRadius.circular(20), color: kwhite),
             child: Row(
               children: [
                 Container(
-                  height: 80,
-                  width: 80,
+                  height: 70,
+                  width: 70,
                   padding: EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25),
+                      borderRadius: BorderRadius.circular(20),
                       color: Colors.grey[200]),
                   child: Image.network(
                     p.photo,
@@ -270,7 +270,7 @@ buildCartItem(ProductModel p, ondelete) {
                   ),
                 ),
                 SizedBox(
-                  width: response.setWidth(10),
+                  width: response.setWidth(5),
                 ),
                 Expanded(
                   child: Column(
@@ -283,7 +283,7 @@ buildCartItem(ProductModel p, ondelete) {
                           style: TextStyle(
                               color: kprimary,
                               fontWeight: FontWeight.w900,
-                              fontSize: response.setFontSize(16))),
+                              fontSize: response.setFontSize(14.5))),
                       SizedBox(
                         height: response.setHeight(4),
                       ),
@@ -293,7 +293,7 @@ buildCartItem(ProductModel p, ondelete) {
                         style: TextStyle(
                             color: ksecondary,
                             fontWeight: FontWeight.w900,
-                            fontSize: response.setFontSize(13.0)),
+                            fontSize: response.setFontSize(11.0)),
                         overflow: TextOverflow.fade,
                       ),
                       SizedBox(
@@ -311,51 +311,73 @@ buildCartItem(ProductModel p, ondelete) {
                                 style: TextStyle(
                                     color: kprimary,
                                     fontWeight: FontWeight.w900,
-                                    fontSize: response.setFontSize(16)),
+                                    fontSize: response.setFontSize(14)),
                               ),
                             ),
                             Container(
                               margin: EdgeInsets.only(right: 5),
                               child: StatefulBuilder(
-                                builder: (ctx, s) => Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    buildIconButton(
-                                        icon: Icons.remove,
-                                        onpressed: () async {
-                                          if (p.amount == 1) return;
-                                          final amount = await API
-                                              .decreaseQtyCart(p.cartId);
-                                          s(() {
-                                            p.amount = amount ?? 0;
-                                          });
-                                        }),
-                                    Container(
-                                      margin:
-                                          EdgeInsets.symmetric(horizontal: 8),
-                                      child: Text(
-                                        p.amount.toString(),
-                                        softWrap: false,
-                                        overflow: TextOverflow.fade,
-                                        style: TextStyle(
-                                            color: kprimary,
-                                            fontWeight: FontWeight.w900,
-                                            fontSize: response.setFontSize(14)),
+                                builder: (ctx, s) {
+                                  var isFinish = true;
+                                  return Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      buildIconButton(
+                                          icon: Icons.remove,
+                                          onpressed: () async {
+                                            if (!isFinish) {
+                                              if (p.amount == 1) return;
+                                              s(() {
+                                                isFinish = false;
+                                              });
+                                              final a = await API
+                                                  .decreaseQtyCart(p.cartId);
+                                              s(() {
+                                                if (a != null) {
+                                                  p.amount =
+                                                      int.parse(a.toString());
+                                                }
+                                                isFinish = true;
+                                              });
+                                            }
+                                          }),
+                                      Container(
+                                        margin:
+                                            EdgeInsets.symmetric(horizontal: 4),
+                                        child: Text(
+                                          p.amount.toString(),
+                                          softWrap: false,
+                                          overflow: TextOverflow.fade,
+                                          style: TextStyle(
+                                              color: kprimary,
+                                              fontWeight: FontWeight.w900,
+                                              fontSize:
+                                                  response.setFontSize(14)),
+                                        ),
                                       ),
-                                    ),
-                                    buildIconButton(
-                                        icon: Icons.add,
-                                        onpressed: () async {
-                                          final amount = await API
-                                              .increaseQtyCart(p.cartId);
-                                          s(() {
-                                            p.amount = amount ?? 0;
-                                          });
-                                        }),
-                                  ],
-                                ),
+                                      buildIconButton(
+                                          icon: Icons.add,
+                                          onpressed: () async {
+                                            if (isFinish) {
+                                              s(() {
+                                                isFinish = false;
+                                              });
+                                              final a = await API
+                                                  .increaseQtyCart(p.cartId);
+                                              s(() {
+                                                if (a != null) {
+                                                  p.amount =
+                                                      int.parse(a.toString());
+                                                }
+                                                isFinish = true;
+                                              });
+                                            }
+                                          }),
+                                    ],
+                                  );
+                                },
                               ),
                             )
                           ],
@@ -449,32 +471,31 @@ buildShopItem({context, ProductModel product}) {
   return Stack(
     children: [
       Container(
-        height: response.setHeight(100),
         margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.all(8),
               width: response.screenWidth - 32,
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30), color: kwhite),
+                  borderRadius: BorderRadius.circular(20), color: kwhite),
               child: Row(
                 children: [
                   Container(
                     padding: EdgeInsets.all(5),
                     alignment: Alignment.center,
-                    height: 90,
-                    width: 90,
+                    height: 60,
+                    width: 60,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25),
+                      borderRadius: BorderRadius.circular(20),
                       color: kcolor1.withOpacity(0.5),
                     ),
                     child: Image.network(product.photo),
                   ),
                   SizedBox(
-                    width: 15,
+                    width: 8,
                   ),
                   Expanded(
                     child: Column(
@@ -488,17 +509,14 @@ buildShopItem({context, ProductModel product}) {
                                 style: TextStyle(
                                     color: kprimary,
                                     fontWeight: FontWeight.w900,
-                                    fontSize: response.setFontSize(16))),
+                                    fontSize: response.setFontSize(15))),
                           ),
                           buildText(
                               "\$ " +
                                   double.parse(product.price.toString())
                                       .toStringAsFixed(1),
                               color: kprimary2,
-                              fontsize: 18.0),
-                          SizedBox(
-                            width: 8,
-                          )
+                              fontsize: 15.0),
                         ]),
                         SizedBox(
                           height: 2,
@@ -508,7 +526,7 @@ buildShopItem({context, ProductModel product}) {
                             style: TextStyle(
                                 color: ksecondary,
                                 fontWeight: FontWeight.w900,
-                                fontSize: response.setFontSize(14))),
+                                fontSize: response.setFontSize(13))),
                         SizedBox(
                           height: 2,
                         ),
@@ -561,8 +579,9 @@ buildShopItem({context, ProductModel product}) {
       ),
       Positioned(
         right: 35,
-        bottom: 0,
+        bottom: -5,
         child: FloatingActionButton(
+          heroTag: product.photo,
           mini: true,
           backgroundColor: kdrawer,
           elevation: 4,
@@ -757,28 +776,31 @@ buildOrderItem(o) {
                 ),
               ],
             ),
-            SizedBox(
-              height: response.setHeight(15),
-            ),
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                buildIconElevatedButton(
-                    label: 'Edit Order',
-                    icon: Image.asset("assets/images/edit-button.png"),
-                    onpressed: () {}),
-                buildIconElevatedButtonOutLine(
-                    label: 'Cancel',
-                    color: kprimary2,
-                    icon: Icon(
-                      Icons.close,
-                      color: kprimary2,
-                      size: 25,
-                    ),
-                    onpressed: () {}),
-              ],
-            ),
+            // SizedBox(
+            //   height: response.setHeight(15),
+            // ),
+            // Row(
+            //   mainAxisSize: MainAxisSize.max,
+            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //   children: [
+            //     buildIconElevatedButton(
+            //         label: 'Edit Order',
+            //         icon: Image.asset("assets/images/edit-button.png"),
+            //         onpressed: () {}),
+            //     SizedBox(
+            //       width: 8,
+            //     ),
+            //     buildIconElevatedButtonOutLine(
+            //         label: 'Cancel',
+            //         color: kprimary2,
+            //         icon: Icon(
+            //           Icons.close,
+            //           color: kprimary2,
+            //           size: 25,
+            //         ),
+            //         onpressed: () {}),
+            //   ],
+            // ),
           ],
         ),
       ),
@@ -800,8 +822,8 @@ buildAppBar(
           onTap: ontap,
           child: Container(
             alignment: Alignment.center,
-            width: response.setHeight(45),
-            height: response.setHeight(45),
+            width: response.setHeight(40),
+            height: response.setHeight(40),
             decoration: BoxDecoration(
                 color: kwhite, borderRadius: BorderRadius.circular(15)),
             child: Icon(
@@ -842,8 +864,8 @@ buildAppBar(
           onTap: () => goTo(context, ProfileScrean()),
           child: Container(
             alignment: Alignment.center,
-            width: response.setHeight(45),
-            height: response.setHeight(45),
+            width: response.setHeight(40),
+            height: response.setHeight(40),
             decoration: BoxDecoration(
                 image: DecorationImage(
                   image: NetworkImage(user['photo']),
@@ -870,8 +892,8 @@ buildAppBarForPages(context, text, press, {showProfile = true}) {
           onTap: press,
           child: Container(
             alignment: Alignment.center,
-            width: response.setHeight(45),
-            height: response.setHeight(45),
+            width: response.setHeight(40),
+            height: response.setHeight(40),
             decoration: BoxDecoration(
                 color: kwhite, borderRadius: BorderRadius.circular(15)),
             child: Icon(
@@ -884,8 +906,9 @@ buildAppBarForPages(context, text, press, {showProfile = true}) {
           child: Text(text,
               softWrap: false,
               textAlign: TextAlign.center,
+              overflow: TextOverflow.fade,
               style: TextStyle(
-                  fontSize: response.setFontSize(23),
+                  fontSize: response.setFontSize(18),
                   color: kprimary,
                   fontWeight: FontWeight.w800)),
         ),
@@ -920,11 +943,11 @@ buildSearch(
     onChange,
     onValidate,
     maxlength,
+    context,
     keyboard}) {
   return Container(
-    padding: EdgeInsets.symmetric(horizontal: 15),
     decoration:
-        BoxDecoration(color: kwhite, borderRadius: BorderRadius.circular(20)),
+        BoxDecoration(color: kwhite, borderRadius: BorderRadius.circular(10)),
     child: TextFormField(
       enabled: enabled,
       onChanged: onChange,
@@ -941,11 +964,11 @@ buildSearch(
           labelText: label,
           counterText: '',
           contentPadding: EdgeInsets.symmetric(
-              vertical: response.setHeight(15),
+              vertical: response.setHeight(10),
               horizontal: response.setWidth(10)),
           suffixIcon: Icon(
             icon,
-            size: 30,
+            size: 28,
             color: kprimary,
           ),
           border: InputBorder.none,
@@ -1031,12 +1054,12 @@ Widget buildDrawer(context) {
                                 fontWeight: FontWeight.w400)),
                       ),
                       SizedBox(
-                        height: response.setHeight(40),
+                        height: (response.screenHeight * 0.15) / 2,
                       ),
                       buildDrawerItem("Home", 0, i, 6, () {
                         app.changeIndex(0);
                         Navigator.of(context).pop();
-                        goTo(context, HomeScrean());
+                        goToWithRemoveUntill(context, HomeScrean());
                       }),
                       SizedBox(
                         height: response.setHeight(20),
@@ -1044,7 +1067,6 @@ Widget buildDrawer(context) {
                       buildDrawerItem("My Course", 1, i, 2, () {
                         app.changeIndex(1);
                         Navigator.of(context).pop();
-
                         goTo(context, CouresScrean());
                       }),
                       SizedBox(
@@ -1108,12 +1130,12 @@ Widget buildDrawerItem(text, index, currant, icon, onTap) {
     child: Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 25),
-      margin: EdgeInsets.only(left: 50),
+      margin: EdgeInsets.only(left: response.screenWidth * 0.1),
       decoration: BoxDecoration(
           border: index == currant
               ? Border(
                   left: BorderSide(
-                      color: kprimary2, width: 2, style: BorderStyle.solid))
+                      color: kprimary2, width: 3, style: BorderStyle.solid))
               : null),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -1121,14 +1143,22 @@ Widget buildDrawerItem(text, index, currant, icon, onTap) {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           index == 6
-              ? Icon(Icons.exit_to_app, color: kwhite)
-              : Image.asset("assets/images/icon$icon.png"),
+              ? Icon(
+                  Icons.exit_to_app,
+                  color: kwhite,
+                  size: 18,
+                )
+              : Image.asset(
+                  "assets/images/icon$icon.png",
+                  height: 18,
+                  width: 18,
+                ),
           SizedBox(
-            width: response.setWidth(15),
+            width: response.setWidth(14),
           ),
           Text(text,
               style: TextStyle(
-                  fontSize: response.setFontSize(15),
+                  fontSize: response.setFontSize(14),
                   color: kwhite,
                   fontWeight: FontWeight.w700)),
         ],
@@ -1162,8 +1192,8 @@ Widget buildBackButton(context) {
         Navigator.of(context).pop();
       },
       child: Container(
-        width: response.setHeight(45),
-        height: response.setHeight(45),
+        width: response.setHeight(40),
+        height: response.setHeight(40),
         decoration: BoxDecoration(
             color: kwhite, borderRadius: BorderRadius.circular(15)),
         child: Center(
@@ -1193,7 +1223,7 @@ Widget buldinputContainer(
     phoneMaxLength = 10,
     onCountryChanged}) {
   return Container(
-    margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
     decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
@@ -1207,25 +1237,26 @@ Widget buldinputContainer(
           height: 12,
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
           child: Row(
             children: [
               Expanded(
                 child: Text(text,
                     style: TextStyle(
                         color: kprimary2,
-                        fontSize: 18,
+                        fontSize: 16,
                         fontWeight: FontWeight.w900)),
               ),
               text == "Address" || text == "Location"
                   ? Container(
-                      width: 40,
-                      height: 40,
+                      width: 32,
+                      height: 32,
                       decoration: BoxDecoration(
                           color: kprimary.withOpacity(0.3),
                           shape: BoxShape.circle),
                       child: IconButton(
                           onPressed: onpressed,
+                          iconSize: 16,
                           icon: Icon(
                             Icons.location_on,
                             color: kwhite,
@@ -1282,7 +1313,7 @@ Widget buldinputContainer(
                   widget != null
                       ? widget
                       : Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
                           child: TextFormField(
                             controller: controller,
                             onChanged: onChange,
@@ -1315,13 +1346,13 @@ Widget buldinputContainer(
                                 : null,
                             style: TextStyle(
                                 color: kprimary,
-                                fontSize: 20,
+                                fontSize: 18,
                                 fontWeight: FontWeight.w900),
                             decoration: InputDecoration(
                                 counterText: '',
                                 hintStyle: TextStyle(
                                     color: ksecondary,
-                                    fontSize: 18,
+                                    fontSize: 16,
                                     fontWeight: FontWeight.w700),
                                 border: InputBorder.none,
                                 hintText: hint),
@@ -1344,16 +1375,14 @@ Widget buldinputContainer(
                         ),
                         Spacer(),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Image.asset(
-                            "assets/images/check.png",
-                            height: 22,
-                            color: controller.text.isNotEmpty
-                                ? kprimary2
-                                : ksecondary,
-                            fit: BoxFit.fill,
-                          ),
-                        )
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Icon(
+                              Icons.check_circle,
+                              color: controller.text.isNotEmpty
+                                  ? kprimary2
+                                  : ksecondary,
+                            ))
                       ],
                     ),
                   )
@@ -1363,13 +1392,11 @@ Widget buldinputContainer(
                         ? CircularProgressIndicator(
                             color: kprimary,
                           )
-                        : Image.asset(
-                            "assets/images/check.png",
-                            height: 22,
+                        : Icon(
+                            Icons.check_circle,
                             color: controller.text.isNotEmpty
                                 ? kprimary2
                                 : ksecondary,
-                            fit: BoxFit.fill,
                           ),
                   )
           ],

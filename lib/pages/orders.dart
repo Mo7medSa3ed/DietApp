@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test_app/API.dart';
+import 'package:flutter_test_app/Alert.dart';
 import 'package:flutter_test_app/constants/config.dart';
 import 'package:flutter_test_app/widgets/custum.dart';
 
@@ -17,10 +18,11 @@ class _OrderScreanState extends State<OrderScrean> {
 
   getData() async {
     cartList.clear();
-    final res = await API.getOneOrders(5);
+    final res = await API.getAllOrders();
+    if (res == 'error') return Alert.errorAlert(ctx: context, title: errorMsg);
     if (res != null) {
       status = res['success'];
-      cartList.add(res['data']);
+      cartList = res['data'];
       setState(() {});
     }
   }
@@ -67,6 +69,7 @@ class _OrderScreanState extends State<OrderScrean> {
                         )
                       : Expanded(
                           child: ListView.builder(
+                            physics: BouncingScrollPhysics(),
                             padding: EdgeInsets.symmetric(horizontal: 10),
                             itemBuilder: (c, i) => buildOrderItem(cartList[i]),
                             itemCount: cartList.length,

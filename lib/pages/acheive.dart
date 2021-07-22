@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test_app/constants/config.dart';
+import 'package:flutter_test_app/pages/home.dart';
 import 'package:flutter_test_app/pages/timeline.dart';
 import 'package:flutter_test_app/provider/app_provider.dart';
 import 'package:flutter_test_app/widgets/custum.dart';
@@ -21,6 +22,7 @@ class _AchieveScreanState extends State<AchieveScrean> {
 
   @override
   void initState() {
+  
     isBoy = Provider.of<AppProvider>(context, listen: false).user['gender'] ==
             "male"
         ? true
@@ -74,9 +76,9 @@ class _AchieveScreanState extends State<AchieveScrean> {
                     color: Colors.white),
               )),
           Align(
-            alignment: Alignment(0, 0.85),
+            alignment: Alignment(0, 0.88),
             child: Text(
-              "Next Day >> ",
+              widget.end == -1 ? "Finish Go Home >>>" : "Next Day >> ",
               textAlign: TextAlign.center,
               style: TextStyle(
                   fontSize: response.setFontSize(22),
@@ -90,10 +92,13 @@ class _AchieveScreanState extends State<AchieveScrean> {
                 width: 65,
                 height: 65,
                 child: FloatingActionButton(
+                  heroTag: "btn1",
                   mini: false,
                   onPressed: () {
-                    return goTo(
-                        context, TimeLineScrean(widget.id, widget.end + 1));
+                    return widget.end == -1
+                        ? goToWithRemoveUntill(context, HomeScrean())
+                        : goTo(
+                            context, TimeLineScrean(widget.id, widget.end + 1));
                   },
                   backgroundColor: kwhite,
                   child: Icon(

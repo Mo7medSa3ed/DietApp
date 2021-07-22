@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test_app/API.dart';
+import 'package:flutter_test_app/Alert.dart';
 import 'package:flutter_test_app/constants/config.dart';
 import 'package:flutter_test_app/models/product.dart';
 import 'package:flutter_test_app/pages/checout.dart';
@@ -19,8 +20,13 @@ class _CartScreanState extends State<CartScrean> {
   getData() async {
     cartList.clear();
     final res = await API.getCart();
+    if (res == 'error')
+      return Alert.errorAlert(
+          ctx: context,
+          title:
+              errorMsg);
     if (res != null) {
-      print(res);
+
       status = res['success'];
       if (res['data']['items'].length > 0) {
         cartList = res['data']['items']
@@ -81,7 +87,7 @@ class _CartScreanState extends State<CartScrean> {
                                     ),
                                     Container(
                                       padding:
-                                          EdgeInsets.symmetric(horizontal: 16),
+                                          EdgeInsets.symmetric(horizontal: 4),
                                       child: buildText(
                                         "Order review",
                                       ),
@@ -96,6 +102,7 @@ class _CartScreanState extends State<CartScrean> {
                                 child: RefreshIndicator(
                                   onRefresh: () async => await getData(),
                                   child: ListView.builder(
+                                    physics: BouncingScrollPhysics(),
                                     padding:
                                         EdgeInsets.only(left: 16, right: 8),
                                     itemBuilder: (c, i) =>

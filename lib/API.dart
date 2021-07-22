@@ -9,181 +9,260 @@ class API {
 
   // Functions For User
 
-  static Future<http.Response> signupUser(user) async {
-    final res = await http.post(Uri.parse('$_BaseUrl/users/auth/register'),
-        encoding: Encoding.getByName("utf-8"),
-        headers: await getHeader(),
-        body: json.encode(user));
+  static Future<dynamic> signupUser(user) async {
+    try {
+      final res = await http.post(Uri.parse('$_BaseUrl/users/auth/register'),
+          encoding: Encoding.getByName("utf-8"),
+          headers: await getHeader(),
+          body: json.encode(user));
 
-    return res;
+      return res;
+    } catch (e) {
+      return "error";
+    }
   }
 
-  static Future<http.Response> loginUser(user) async {
-    final res = await http.post(Uri.parse('$_BaseUrl/users/auth/login'),
-        encoding: Encoding.getByName("utf-8"),
-        headers: await getHeader(),
-        body: json.encode(user));
-    return res;
+  static Future<dynamic> loginUser(user) async {
+    try {
+      final res = await http.post(Uri.parse('$_BaseUrl/users/auth/login'),
+          encoding: Encoding.getByName("utf-8"),
+          headers: await getHeader(),
+          body: json.encode(user));
+      return res;
+    } catch (e) {
+      return "error";
+    }
   }
 
-  static Future<http.Response> forgetPassword(mobile) async {
-    final res = await http.post(
-        Uri.parse('$_BaseUrl/users/auth/forget_password'),
-        encoding: Encoding.getByName("utf-8"),
-        headers: await getHeader(),
-        body: json.encode({"mobile": mobile}));
-    return res;
+  static Future<dynamic> forgetPassword(mobile) async {
+    try {
+      final res = await http.post(
+          Uri.parse('$_BaseUrl/users/auth/forget_password'),
+          encoding: Encoding.getByName("utf-8"),
+          headers: await getHeader(),
+          body: json.encode({"mobile": mobile}));
+      return res;
+    } catch (e) {
+      return "error";
+    }
   }
 
-  static Future<http.Response> resetPassword(body) async {
-    final res = await http.post(Uri.parse('$_BaseUrl/users/auth/reset'),
-        encoding: Encoding.getByName("utf-8"),
-        headers: await getHeader(),
-        body: json.encode(body));
-    return res;
+  static Future<dynamic> resetPassword(body) async {
+    try {
+      final res = await http.post(Uri.parse('$_BaseUrl/users/auth/reset'),
+          encoding: Encoding.getByName("utf-8"),
+          headers: await getHeader(),
+          body: json.encode(body));
+      return res;
+    } catch (e) {
+      return "error";
+    }
   }
 
-  static Future<http.Response> logout() async {
-    final res = await http.post(Uri.parse('$_BaseUrl/users/auth/logout'),
-        encoding: Encoding.getByName("utf-8"), headers: await getHeader());
-    return res;
+  static Future<dynamic> logout() async {
+    try {
+      final res = await http.post(Uri.parse('$_BaseUrl/users/auth/logout'),
+          encoding: Encoding.getByName("utf-8"), headers: await getHeader());
+      return res;
+    } catch (e) {
+      return "error";
+    }
   }
 
   static Future<dynamic> getAllCourses() async {
-    final res = await http.get(Uri.parse('$_BaseUrl/users/courses'),
-        headers: await getHeader());
-    final body = utf8.decode(res.bodyBytes);
-    final parsed = json.decode(body);
+    try {
+      final res = await http.get(Uri.parse('$_BaseUrl/users/courses'),
+          headers: await getHeader());
+      final body = utf8.decode(res.bodyBytes);
+      final parsed = json.decode(body);
 
-    if ((res.statusCode == 200 || res.statusCode == 201) && parsed['success']) {
-      return parsed;
+      if ((res.statusCode == 200 || res.statusCode == 201) &&
+          parsed['success']) {
+        return parsed;
+      }
+      return null;
+    } catch (e) {
+      return "error";
     }
-    return null;
   }
 
   static Future<dynamic> getAllProducts() async {
-    final res = await http.get(Uri.parse('$_BaseUrl/users/products'),
-        headers: await getHeader());
-    final body = utf8.decode(res.bodyBytes);
-    final parsed = json.decode(body);
-    if ((res.statusCode == 200 || res.statusCode == 201) && parsed['success']) {
-      return parsed;
+    try {
+      final res = await http.get(Uri.parse('$_BaseUrl/users/products'),
+          headers: await getHeader());
+      final body = utf8.decode(res.bodyBytes);
+      final parsed = json.decode(body);
+      if ((res.statusCode == 200 || res.statusCode == 201) &&
+          parsed['success']) {
+        return parsed;
+      }
+      return null;
+    } catch (e) {
+      return "error";
     }
-    return null;
   }
 
   static Future<dynamic> getCart() async {
-    final res = await http.get(Uri.parse('$_BaseUrl/users/cart'),
-        headers: await getHeader());
-    final body = utf8.decode(res.bodyBytes);
-    final parsed = json.decode(body);
+    try {
+      final res = await http.get(Uri.parse('$_BaseUrl/users/cart'),
+          headers: await getHeader());
+      final body = utf8.decode(res.bodyBytes);
+      final parsed = json.decode(body);
 
-    if ((res.statusCode == 200 || res.statusCode == 201) && parsed['success']) {
-      return parsed;
+      if ((res.statusCode == 200 || res.statusCode == 201) &&
+          parsed['success']) {
+        return parsed;
+      }
+      return null;
+    } catch (e) {
+      return "error";
     }
-    return null;
   }
 
   static Future<dynamic> increaseQtyCart(id) async {
-    final res = await http.get(
-        Uri.parse('$_BaseUrl/users/cart/increaseQty/$id'),
-        headers: await getHeader());
-    final body = utf8.decode(res.bodyBytes);
-    final parsed = json.decode(body);
-    print(parsed);
-    if ((res.statusCode == 200 || res.statusCode == 201) && parsed['success']) {
-      final item = parsed['data']['items'].firstWhere((e) => e["id"] == id);
-      return item['quantity'];
+    try {
+      final res = await http.get(
+          Uri.parse('$_BaseUrl/users/cart/increaseQty/$id'),
+          headers: await getHeader());
+      final body = utf8.decode(res.bodyBytes);
+      final parsed = json.decode(body);
+      
+      if ((res.statusCode == 200 || res.statusCode == 201) &&
+          parsed['success']) {
+        final item = parsed['data']['items'].firstWhere((e) => e["id"] == id);
+        return item['quantity'];
+      }
+      return null;
+    } catch (e) {
+      return "error";
     }
-    return null;
   }
 
   static Future<dynamic> addToCart(id) async {
-    final res = await http.get(Uri.parse('$_BaseUrl/users/cart/addProduct/$id'),
-        headers: await getHeader());
-    final body = utf8.decode(res.bodyBytes);
-    final parsed = json.decode(body);
+    try {
+      final res = await http.get(
+          Uri.parse('$_BaseUrl/users/cart/addProduct/$id'),
+          headers: await getHeader());
+      final body = utf8.decode(res.bodyBytes);
+      final parsed = json.decode(body);
 
-    if ((res.statusCode == 200 || res.statusCode == 201) && parsed['success']) {
-      return {"success": true, "amount": parsed['data']['items_count']};
+      if ((res.statusCode == 200 || res.statusCode == 201) &&
+          parsed['success']) {
+        return {"success": true, "amount": parsed['data']['items_count']};
+      }
+      return false;
+    } catch (e) {
+      return "error";
     }
-    return false;
   }
 
   static Future<dynamic> decreaseQtyCart(id) async {
-    final res = await http.get(
-        Uri.parse('$_BaseUrl/users/cart/decreaseQty/$id'),
-        headers: await getHeader());
-    final body = utf8.decode(res.bodyBytes);
-    final parsed = json.decode(body);
-    if ((res.statusCode == 200 || res.statusCode == 201) && parsed['success']) {
-      final item = parsed['data']['items'].firstWhere((e) => e["id"] == id);
-      return item['quantity'];
+    try {
+      final res = await http.get(
+          Uri.parse('$_BaseUrl/users/cart/decreaseQty/$id'),
+          headers: await getHeader());
+      final body = utf8.decode(res.bodyBytes);
+      final parsed = json.decode(body);
+      if ((res.statusCode == 200 || res.statusCode == 201) &&
+          parsed['success']) {
+        final item = parsed['data']['items'].firstWhere((e) => e["id"] == id);
+        return item['quantity'];
+      }
+      return null;
+    } catch (e) {
+      return "error";
     }
-    return null;
   }
 
   static Future<dynamic> removeProductFromCart(id) async {
-    final res = await http.get(
-        Uri.parse('$_BaseUrl/users/cart/removeProduct/$id'),
-        headers: await getHeader());
-    final body = utf8.decode(res.bodyBytes);
-    final parsed = json.decode(body);
-    if ((res.statusCode == 200 || res.statusCode == 201) && parsed['success']) {
-      return parsed;
+    try {
+      final res = await http.get(
+          Uri.parse('$_BaseUrl/users/cart/removeProduct/$id'),
+          headers: await getHeader());
+      final body = utf8.decode(res.bodyBytes);
+      final parsed = json.decode(body);
+      if ((res.statusCode == 200 || res.statusCode == 201) &&
+          parsed['success']) {
+        return parsed;
+      }
+      return null;
+    } catch (e) {
+      return "error";
     }
-    return null;
   }
 
   static Future<dynamic> getOneCourse(id) async {
-    final res = await http.get(Uri.parse('$_BaseUrl/users/courses/$id'),
-        headers: await getHeader());
-    final body = utf8.decode(res.bodyBytes);
-    final parsed = json.decode(body);
-    if ((res.statusCode == 200 || res.statusCode == 201) && parsed['success']) {
-      return parsed;
+    try {
+      final res = await http.get(Uri.parse('$_BaseUrl/users/courses/$id'),
+          headers: await getHeader());
+      final body = utf8.decode(res.bodyBytes);
+      final parsed = json.decode(body);
+      if ((res.statusCode == 200 || res.statusCode == 201) &&
+          parsed['success']) {
+        return parsed;
+      }
+      return null;
+    } catch (e) {
+      return "error";
     }
-    return null;
   }
 
   static Future<dynamic> getOneCourseDays(id) async {
-    final res = await http.get(
-        Uri.parse('$_BaseUrl/users/courses/courses_days/$id'),
-        headers: await getHeader());
-    final body = utf8.decode(res.bodyBytes);
-    final parsed = json.decode(body);
-    if ((res.statusCode == 200 || res.statusCode == 201) && parsed['success']) {
-      return parsed;
+    try {
+      final res = await http.get(
+          Uri.parse('$_BaseUrl/users/courses/courses_days/$id'),
+          headers: await getHeader());
+      final body = utf8.decode(res.bodyBytes);
+      final parsed = json.decode(body);
+      if ((res.statusCode == 200 || res.statusCode == 201) &&
+          parsed['success']) {
+        return parsed;
+      }
+      return null;
+    } catch (e) {
+      return "error";
     }
-    return null;
   }
 
-  static Future<dynamic> getOneOrders(id) async {
-    final res = await http.get(Uri.parse('$_BaseUrl/users/orders/$id'),
-        headers: await getHeader());
-    final body = utf8.decode(res.bodyBytes);
-    final parsed = json.decode(body);
-    if ((res.statusCode == 200 || res.statusCode == 201) && parsed['success']) {
-      return parsed;
+  static Future<dynamic> getAllOrders() async {
+    try {
+      final res = await http.get(Uri.parse('$_BaseUrl/users/orders'),
+          headers: await getHeader());
+      final body = utf8.decode(res.bodyBytes);
+      final parsed = json.decode(body);
+      if ((res.statusCode == 200 || res.statusCode == 201) &&
+          parsed['success']) {
+        return parsed;
+      }
+      return null;
+    } catch (e) {
+      return "error";
     }
-    return null;
   }
 
-  static Future<Response> updateProfile(userUpdated) async {
-    final formData = FormData.fromMap(userUpdated);
-    final dio = Dio();
-    dio.options = BaseOptions(headers: await getHeader());
-    final res =
-        await dio.post('$_BaseUrl/users/account/updateProfile', data: formData);
-    return res;
+  static Future<dynamic> updateProfile(userUpdated) async {
+    try {
+      final formData = FormData.fromMap(userUpdated);
+      final dio = Dio();
+      dio.options = BaseOptions(headers: await getHeader());
+      final res = await dio.post('$_BaseUrl/users/account/updateProfile',
+          data: formData);
+      return res;
+    } catch (e) {
+      return "error";
+    }
   }
 
-  static Future<Response> makeOrder(body) async {
-    final formData = FormData.fromMap(body);
-    final dio = Dio();
-    dio.options = BaseOptions(headers: await getHeader());
-    final res = await dio.post('$_BaseUrl/users/orders', data: formData);
-    return res;
+  static Future<dynamic> makeOrder(body) async {
+    try {
+      final formData = FormData.fromMap(body);
+      final dio = Dio();
+      dio.options = BaseOptions(headers: await getHeader());
+      final res = await dio.post('$_BaseUrl/users/orders', data: formData);
+      return res;
+    } catch (e) {
+      return "error";
+    }
   }
 }
 /*

@@ -310,6 +310,7 @@ class _AuthScreanState extends State<AuthScrean> {
             Align(
               alignment: Alignment(0.0, loginPressed ? 0.6 : 0.8),
               child: FloatingActionButton(
+                heroTag: "btn2",
                 elevation: 8,
                 backgroundColor: kwhite,
                 onPressed: () async {
