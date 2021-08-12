@@ -37,6 +37,13 @@ class _HeightScreanState extends State<HeightScrean> {
     return SafeArea(
       child: Scaffold(
         body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: BoxDecoration(
+              gradient: RadialGradient(radius: 1, colors: [
+            kwhite,
+            kcolor1,
+          ])),
           padding: EdgeInsets.only(top: 20),
           child: Column(
             children: [
@@ -146,41 +153,71 @@ class _HeightScreanState extends State<HeightScrean> {
               //             ),
               //           )),
               // ),
-              SizedBox(
-                width: 8,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 20.0, vertical: 16.0),
-                child: WeightSlider(
-                  weight: weight,
-                  minWeight: 40,
-                  maxWeight: 120,
-                  onChange: (val) => setState(() => weight = val),
-                  unit: 'kg',
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(right: 32.0, bottom: 32),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+
+              Container(
+                height: MediaQuery.of(context).size.height * 0.25,
+                child: Stack(
                   children: [
-                    FloatingActionButton(
-                      elevation: 8,
-                      backgroundColor: kwhite,
-                      onPressed: () async {
-                        user = Provider.of<AppProvider>(context, listen: false)
-                            .user;
-                        await updateUser();
-                      },
-                      child: Icon(
-                        Icons.arrow_forward_sharp,
-                        color: kprimary,
+                    Positioned(
+                        bottom: MediaQuery.of(context).size.height * 0.2 / -2,
+                        left: MediaQuery.of(context).size.width * 0.2,
+                        right: MediaQuery.of(context).size.width * 0.2,
+                        child: SvgPicture.asset(
+                          "assets/images/weight.svg",
+                          fit: BoxFit.fill,
+                          height: MediaQuery.of(context).size.height * 0.3,
+                        )),
+                    Align(
+                      alignment: Alignment(0, -0.3),
+                      child: WeightSlider(
+                        weight: weight,
+                        minWeight: 40,
+                        maxWeight: 120,
+                        onChange: (val) => setState(() => weight = val),
+                        unit: 'kg',
                       ),
                     ),
+                    // Align(
+                    //   alignment: Alignment(0.75, 0.6),
+                    //   child: FloatingActionButton(
+                    //     elevation: 8,
+                    //     backgroundColor: kwhite,
+                    //     onPressed: () async {
+                    //       user =
+                    //           Provider.of<AppProvider>(context, listen: false)
+                    //               .user;
+                    //       await updateUser();
+                    //     },
+                    //     child: Icon(
+                    //       Icons.arrow_forward_sharp,
+                    //       color: kprimary,
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
-              )
+              ),
+              // Padding(
+              //   padding: EdgeInsets.only(right: 32.0, bottom: 32),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.end,
+              //     children: [
+              //       FloatingActionButton(
+              //         elevation: 8,
+              //         backgroundColor: kwhite,
+              //         onPressed: () async {
+              //           user = Provider.of<AppProvider>(context, listen: false)
+              //               .user;
+              //           await updateUser();
+              //         },
+              //         child: Icon(
+              //           Icons.arrow_forward_sharp,
+              //           color: kprimary,
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // )
             ],
           ),
         ),
@@ -199,11 +236,7 @@ class _HeightScreanState extends State<HeightScrean> {
     };
     final res = await API.updateProfile(body);
     Navigator.of(context).pop();
-    if (res == 'error')
-      return Alert.errorAlert(
-          ctx: context,
-          title:
-              errorMsg);
+    if (res == 'error') return Alert.errorAlert(ctx: context, title: errorMsg);
     final resBody = res.data;
     if ((res.statusCode == 200 || res.statusCode == 201) &&
         resBody['success']) {

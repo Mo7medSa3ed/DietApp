@@ -31,11 +31,7 @@ class _HomeScreanState extends State<HomeScrean> {
 
   getData() async {
     final res = await API.getAllCourses();
-    if (res == 'error')
-      return Alert.errorAlert(
-          ctx: context,
-          title:
-              errorMsg);
+    if (res == 'error') return Alert.errorAlert(ctx: context, title: errorMsg);
     if (res != null) {
       status = res['success'];
       allCourseList = res['data'] ?? [];
@@ -58,8 +54,10 @@ class _HomeScreanState extends State<HomeScrean> {
             width: double.infinity,
             height: double.infinity,
             decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    colors: [kcolor1, Colors.grey[300], kcolor1])),
+                gradient: RadialGradient(radius: 1, colors: [
+              kwhite,
+              kcolor1,
+            ])),
             child: !status
                 ? Column(
                     children: [

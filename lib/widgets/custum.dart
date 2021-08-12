@@ -11,6 +11,7 @@ import 'package:flutter_test_app/pages/orders.dart';
 import 'package:flutter_test_app/pages/profile.dart';
 import 'package:flutter_test_app/pages/shop.dart';
 import 'package:flutter_test_app/provider/app_provider.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:response/response.dart';
 import 'package:toast/toast.dart';
@@ -471,7 +472,7 @@ buildShopItem({context, ProductModel product}) {
   return Stack(
     children: [
       Container(
-        margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        margin: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -772,35 +773,37 @@ buildOrderItem(o) {
                 ),
                 Expanded(
                   flex: 20,
-                  child: buildText2(o['status'], fontsize: 14),
+                  child: buildText2(
+                      o['status'].toUpperCase().replaceAll('_', " "),
+                      fontsize: 14),
                 ),
               ],
             ),
-            // SizedBox(
-            //   height: response.setHeight(15),
-            // ),
-            // Row(
-            //   mainAxisSize: MainAxisSize.max,
-            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //   children: [
-            //     buildIconElevatedButton(
-            //         label: 'Edit Order',
-            //         icon: Image.asset("assets/images/edit-button.png"),
-            //         onpressed: () {}),
-            //     SizedBox(
-            //       width: 8,
-            //     ),
-            //     buildIconElevatedButtonOutLine(
-            //         label: 'Cancel',
-            //         color: kprimary2,
-            //         icon: Icon(
-            //           Icons.close,
-            //           color: kprimary2,
-            //           size: 25,
-            //         ),
-            //         onpressed: () {}),
-            //   ],
-            // ),
+            SizedBox(
+              height: response.setHeight(15),
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                buildIconElevatedButton(
+                    label: 'Edit Order',
+                    icon: Image.asset("assets/images/edit-button.png"),
+                    onpressed: () {}),
+                SizedBox(
+                  width: 8,
+                ),
+                buildIconElevatedButtonOutLine(
+                    label: 'Cancel',
+                    color: kprimary2,
+                    icon: Icon(
+                      Icons.close,
+                      color: kprimary2,
+                      size: 25,
+                    ),
+                    onpressed: () {}),
+              ],
+            ),
           ],
         ),
       ),
@@ -947,7 +950,7 @@ buildSearch(
     keyboard}) {
   return Container(
     decoration:
-        BoxDecoration(color: kwhite, borderRadius: BorderRadius.circular(10)),
+        BoxDecoration(color: kwhite, borderRadius: BorderRadius.circular(15)),
     child: TextFormField(
       enabled: enabled,
       onChanged: onChange,

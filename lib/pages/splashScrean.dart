@@ -20,10 +20,10 @@ class _SplashScreanState extends State<SplashScrean> {
   void initState() {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      final d = DateTime.now();
-      if (d.day == 21 && d.month == 7 && d.year == 2021) {
+      //final d = DateTime.now();
         getData();
-      }
+      //if (d.day == 21 && d.month == 7 && d.year == 2021) {
+     // }
     });
   }
 

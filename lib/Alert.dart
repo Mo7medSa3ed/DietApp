@@ -7,6 +7,7 @@ class Alert {
         context: ctx,
         type: CoolAlertType.success,
         text: text,
+        loopAnimation: true,
         title: title,
         onConfirmBtnTap: ontap);
   }
@@ -16,6 +17,7 @@ class Alert {
         barrierDismissible: true,
         context: ctx,
         type: CoolAlertType.error,
+        loopAnimation: true,
         title: "Oops...",
         text: title);
   }
@@ -24,6 +26,7 @@ class Alert {
     return CoolAlert.show(
       barrierDismissible: false,
       context: ctx,
+      lottieAsset: 'assets/images/Waiting.svg',
       type: CoolAlertType.loading,
       text: "Loading please wait....",
     );
