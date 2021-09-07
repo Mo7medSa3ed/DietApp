@@ -142,7 +142,7 @@ class API {
           headers: await getHeader());
       final body = utf8.decode(res.bodyBytes);
       final parsed = json.decode(body);
-      
+
       if ((res.statusCode == 200 || res.statusCode == 201) &&
           parsed['success']) {
         final item = parsed['data']['items'].firstWhere((e) => e["id"] == id);
@@ -273,8 +273,13 @@ class API {
     try {
       final formData = FormData.fromMap(body);
       final dio = Dio();
-      dio.options = BaseOptions(headers: await getHeader());
+      dio.options = BaseOptions(
+        headers: await getHeader(),
+        contentType: 'application/json',
+      );
+
       final res = await dio.post('$_BaseUrl/users/orders', data: formData);
+
       return res;
     } catch (e) {
       return "error";

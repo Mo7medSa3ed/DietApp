@@ -25,11 +25,7 @@ class _CouresScreanState extends State<CouresScrean> {
         .user['course_recommended'];
 
     final res = await API.getOneCourse(id);
-    if (res == 'error')
-      return Alert.errorAlert(
-          ctx: context,
-          title:
-              errorMsg);
+    if (res == 'error') return Alert.errorAlert(ctx: context, title: errorMsg);
     if (res != null) {
       status = res['success'];
       course = res['data'];
@@ -75,7 +71,7 @@ class _CouresScreanState extends State<CouresScrean> {
                         )
                       : Expanded(
                           child: ListView(
-                               physics: BouncingScrollPhysics(),
+                            physics: BouncingScrollPhysics(),
                             children: [
                               Container(
                                 height: response.screenHeight * 0.23 + 5,
@@ -151,31 +147,17 @@ class _CouresScreanState extends State<CouresScrean> {
                                       horizontal: 25.0),
                                   child: buildText2(course['description'])),
                               SizedBox(
-                                height: response.setHeight(5),
+                                height: response.setHeight(10),
                               ),
-                              // Padding(
-                              //     padding: const EdgeInsets.symmetric(
-                              //         horizontal: 25.0),
-                              //     child: Row(
-                              //       children: List.generate(
-                              //           5,
-                              //           (index) => Icon(
-                              //                 Icons.star,
-                              //                 size: 20,
-                              //                 color: Colors.amber[400],
-                              //               )),
-                              //     )),
-                              // SizedBox(
-                              //   height: response.setHeight(10),
-                              // ),
-                              // Padding(
-                              //     padding: const EdgeInsets.symmetric(
-                              //         horizontal: 25.0),
-                              //     child: buildText('Components')),
-                              // SizedBox(
-                              //   height: response.setHeight(10),
-                              // ),
-                              // buildCourseItem(),
+                              Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 25.0),
+                                  child: buildText('Components')),
+                              SizedBox(
+                                height: response.setHeight(10),
+                              ),
+                              ...List.generate(course['products'].length,
+                                  (i) => buildCourseItem(course['products'][i])),
                             ],
                           ),
                         ),
@@ -211,7 +193,7 @@ class _CouresScreanState extends State<CouresScrean> {
                             icon: Icon(Icons.play_arrow),
                             label: 'Start Now',
                             onpressed: () =>
-                                goTo(context, TimeLineScrean(course['id'],0))))
+                                goTo(context, TimeLineScrean(course['id'], 0))))
                   ],
                 ),
               )

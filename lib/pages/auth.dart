@@ -257,7 +257,6 @@ class _AuthScreanState extends State<AuthScrean> {
                                           groupValue: isMale,
                                           value: 'male',
                                           onChanged: (v) {
-                                          
                                             isMale = v;
                                             setState(() {});
                                           },
@@ -314,14 +313,13 @@ class _AuthScreanState extends State<AuthScrean> {
                 elevation: 8,
                 backgroundColor: kwhite,
                 onPressed: () async {
-                   if (formKey.currentState.validate()) {
+                  if (formKey.currentState.validate()) {
                     if (loginPressed) {
                       await login();
                     } else {
                       await signUp();
                     }
                   }
-          
                 },
                 child: Icon(
                   Icons.arrow_forward_sharp,

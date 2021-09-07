@@ -24,17 +24,14 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
   getData() async {
     courseDayList.clear();
     final res = await API.getOneCourseDays(widget.id);
-    if (res == 'error')
-      return Alert.errorAlert(
-          ctx: context,
-          title:
-              errorMsg);
+    if (res == 'error') return Alert.errorAlert(ctx: context, title: errorMsg);
     if (res != null) {
       status = res['success'];
       res['data'].forEach((k, v) {
         courseDayList.add({
           "day": k,
-          "value": v.map((e) => {"item": e, "done": false}).toList()
+          "value":
+              v[0]['components'].map((e) => {"item": e, "done": false}).toList()
         });
       });
     }
@@ -43,7 +40,6 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
 
   @override
   void initState() {
-
     press = widget.start ?? 0;
     getData();
     super.initState();
@@ -51,7 +47,6 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
 
   @override
   Widget build(BuildContext context) {
-    courseDayList.length;
     return SafeArea(
       child: Scaffold(
         key: scaffoldkey,
@@ -118,13 +113,15 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
                                       courseDayList.length,
                                       (index) => Container(
                                             decoration: BoxDecoration(
-                                                color: /* press != index || index > 3
+                                                color:
+                                                    /* press != index || index > 3
                                         ? kscaffoldcolor
                                         : */
                                                     press > index
                                                         ? kscaffoldcolor
                                                         : kprimary2,
-                                                borderRadius: /*  (press ==
+                                                borderRadius:
+                                                    /*  (press ==
                                             index /*  && index > 3 */)
                                         ? */
                                                     BorderRadius.only(
@@ -241,8 +238,18 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
                               children: [
                                 ...List.generate(
                                     courseDayList[press]['value'].length, (i) {
-                                  final m =
+                                  var m;
+                                  final product =
                                       courseDayList[press]['value'][i]['item'];
+                                  if (product['type'] == 'and' ||
+                                      product['type'] == 'or') {
+                                    m = product['items'];
+                                  } else {
+                                    m = [product['items']];
+                                  }
+
+                                  print(m);
+
                                   return Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
@@ -250,15 +257,16 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
                                     children: [
                                       buildRowwithindicator(
                                           index: i,
-                                          firsttext: getMealName(int.parse(
-                                              m['time'].substring(0, 2))),
-                                          seconttext:
-                                              "${m['time'].substring(0, 5)} AM"),
+                                          firsttext: getMealName(1),
+                                          seconttext: "02:30 AM"),
+                                      // buildRowwithindicator(
+                                      //     index: i,
+                                      //     firsttext: getMealName(int.parse(
+                                      //         m['time'].substring(0, 2))),
+                                      //     seconttext:
+                                      //         "${m['time'].substring(0, 5)} AM"),
                                       buldcardForcourseitem(
-                                          img: m['photo'],
-                                          title: m['name'],
-                                          desc: m['description'],
-                                          index: i),
+                                          index: i, products: m),
                                     ],
                                   );
                                 }),
@@ -381,7 +389,7 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
     );
   }
 
-  Widget buldcardForcourseitem({img, title, desc, time, index}) {
+  Widget buldcardForcourseitem({time, index, products}) {
     return Padding(
       padding: const EdgeInsets.only(left: 15.0),
       child: TimelineTile(
@@ -396,20 +404,16 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            /*  ...List.generate(
-                1,
-                (index) =>  */
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                buildItemForCourse(img, title, desc, index),
+                buildItemForCourse(products, index),
                 time != null
                     ? buildRowforTimer(text: time.toString())
                     : Container(),
               ],
             ),
-            // ),
             buildDonerow(
                 isDone: courseDayList[press]['value'][index]['done'],
                 ontap: () {
@@ -433,7 +437,7 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
     );
   }
 
-  Widget buildItemForCourse(img, title, desc, index) {
+  Widget buildItemForCourse(products, i) {
     return Container(
       margin: EdgeInsets.only(top: 5, bottom: 5, left: 15),
       padding: EdgeInsets.all(12),
@@ -449,41 +453,53 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
         ],
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          buildrowForCousritem(img, title, desc),
-
-          // ...index > 1
-          //     ? List.generate(
-          //         3,
-          //         (index) => Column(
-          //           mainAxisAlignment: MainAxisAlignment.start,
-          //           crossAxisAlignment: CrossAxisAlignment.start,
-          //           children: [
-          //             Padding(
-          //               padding: EdgeInsets.only(left: 125),
-          //               child: index > 1
-          //                   ? Text(
-          //                       "Or",
-          //                       style: TextStyle(
-          //                           fontSize: 16,
-          //                           color: kprimary2,
-          //                           fontWeight: FontWeight.w900),
-          //                     )
-          //                   : Container(
-          //                       height: 23,
-          //                       padding: const EdgeInsets.only(bottom: 8.0),
-          //                       child: Image.asset(
-          //                         "assets/images/plus.png",
-          //                       ),
-          //                     ),
-          //             ),
-          //             buildrowForCousritem(img, title, desc),
-          //           ],
-          //         ),
-          //       )
-          //     : []
+          ...List.generate(
+            products.length,
+            (index) => Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                buildrowForCousritem(
+                  products[index]['photo'] ?? "",
+                  products[index]['name'] ?? "",
+                  products[index]['description'] ?? "",
+                ),
+                index == products.length - 1
+                    ? Container()
+                    : Padding(
+                        padding: EdgeInsets.only(left: 125),
+                        child: courseDayList[press]['value'][i]['item']
+                                    ['type'] ==
+                                'or'
+                            ? Text(
+                                "Or",
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: kprimary2,
+                                    fontWeight: FontWeight.w900),
+                              )
+                            : courseDayList[press]['value'][i]['item']['type']
+                                        .toString()
+                                        .toLowerCase()
+                                        .trim() ==
+                                    'and'
+                                ? Container(
+                                    height: 23,
+                                    padding: const EdgeInsets.only(bottom: 8.0),
+                                    child: Icon(
+                                      Icons.add,
+                                      color: kprimary2,
+                                    ),
+                                  )
+                                : Container(),
+                      ),
+              ],
+            ),
+          )
         ],
       ),
     );

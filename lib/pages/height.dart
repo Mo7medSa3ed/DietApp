@@ -64,9 +64,12 @@ class _HeightScreanState extends State<HeightScrean> {
                             fontSize: response.setFontSize(28),
                             fontWeight: FontWeight.w800),
                       ),
-                      SvgPicture.asset(
-                        "assets/images/Group 549.svg",
-                        height: 70,
+                      InkWell(
+                        onTap: () async => await updateUser(),
+                        child: SvgPicture.asset(
+                          "assets/images/Group 549.svg",
+                          height: 70,
+                        ),
                       )
                     ],
                   ),
@@ -155,7 +158,7 @@ class _HeightScreanState extends State<HeightScrean> {
               // ),
 
               Container(
-                height: MediaQuery.of(context).size.height * 0.25,
+                height: MediaQuery.of(context).size.height * 0.29,
                 child: Stack(
                   children: [
                     Positioned(

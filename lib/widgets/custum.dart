@@ -11,7 +11,6 @@ import 'package:flutter_test_app/pages/orders.dart';
 import 'package:flutter_test_app/pages/profile.dart';
 import 'package:flutter_test_app/pages/shop.dart';
 import 'package:flutter_test_app/provider/app_provider.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:response/response.dart';
 import 'package:toast/toast.dart';
@@ -403,7 +402,7 @@ buildCartItem(ProductModel p, ondelete) {
   );
 }
 
-buildCourseItem() {
+buildCourseItem(product) {
   return Container(
     margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     child: Row(
@@ -425,7 +424,7 @@ buildCourseItem() {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
                     color: Colors.grey[200]),
-                child: Image.asset("assets/images/image4.png"),
+                child: Image.network(product['photo'] ?? ''),
               ),
               SizedBox(
                 width: response.setWidth(10),
@@ -434,7 +433,7 @@ buildCourseItem() {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Forevver Therm",
+                  Text(product['name'] ?? '',
                       overflow: TextOverflow.fade,
                       style: TextStyle(
                           color: kprimary,
@@ -443,7 +442,7 @@ buildCourseItem() {
                   SizedBox(
                     height: response.setHeight(2),
                   ),
-                  Text("Forevver Therm",
+                  Text(product['description'] ?? '',
                       overflow: TextOverflow.fade,
                       style: TextStyle(
                           color: ksecondary,
@@ -452,7 +451,7 @@ buildCourseItem() {
                   SizedBox(
                     height: response.setHeight(2),
                   ),
-                  Text("x 1",
+                  Text("x ${product['pivot']['quantity']}",
                       overflow: TextOverflow.fade,
                       style: TextStyle(
                           color: kprimary,
@@ -966,9 +965,7 @@ buildSearch(
       decoration: InputDecoration(
           labelText: label,
           counterText: '',
-          contentPadding: EdgeInsets.symmetric(
-              vertical: response.setHeight(10),
-              horizontal: response.setWidth(10)),
+          contentPadding: EdgeInsets.all(16.0),
           suffixIcon: Icon(
             icon,
             size: 28,
@@ -1272,7 +1269,8 @@ Widget buldinputContainer(
         Row(
           children: [
             Expanded(
-              child: /*  widget == "phone"
+              child:
+                  /*  widget == "phone"
                   ? Padding(
                       padding: const EdgeInsets.only(left: 10.0),
                       child: IntlPhoneField(

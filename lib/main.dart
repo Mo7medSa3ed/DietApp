@@ -39,7 +39,6 @@ class MyApp extends StatelessWidget {
                 primaryColor: kprimary,
                 splashColor: kprimary,
                 indicatorColor: kprimary,
-
                 // ignore: deprecated_member_use
                 accentColor: kprimary,
                 inputDecorationTheme: InputDecorationTheme(

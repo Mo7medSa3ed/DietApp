@@ -80,7 +80,7 @@ class _LoginScreanState extends State<LoginScrean>
     return SafeArea(
         child: Scaffold(
             body: ListView(
-                 physics: BouncingScrollPhysics(),
+      physics: BouncingScrollPhysics(),
       children: [
         Container(
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 50),
@@ -568,14 +568,9 @@ class _LoginScreanState extends State<LoginScrean>
     };
 
     final res = await API.signupUser(body);
-    Navigator.of(context).pop(); 
-    if (res == 'error')
-      return Alert.errorAlert(
-          ctx: context,
-          title:
-              errorMsg);
+    Navigator.of(context).pop();
+    if (res == 'error') return Alert.errorAlert(ctx: context, title: errorMsg);
     final resBody = json.decode(res.body);
- 
 
     if ((res.statusCode == 200 || res.statusCode == 201) &&
         resBody['success']) {
@@ -604,6 +599,9 @@ class _LoginScreanState extends State<LoginScrean>
     final res = await API.loginUser(body);
     final resBody = json.decode(res.body);
     Navigator.of(context).pop();
+    if (res == 'error')
+      return Alert.errorAlert(ctx: context, title: "Something went wrong...");
+
     if (res.statusCode == 200 && resBody['success']) {
       await setValue(
           key: 'token', value: json.encode(resBody['data']['access_token']));

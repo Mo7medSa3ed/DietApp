@@ -3,7 +3,6 @@ import 'package:flutter_test_app/API.dart';
 import 'package:flutter_test_app/Alert.dart';
 import 'package:flutter_test_app/constants/config.dart';
 import 'package:flutter_test_app/models/categories.dart';
-import 'package:flutter_test_app/models/product.dart';
 import 'package:flutter_test_app/pages/cart.dart';
 import 'package:flutter_test_app/provider/app_provider.dart';
 import 'package:flutter_test_app/widgets/custum.dart';
@@ -18,6 +17,7 @@ class _ShopScreanState extends State<ShopScrean> {
   final scaffoldkey = GlobalKey<ScaffoldState>();
   var idx = 0;
   List<CategoriesModel> data = [];
+  List<CategoriesModel> filterData = [];
 
   var status = false;
 
@@ -28,8 +28,10 @@ class _ShopScreanState extends State<ShopScrean> {
     if (res != null) {
       status = res['success'];
       if (res['data'].length > 0) {
-        print(res['data']);
         data = res['data']
+            .map<CategoriesModel>((e) => CategoriesModel.fromJson(e))
+            .toList();
+        filterData = res['data']
             .map<CategoriesModel>((e) => CategoriesModel.fromJson(e))
             .toList();
       }
@@ -128,7 +130,8 @@ class _ShopScreanState extends State<ShopScrean> {
                           : Expanded(
                               child: ListView(
                                 padding: EdgeInsets.all(16),
-                                physics: BouncingScrollPhysics(),
+                                physics: BouncingScrollPhysics(
+                                    parent: AlwaysScrollableScrollPhysics()),
                                 children: [
                                   Container(
                                     decoration: BoxDecoration(
@@ -140,15 +143,35 @@ class _ShopScreanState extends State<ShopScrean> {
                                             spreadRadius: 5)
                                       ],
                                     ),
-                                    child: buildSearch(hint: "Search"),
+                                    child: buildSearch(
+                                        hint: "Search",
+                                        onChange: (String v) {
+                                          if (v.toString().length > 0) {
+                                            print("object");
+                                            data[idx].products = filterData[idx]
+                                                .products
+                                                .where((e) => e.name
+                                                    .toLowerCase()
+                                                    .trim()
+                                                    .contains(
+                                                        v.toLowerCase().trim()))
+                                                .toList();
+                                          } else {
+                                            print("else ");
+                                            print(filterData[idx].products);
+                                            data[idx].products =
+                                                filterData[idx].products;
+                                          }
+                                          setState(() {});
+                                        }),
                                   ),
                                   SizedBox(height: response.setHeight(20)),
                                   Container(
-                                    width: response.screenWidth,
+                                    width: response.screenWidth / 2,
                                     height: 56,
                                     decoration: BoxDecoration(
                                         color: kwhite.withOpacity(0.9),
-                                        borderRadius: BorderRadius.circular(20),
+                                        borderRadius: BorderRadius.circular(18),
                                         border: Border.all(
                                             color: ksecondary, width: 1)),
                                     child: ListView(
@@ -215,7 +238,7 @@ class _ShopScreanState extends State<ShopScrean> {
           color: idx == indx
               ? ksecondary.withOpacity(0.8)
               : kwhite.withOpacity(0.9),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(16),
         ),
         child: Center(
           child: Text(
