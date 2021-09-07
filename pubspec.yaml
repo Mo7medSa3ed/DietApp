@@ -46,7 +46,6 @@ dependencies:
   flutter_svg:
   toast:
   http:
-  cool_alert:
   shared_preferences:
   height_slider:
   weight_slider:
