@@ -193,6 +193,7 @@ class _CheckoutScreanState extends State<CheckoutScrean> {
           : "+2" + _phone.text.trim(),
       "user_country": addresses != null ? addresses.countryName : 'Egypt',
       "user_city": addresses != null ? addresses.subAdminArea : "Minya",
+      "currency": "EGP"
     };
     final res = await API.makeOrder(body);
     Navigator.of(context).pop();
@@ -200,7 +201,7 @@ class _CheckoutScreanState extends State<CheckoutScrean> {
       return Alert.errorAlert(ctx: context, title: "Something went wrong...");
     }
 
-    final data = res.data;
+    final data = res.body;
 
     if ((res.statusCode == 200 || res.statusCode == 201) && data['success']) {
       return buildDialog(

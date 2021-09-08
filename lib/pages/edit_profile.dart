@@ -32,7 +32,7 @@ class _EditProfileScreanState extends State<EditProfileScrean> {
   var confirController = TextEditingController(text: '');
   var image;
   var gender;
-  //bool isConfirmVisible = true;
+  bool isLoading = false;
   var _selectedDate;
   var user;
 
@@ -232,8 +232,17 @@ class _EditProfileScreanState extends State<EditProfileScrean> {
                         },
                         hint: "Enter your location ...",
                         text: "Location",
+                        isLoading: isLoading,
                         onpressed: () async {
-                          await getCurrantLocation(context);
+                          setState(() {
+                            isLoading = true;
+                          });
+                          final add = await getCurrantaddress();
+                          locationController.text = add.addressLine;
+
+                          setState(() {
+                            isLoading = false;
+                          });
                         },
                         controller: locationController),
                     buldinputContainer(
@@ -467,11 +476,7 @@ class _EditProfileScreanState extends State<EditProfileScrean> {
 
     final res = await API.updateProfile(body);
     Navigator.of(context).pop();
-    if (res == 'error')
-      return Alert.errorAlert(
-          ctx: context,
-          title:
-              errorMsg);
+    if (res == 'error') return Alert.errorAlert(ctx: context, title: errorMsg);
     final resBody = res.data;
     if ((res.statusCode == 200 || res.statusCode == 201) &&
         resBody['success']) {

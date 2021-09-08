@@ -1,10 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_test_app/pages/map.dart';
-import 'package:flutter_test_app/widgets/custum.dart';
 import 'package:geocoder/geocoder.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart' as loc;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -84,39 +81,39 @@ Future<dynamic> getCurrantaddress() async {
   return add.first;
 }
 
-getCurrantLocation(context) async {
-  await Geolocator.checkPermission().then((value) {
-    if (value == LocationPermission.always ||
-        value == LocationPermission.whileInUse) {
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (_) => MapScrean()));
-    } else {
-      buildDialogforNotification(
-          context: context,
-          test: false,
-          text: "Allow your Location",
-          desc: "we will need your location to give you better experience.",
-          img: "location.png",
-          conTap: () {
-            Navigator.of(context).pop();
-            Geolocator.requestPermission().then((value) {
-              if (value == LocationPermission.always ||
-                  value == LocationPermission.whileInUse) {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (_) => MapScrean()));
-              } else {
-                Navigator.of(context).pop();
-              }
-            });
-          },
-          backTap: () {
-            Navigator.of(context).pop();
-          },
-          conText: "Sure, I'd Like that",
-          backText: "Not now");
-    }
-  });
-}
+// getCurrantLocation(context) async {
+//   await Geolocator.checkPermission().then((value) {
+//     if (value == LocationPermission.always ||
+//         value == LocationPermission.whileInUse) {
+//       Navigator.of(context)
+//           .push(MaterialPageRoute(builder: (_) => MapScrean()));
+//     } else {
+//       buildDialogforNotification(
+//           context: context,
+//           test: false,
+//           text: "Allow your Location",
+//           desc: "we will need your location to give you better experience.",
+//           img: "location.png",
+//           conTap: () {
+//             Navigator.of(context).pop();
+//             Geolocator.requestPermission().then((value) {
+//               if (value == LocationPermission.always ||
+//                   value == LocationPermission.whileInUse) {
+//                 Navigator.of(context)
+//                     .push(MaterialPageRoute(builder: (_) => MapScrean()));
+//               } else {
+//                 Navigator.of(context).pop();
+//               }
+//             });
+//           },
+//           backTap: () {
+//             Navigator.of(context).pop();
+//           },
+//           conText: "Sure, I'd Like that",
+//           backText: "Not now");
+//     }
+//   });
+// }
 
 class CustumLinearclipper extends CustomClipper<Path> {
   @override

@@ -263,6 +263,7 @@ class API {
       dio.options = BaseOptions(headers: await getHeader());
       final res = await dio.post('$_BaseUrl/users/account/updateProfile',
           data: formData);
+
       return res;
     } catch (e) {
       return "error";
@@ -271,17 +272,22 @@ class API {
 
   static Future<dynamic> makeOrder(body) async {
     try {
-      final formData = FormData.fromMap(body);
-      final dio = Dio();
-      dio.options = BaseOptions(
-        headers: await getHeader(),
-        contentType: 'application/json',
-      );
+      // final dio = Dio();
+      // dio.options = BaseOptions(
+      //   headers: await getHeader(),
+      //   contentType: 'application/json',
+      // );
 
-      final res = await dio.post('$_BaseUrl/users/orders', data: formData);
-
+      // final res = await dio.post('$_BaseUrl/users/orders', data: body);
+      print(body);
+      final res = await http.post(Uri.parse('$_BaseUrl/users/orders'),
+          body: jsonEncode(body), headers: await getHeader());
+      final bo = utf8.decode(res.bodyBytes);
+      final parsed = json.decode(bo);
+      print(parsed);
       return res;
     } catch (e) {
+      print(e);
       return "error";
     }
   }
