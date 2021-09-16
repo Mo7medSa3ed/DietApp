@@ -563,7 +563,7 @@ class _LoginScreanState extends State<LoginScrean>
       "mobile": "+2" + phoneController.text,
       "password": passController.text,
       "gender": genderController.text.toLowerCase(),
-      "birth_date": selectedDate.toString(),
+      "birth_date": selectedDate.toString().substring(0, 10),
       "location": locationController.text,
     };
 

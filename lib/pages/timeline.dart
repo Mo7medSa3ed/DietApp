@@ -22,18 +22,20 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
   var status = false;
 
   getData() async {
-    courseDayList.clear();
+    courseDayList = [];
     final res = await API.getOneCourseDays(widget.id);
     if (res == 'error') return Alert.errorAlert(ctx: context, title: errorMsg);
     if (res != null) {
       status = res['success'];
-      res['data'].forEach((k, v) {
-        courseDayList.add({
-          "day": k,
-          "value":
-              v[0]['components'].map((e) => {"item": e, "done": false}).toList()
+      if (res['data'].length > 0)
+        res['data'].forEach((k, v) {
+          courseDayList.add({
+            "day": k,
+            "value": v[0]['components']
+                .map((e) => {"item": e, "done": false})
+                .toList()
+          });
         });
-      });
     }
     setState(() {});
   }

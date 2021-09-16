@@ -109,123 +109,135 @@ class _ShopScreanState extends State<ShopScrean> {
                   kwhite,
                   kcolor1,
                 ])),
-                child: Column(children: [
-                  buildAppBarForPages(
-                    context,
-                    'Shop',
-                    () => scaffoldkey.currentState.openDrawer(),
-                  ),
-                  !status
-                      ? Expanded(
-                          child: Center(
-                            child: CircularProgressIndicator(color: kprimary),
-                          ),
-                        )
-                      : data.length == 0
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      buildAppBarForPages(
+                        context,
+                        'Shop',
+                        () => scaffoldkey.currentState.openDrawer(),
+                      ),
+                      !status
                           ? Expanded(
                               child: Center(
-                                child: buildText("No Data Found ...."),
+                                child:
+                                    CircularProgressIndicator(color: kprimary),
                               ),
                             )
-                          : Expanded(
-                              child: ListView(
-                                padding: EdgeInsets.all(16),
-                                physics: BouncingScrollPhysics(
-                                    parent: AlwaysScrollableScrollPhysics()),
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      boxShadow: [
-                                        BoxShadow(
-                                            color: ksecondary.withOpacity(0.3),
-                                            offset: Offset(0, 0),
-                                            blurRadius: 15,
-                                            spreadRadius: 5)
-                                      ],
-                                    ),
-                                    child: buildSearch(
-                                        hint: "Search",
-                                        onChange: (String v) {
-                                          if (v.toString().length > 0) {
-                                            print("object");
-                                            data[idx].products = filterData[idx]
-                                                .products
-                                                .where((e) => e.name
-                                                    .toLowerCase()
-                                                    .trim()
-                                                    .contains(
-                                                        v.toLowerCase().trim()))
-                                                .toList();
-                                          } else {
-                                            print("else ");
-                                            print(filterData[idx].products);
-                                            data[idx].products =
-                                                filterData[idx].products;
-                                          }
-                                          setState(() {});
-                                        }),
+                          : data.length == 0
+                              ? Expanded(
+                                  child: Center(
+                                    child: buildText("No Data Found ...."),
                                   ),
-                                  SizedBox(height: response.setHeight(20)),
-                                  Container(
-                                    width: response.screenWidth / 2,
-                                    height: 56,
-                                    decoration: BoxDecoration(
-                                        color: kwhite.withOpacity(0.9),
-                                        borderRadius: BorderRadius.circular(18),
-                                        border: Border.all(
-                                            color: ksecondary, width: 1)),
-                                    child: ListView(
-                                        physics: BouncingScrollPhysics(),
-                                        scrollDirection: Axis.horizontal,
-                                        children:
-                                            List.generate(data.length, (index) {
-                                          return Row(
-                                            children: [
-                                              buldTextForRow(
-                                                  data[index].name, index, () {
-                                                setState(() {
-                                                  idx = index;
-                                                });
-                                              }),
-                                              (index == data.length - 1) ||
-                                                      (idx == index ||
-                                                          idx - 1 == index)
-                                                  ? Container()
-                                                  : SizedBox(
-                                                      height: 20,
-                                                      child: VerticalDivider(
-                                                        color: ksecondary,
-                                                        thickness: 1.5,
-                                                      ),
-                                                    )
-                                            ],
-                                          );
-                                        })),
+                                )
+                              : Expanded(
+                                  child: ListView(
+                                    padding: EdgeInsets.all(16),
+                                    physics: BouncingScrollPhysics(
+                                        parent:
+                                            AlwaysScrollableScrollPhysics()),
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                                color:
+                                                    ksecondary.withOpacity(0.3),
+                                                offset: Offset(0, 0),
+                                                blurRadius: 15,
+                                                spreadRadius: 5)
+                                          ],
+                                        ),
+                                        child: buildSearch(
+                                            hint: "Search",
+                                            onChange: (String v) {
+                                              if (v.toString().length > 0) {
+                                                print("object");
+                                                data[idx].products =
+                                                    filterData[idx]
+                                                        .products
+                                                        .where((e) => e
+                                                            .name
+                                                            .toLowerCase()
+                                                            .trim()
+                                                            .contains(v
+                                                                .toLowerCase()
+                                                                .trim()))
+                                                        .toList();
+                                              } else {
+                                                print("else ");
+                                                print(filterData[idx].products);
+                                                data[idx].products =
+                                                    filterData[idx].products;
+                                              }
+                                              setState(() {});
+                                            }),
+                                      ),
+                                      SizedBox(height: response.setHeight(20)),
+                                      Container(
+                                        width: response.screenWidth / 2,
+                                        height: 56,
+                                        decoration: BoxDecoration(
+                                            color: kwhite.withOpacity(0.9),
+                                            borderRadius:
+                                                BorderRadius.circular(18),
+                                            border: Border.all(
+                                                color: ksecondary, width: 1)),
+                                        child: ListView(
+                                            physics: BouncingScrollPhysics(),
+                                            scrollDirection: Axis.horizontal,
+                                            children: List.generate(data.length,
+                                                (index) {
+                                              return Row(
+                                                children: [
+                                                  buldTextForRow(
+                                                      data[index].name, index,
+                                                      () {
+                                                    setState(() {
+                                                      idx = index;
+                                                    });
+                                                  }),
+                                                  (index == data.length - 1) ||
+                                                          (idx == index ||
+                                                              idx - 1 == index)
+                                                      ? Container()
+                                                      : SizedBox(
+                                                          height: 20,
+                                                          child:
+                                                              VerticalDivider(
+                                                            color: ksecondary,
+                                                            thickness: 1.5,
+                                                          ),
+                                                        )
+                                                ],
+                                              );
+                                            })),
+                                      ),
+                                      SizedBox(height: response.setHeight(20)),
+                                      buildText(data[idx].name),
+                                      SizedBox(height: response.setHeight(20)),
+                                      data[idx].products.length == 0
+                                          ? Container(
+                                              margin: EdgeInsets.symmetric(
+                                                  vertical: 200),
+                                              child: Center(
+                                                child: buildText(
+                                                    "No Products Found ...."),
+                                              ),
+                                            )
+                                          : Column(
+                                              children: List.generate(
+                                                  data[idx].products.length,
+                                                  (index) => buildShopItem(
+                                                        context: context,
+                                                        product: data[idx]
+                                                            .products[index],
+                                                      )))
+                                    ],
                                   ),
-                                  SizedBox(height: response.setHeight(20)),
-                                  buildText(data[idx].name),
-                                  SizedBox(height: response.setHeight(20)),
-                                  data[idx].products.length == 0
-                                      ? Container(
-                                          margin: EdgeInsets.symmetric(
-                                              vertical: 200),
-                                          child: Center(
-                                            child: buildText(
-                                                "No Products Found ...."),
-                                          ),
-                                        )
-                                      : Column(
-                                          children: List.generate(
-                                              data[idx].products.length,
-                                              (index) => buildShopItem(
-                                                    context: context,
-                                                    product: data[idx]
-                                                        .products[index],
-                                                  )))
-                                ],
-                              ),
-                            )
-                ]))));
+                                )
+                    ]))));
   }
 
   Widget buldTextForRow(text, indx, ontap) {
@@ -243,6 +255,7 @@ class _ShopScreanState extends State<ShopScrean> {
         child: Center(
           child: Text(
             text,
+            textAlign: TextAlign.start,
             style: TextStyle(
               fontWeight: FontWeight.w900,
               fontSize: 18,
