@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test_app/API.dart';
@@ -49,7 +50,7 @@ class _OrderScreanState extends State<OrderScrean> {
             children: [
               buildAppBarForPages(
                 context,
-                'Orders',
+                tr('orders'),
                 () => scaffoldkey.currentState.openDrawer(),
               ),
               SizedBox(

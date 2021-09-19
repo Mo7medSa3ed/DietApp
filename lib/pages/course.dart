@@ -25,7 +25,7 @@ class _CouresScreanState extends State<CouresScrean> {
     var id = Provider.of<AppProvider>(context, listen: false)
         .user['course_recommended'];
 
-    final res = await API.getOneCourse(id);
+    final res = await API.getOneCourse(2);
     if (res == 'error') return Alert.errorAlert(ctx: context, title: errorMsg);
     if (res != null) {
       status = res['success'];
@@ -68,7 +68,7 @@ class _CouresScreanState extends State<CouresScrean> {
                     )
                   : course == null
                       ? Center(
-                          child: buildText("No Data Found ...."),
+                          child: buildText(tr("nodata")),
                         )
                       : Expanded(
                           child: ListView(

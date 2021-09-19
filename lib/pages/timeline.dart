@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test_app/API.dart';
 import 'package:flutter_test_app/Alert.dart';
@@ -85,7 +86,7 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
                         ),
                         Expanded(
                           child: Center(
-                            child: buildText("No Data Found ...."),
+                            child: buildText(tr("nodata")),
                           ),
                         ),
                       ],
@@ -127,11 +128,23 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
                                             index /*  && index > 3 */)
                                         ? */
                                                     BorderRadius.only(
-                                                        topRight:
-                                                            Radius.circular(20),
-                                                        bottomRight:
-                                                            Radius.circular(
-                                                                20))),
+                                                  topRight: context.locale ==
+                                                          Locale('en')
+                                                      ? Radius.circular(20)
+                                                      : Radius.zero,
+                                                  bottomRight: context.locale ==
+                                                          Locale('en')
+                                                      ? Radius.circular(20)
+                                                      : Radius.zero,
+                                                  topLeft: context.locale !=
+                                                          Locale('en')
+                                                      ? Radius.circular(20)
+                                                      : Radius.zero,
+                                                  bottomLeft: context.locale !=
+                                                          Locale('en')
+                                                      ? Radius.circular(20)
+                                                      : Radius.zero,
+                                                )),
                                             child: InkWell(
                                               onTap: () {
                                                 setState(() {
@@ -151,16 +164,31 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
                                                       ? BorderRadius.circular(
                                                           20)
                                                       : index ==
-                                                              courseDayList
-                                                                      .length -
+                                                              courseDayList.length -
                                                                   1
                                                           ? BorderRadius.only(
-                                                              topRight: Radius
-                                                                  .circular(20),
-                                                              bottomRight:
-                                                                  Radius
-                                                                      .circular(
-                                                                          20))
+                                                              topRight: context.locale == Locale('en')
+                                                                  ? Radius.circular(
+                                                                      20)
+                                                                  : Radius.zero,
+                                                              bottomRight: context
+                                                                          .locale ==
+                                                                      Locale(
+                                                                          'en')
+                                                                  ? Radius.circular(
+                                                                      20)
+                                                                  : Radius.zero,
+                                                              topLeft: context.locale !=
+                                                                      Locale(
+                                                                          'en')
+                                                                  ? Radius.circular(
+                                                                      20)
+                                                                  : Radius.zero,
+                                                              bottomLeft: context
+                                                                          .locale !=
+                                                                      Locale('en')
+                                                                  ? Radius.circular(20)
+                                                                  : Radius.zero)
                                                           : null,
                                                   border: press == index
                                                       ? Border.all(
@@ -176,7 +204,8 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
                                                           const EdgeInsets.all(
                                                               12.0),
                                                       child: Text(
-                                                        "Day\n${courseDayList[index]['day']}",
+                                                        tr('day') +
+                                                            "\n${courseDayList[index]['day']}",
                                                         style: TextStyle(
                                                             fontWeight:
                                                                 FontWeight.w900,
@@ -218,17 +247,19 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
                               children: [
                                 buildExpandedForRow(
                                     text:
-                                        "${(((press) / courseDayList.length) * 100).toStringAsFixed(0)} % Complete",
+                                        "${(((press) / courseDayList.length) * 100).toStringAsFixed(0)} % " +
+                                            tr('complete'),
                                     color: kprimary2),
                                 buildExpandedForRow(
-                                    text: "$press Days Left", color: kblue)
+                                    text: "$press " + tr('days_left'),
+                                    color: kblue)
                               ],
                             ),
                           ),
                           Container(
                               margin: EdgeInsets.symmetric(horizontal: 20),
                               child: Text(
-                                "Today",
+                                tr("today"),
                                 style: TextStyle(
                                     fontSize: 20, fontWeight: FontWeight.w900),
                               )),
@@ -285,9 +316,9 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
 
   getMealName(num) {
     if (num > 1)
-      return "Launch";
-    else if (num < 1) return "BreakFast";
-    return "Dinner";
+      return tr("launch");
+    else if (num < 1) return tr("breakfast");
+    return tr("dinner");
   }
 
   Widget buildRowforTimer({text}) {
@@ -323,7 +354,7 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              "Done",
+              tr('ok'),
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
             ),
             SizedBox(
@@ -371,7 +402,7 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
           ),
         ),
         Container(
-          padding: EdgeInsets.only(left: 20),
+          padding: EdgeInsets.only(left: 20, right: 20),
           child: Text(
             firsttext,
             style: TextStyle(
@@ -380,7 +411,7 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
         ),
         Spacer(),
         Container(
-          padding: EdgeInsets.only(left: 20),
+          padding: EdgeInsets.only(left: 20, right: 20),
           child: Text(
             seconttext,
             style: TextStyle(
@@ -393,7 +424,7 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
 
   Widget buldcardForcourseitem({time, index, products}) {
     return Padding(
-      padding: const EdgeInsets.only(left: 15.0),
+      padding: const EdgeInsets.only(left: 15.0, right: 15),
       child: TimelineTile(
         alignment: TimelineAlign.start,
         hasIndicator: false,
@@ -441,7 +472,7 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
 
   Widget buildItemForCourse(products, i) {
     return Container(
-      margin: EdgeInsets.only(top: 5, bottom: 5, left: 15),
+      margin: EdgeInsets.only(top: 5, bottom: 5, left: 15, right: 15),
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: kwhite,
@@ -473,7 +504,9 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
                 index == products.length - 1
                     ? Container()
                     : Padding(
-                        padding: EdgeInsets.only(left: 125),
+                        padding: EdgeInsets.only(
+                          left: 125,
+                        ),
                         child: courseDayList[press]['value'][i]['item']
                                     ['type'] ==
                                 'or'
@@ -523,29 +556,33 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
         SizedBox(
           width: 15,
         ),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 5,
-            ),
-            Text(
-              title,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                  fontSize: 18, color: kprimary, fontWeight: FontWeight.w900),
-            ),
-            SizedBox(
-              height: 2,
-            ),
-            Text(
-              desc,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                  fontSize: 18, color: ksecondary, fontWeight: FontWeight.w900),
-            ),
-          ],
+        Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 5,
+              ),
+              Text(
+                title,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                    fontSize: 18, color: kprimary, fontWeight: FontWeight.w900),
+              ),
+              SizedBox(
+                height: 2,
+              ),
+              Text(
+                desc,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                    fontSize: 18,
+                    color: ksecondary,
+                    fontWeight: FontWeight.w900),
+              ),
+            ],
+          ),
         ),
       ],
     );

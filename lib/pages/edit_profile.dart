@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart' as dio;
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test_app/API.dart';
 import 'package:flutter_test_app/Alert.dart';
@@ -65,9 +66,8 @@ class _EditProfileScreanState extends State<EditProfileScrean> {
     if (user['birth_date'] != null) {
       _selectedDate = DateTime.parse(user['birth_date']);
     }
-    gender = user['gender'] != null
-        ? user['gender'][0].toUpperCase() + user['gender'].substring(1)
-        : "Male";
+    gender =
+        user['gender'] != null ? tr(user['gender'].toLowerCase()) : tr('male');
     setState(() {});
   }
 
@@ -80,7 +80,7 @@ class _EditProfileScreanState extends State<EditProfileScrean> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              buildAppBarForPages(context, "Edit Profile",
+              buildAppBarForPages(context, tr('edit') + ' ' + tr('profile'),
                   () => scaffoldkey.currentState.openDrawer(),
                   showProfile: false),
               Padding(
@@ -164,7 +164,7 @@ class _EditProfileScreanState extends State<EditProfileScrean> {
                                                           Icons.camera_alt,
                                                           color: kprimary2,
                                                         )),
-                                                    buildText2("Camera",
+                                                    buildText2(tr('camera'),
                                                         color: kprimary2)
                                                   ],
                                                 ),
@@ -189,7 +189,7 @@ class _EditProfileScreanState extends State<EditProfileScrean> {
                                                           Icons.camera,
                                                           color: kprimary2,
                                                         )),
-                                                    buildText2("Gallery",
+                                                    buildText2(tr('gallery'),
                                                         color: kprimary2)
                                                   ],
                                                 )
@@ -209,8 +209,9 @@ class _EditProfileScreanState extends State<EditProfileScrean> {
                         onChange: (v) {
                           if (v.length == 0 || v.length == 1) setState(() {});
                         },
-                        text: "Name",
-                        hint: 'enter client name ...',
+                        text: tr('name'),
+                        hint: tr('hint_msg',
+                            namedArgs: {'attribute': tr('name')}),
                         controller: nameController),
                     // buldinputContainer(
                     //     onChange: (v) {
@@ -223,15 +224,17 @@ class _EditProfileScreanState extends State<EditProfileScrean> {
                         onChange: (v) {
                           if (v.length == 0 || v.length == 1) setState(() {});
                         },
-                        text: "Phone",
-                        hint: 'enter mobile phone ...',
+                        text: tr('phone'),
+                        hint: tr('hint_msg',
+                            namedArgs: {'attribute': tr('phone')}),
                         controller: phoneController),
                     buldinputContainer(
                         onChange: (v) {
                           if (v.length == 0 || v.length == 1) setState(() {});
                         },
-                        hint: "Enter your location ...",
-                        text: "Location",
+                        text: tr('location'),
+                        hint: tr('hint_msg',
+                            namedArgs: {'attribute': tr('location')}),
                         isLoading: isLoading,
                         onpressed: () async {
                           setState(() {
@@ -246,7 +249,7 @@ class _EditProfileScreanState extends State<EditProfileScrean> {
                         },
                         controller: locationController),
                     buldinputContainer(
-                        text: "Birth Date",
+                        text: tr('birthdate'),
                         widget: InkWell(
                             onTap: () async {
                               FocusScope.of(context)
@@ -266,7 +269,9 @@ class _EditProfileScreanState extends State<EditProfileScrean> {
                                       ? DateFormat('dd/MM/yyyy')
                                           .format(_selectedDate)
                                           .toString()
-                                      : 'select your birthdate',
+                                      : tr('hint_msg', namedArgs: {
+                                          'attribute': tr('birthdate')
+                                        }),
                                   style: TextStyle(
                                       color: _selectedDate != null
                                           ? kprimary
@@ -280,7 +285,7 @@ class _EditProfileScreanState extends State<EditProfileScrean> {
                         controller: TextEditingController(
                             text: _selectedDate.toString())),
                     buldinputContainer(
-                      text: "Gender",
+                      text: tr('gender'),
                       controller: TextEditingController(
                           text: user['gender'][0].toUpperCase() +
                               user['gender'].substring(1)),
@@ -301,10 +306,11 @@ class _EditProfileScreanState extends State<EditProfileScrean> {
                                           fontWeight: FontWeight.w900,
                                           fontSize: 18),
                                     ),
-                            items: ['Male', 'Female'],
+                            items: [tr('male'), tr('female')],
                             popupBackgroundColor: kcolor1,
-                            maxHeight: 110,
-                            hint: "Choose your gender ...",
+                            maxHeight: 100,
+                            hint: tr('hint_msg',
+                                namedArgs: {'attribute': tr('gender')}),
                             onChanged: (g) {
                               setState(() {
                                 gender = g;
@@ -317,15 +323,17 @@ class _EditProfileScreanState extends State<EditProfileScrean> {
                         onChange: (v) {
                           if (v.length == 0 || v.length == 1) setState(() {});
                         },
-                        text: "Weight",
-                        hint: 'enter your weight ...',
+                        text: tr('weight'),
+                        hint: tr('hint_msg',
+                            namedArgs: {'attribute': tr('weight')}),
                         controller: weightController),
                     buldinputContainer(
                         onChange: (v) {
                           if (v.length == 0 || v.length == 1) setState(() {});
                         },
-                        text: "Height",
-                        hint: 'enter your height ...',
+                        text: tr('height'),
+                        hint: tr('hint_msg',
+                            namedArgs: {'attribute': tr('height')}),
                         controller: heightController),
                     // buldinputContainer(
                     //   text: "Password",
@@ -421,7 +429,7 @@ class _EditProfileScreanState extends State<EditProfileScrean> {
                           Expanded(
                               flex: 2,
                               child: buildFillElevatedButton(
-                                text: "Discard Edits",
+                                text: tr("discard_edits"),
                                 bgcolor: kwhite.withOpacity(0.9),
                                 txtcolor: kprimary,
                                 onpressed: () {
@@ -434,7 +442,7 @@ class _EditProfileScreanState extends State<EditProfileScrean> {
                           Expanded(
                               flex: 1,
                               child: buildFillElevatedButton(
-                                text: "Save",
+                                text: tr("save"),
                                 onpressed: () async {
                                   await updateProfile();
                                 },

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:location/location.dart' as loc;
@@ -22,8 +23,8 @@ const kblue = Color(0xff3f4075);
 const APIKEY = "AIzaSyDXgbuvH4h_A7OkEbqAucUKQSLUfJs8i2Y";
 const img =
     "https://digitaldefynd.com/wp-content/uploads/2020/04/Best-Food-Styling-course-tutorial-class-certification-training-online-1024x625.jpg";
-const errorMsg =
-    "tr('error404')\nplease send correct data or check network status!!";
+var errorMsg = tr('error404');
+// "\nplease send correct data or check network status!!";
 setValue({key, value}) async {
   SharedPreferences prfs = await SharedPreferences.getInstance();
   prfs.setString(key, value);

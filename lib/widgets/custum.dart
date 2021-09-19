@@ -91,7 +91,6 @@ buildOutElevatedButton({text, onpressed, test: true}) {
 buildIconElevatedButton(
     {icon, label, onpressed, color = kwhite, bg = kprimary2, fontSize = 16.0}) {
   return ElevatedButton.icon(
-  
     label: Text(label,
         style: TextStyle(
           color: color,
@@ -100,9 +99,7 @@ buildIconElevatedButton(
         )),
     onPressed: onpressed,
     icon: icon,
-    
     style: ButtonStyle(
-      
         padding: MaterialStateProperty.all(
             EdgeInsets.symmetric(vertical: 12, horizontal: 18)),
         backgroundColor: MaterialStateProperty.all<Color>(bg),
@@ -409,11 +406,11 @@ buildCartItem(ProductModel p, ondelete) {
 
 buildCourseItem(product) {
   return Container(
-  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     padding: EdgeInsets.all(10),
-    width: response.screenWidth ,
-    decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30), color: kwhite),
+    width: response.screenWidth,
+    decoration:
+        BoxDecoration(borderRadius: BorderRadius.circular(30), color: kwhite),
     child: Row(
       children: [
         Container(
@@ -422,8 +419,7 @@ buildCourseItem(product) {
           width: 80,
           padding: EdgeInsets.all(8),
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(25),
-              color: Colors.grey[200]),
+              borderRadius: BorderRadius.circular(25), color: Colors.grey[200]),
           child: Image.network(product['photo'] ?? ''),
         ),
         SizedBox(
@@ -525,7 +521,8 @@ buildShopItem({context, ProductModel product}) {
                           height: 2,
                         ),
                         Text(product.description,
-                            overflow: TextOverflow.fade,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
                             style: TextStyle(
                                 color: ksecondary,
                                 fontWeight: FontWeight.w900,
@@ -593,7 +590,7 @@ buildShopItem({context, ProductModel product}) {
             if (res != false) {
               Provider.of<AppProvider>(context, listen: false)
                   .changeCartCount(int.parse(res['amount'].toString()));
-              Toast.show("Product added to cart successfully", context,
+              Toast.show(tr("added"), context,
                   backgroundColor: kprimary,
                   textColor: kwhite,
                   gravity: Toast.BOTTOM,
@@ -653,7 +650,7 @@ buildOrderItem(o) {
               children: [
                 Expanded(
                   flex: 8,
-                  child: buildText2("Client Name : ", fontsize: 14),
+                  child: buildText2(tr("client_name"), fontsize: 14),
                 ),
                 Expanded(
                   flex: 20,
@@ -671,7 +668,7 @@ buildOrderItem(o) {
               children: [
                 Expanded(
                   flex: 8,
-                  child: buildText2("Address : ", fontsize: 14),
+                  child: buildText2(tr("address"), fontsize: 14),
                 ),
                 Expanded(
                   flex: 20,
@@ -689,7 +686,7 @@ buildOrderItem(o) {
               children: [
                 Expanded(
                   flex: 8,
-                  child: buildText2("Phone : ", fontsize: 14),
+                  child: buildText2(tr("phone") + ': ', fontsize: 14),
                 ),
                 Expanded(
                   flex: 20,
@@ -707,7 +704,7 @@ buildOrderItem(o) {
               children: [
                 Expanded(
                   flex: 8,
-                  child: buildText2("Order : ", fontsize: 14),
+                  child: buildText2(tr("order"), fontsize: 14),
                 ),
                 Expanded(
                     flex: 20,
@@ -733,7 +730,7 @@ buildOrderItem(o) {
               children: [
                 Expanded(
                   flex: 8,
-                  child: buildText2("Total Price : ", fontsize: 14),
+                  child: buildText2(tr("total_price"), fontsize: 14),
                 ),
                 Expanded(
                   flex: 20,
@@ -753,7 +750,7 @@ buildOrderItem(o) {
               children: [
                 Expanded(
                   flex: 8,
-                  child: buildText2("Date : ", fontsize: 14),
+                  child: buildText2(tr("date"), fontsize: 14),
                 ),
                 Expanded(
                   flex: 20,
@@ -771,7 +768,7 @@ buildOrderItem(o) {
               children: [
                 Expanded(
                   flex: 8,
-                  child: buildText2("Status : ", fontsize: 14),
+                  child: buildText2(tr("status"), fontsize: 14),
                 ),
                 Expanded(
                   flex: 20,
@@ -789,14 +786,14 @@ buildOrderItem(o) {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 buildIconElevatedButton(
-                    label: 'Edit Order',
+                    label: tr('edit_order'),
                     icon: Image.asset("assets/images/edit-button.png"),
                     onpressed: () {}),
                 SizedBox(
                   width: 8,
                 ),
                 buildIconElevatedButtonOutLine(
-                    label: 'Cancel',
+                    label: tr('cancel'),
                     color: kprimary2,
                     icon: Icon(
                       Icons.close,
@@ -1029,7 +1026,7 @@ Widget buildDrawer(context) {
                     ? MainAxisAlignment.end
                     : MainAxisAlignment.start,
                 children: [
-                  buildBackButton(context,context.locale == Locale('ar')),
+                  buildBackButton(context, context.locale == Locale('ar')),
                 ],
               ),
               Expanded(
@@ -1205,7 +1202,7 @@ goToWithRemoveUntill(context, page) {
       MaterialPageRoute(builder: (_) => page), (Route<dynamic> route) => false);
 }
 
-Widget buildBackButton(context ,bool isRtl) {
+Widget buildBackButton(context, bool isRtl) {
   return Container(
     margin: EdgeInsets.all(32),
     alignment: Alignment.centerRight,
@@ -1220,11 +1217,10 @@ Widget buildBackButton(context ,bool isRtl) {
             color: kwhite, borderRadius: BorderRadius.circular(15)),
         child: Center(
           child: Padding(
-            padding:  EdgeInsets.only(left:isRtl?0: 8.0 ,right: isRtl?8.0:0),
+            padding:
+                EdgeInsets.only(left: isRtl ? 0 : 8.0, right: isRtl ? 8.0 : 0),
             child: Icon(
-             isRtl
-                  ? Icons.arrow_forward_ios
-                  : Icons.arrow_back_ios,
+              isRtl ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
               size: 25,
               color: kicon,
             ),

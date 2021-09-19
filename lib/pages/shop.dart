@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test_app/API.dart';
 import 'package:flutter_test_app/Alert.dart';
@@ -84,12 +85,12 @@ class _ShopScreanState extends State<ShopScrean> {
                     child: Selector<AppProvider, int>(
                         selector: (context, app) => app.cartCount,
                         builder: (context, i, w) =>
-                            buildText2('$i item in cart')),
+                            buildText2('$i ' + tr('item_in_cart'))),
                   ),
                   SizedBox(height: 3),
                   buildIconElevatedButton(
                       icon: Image.asset("assets/images/cart.png"),
-                      label: 'Shopping Cart',
+                      label: tr('cart'),
                       onpressed: () =>
                           goTo(context, CartScrean(), then: (v) async {
                             final response = await API.getCart();
@@ -128,7 +129,7 @@ class _ShopScreanState extends State<ShopScrean> {
                           : data.length == 0
                               ? Expanded(
                                   child: Center(
-                                    child: buildText("No Data Found ...."),
+                                    child: buildText(tr("nodata")),
                                   ),
                                 )
                               : Expanded(
@@ -150,7 +151,7 @@ class _ShopScreanState extends State<ShopScrean> {
                                           ],
                                         ),
                                         child: buildSearch(
-                                            hint: "Search",
+                                            hint: tr('search'),
                                             onChange: (String v) {
                                               if (v.toString().length > 0) {
                                                 print("object");

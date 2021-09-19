@@ -80,7 +80,7 @@ class _HomeScreanState extends State<HomeScrean> {
                   )
                 : allCourseList.length == 0
                     ? Center(
-                        child: buildText("No Data Found ...."),
+                        child: buildText(tr("nodata")),
                       )
                     : ListView(
                         physics: BouncingScrollPhysics(),
@@ -256,11 +256,18 @@ class _HomeScreanState extends State<HomeScrean> {
                                         alignment: Alignment.bottomCenter,
                                         child: Container(
                                           margin: EdgeInsets.only(
-                                              left: 16,
-                                              right:
-                                                  (i == courseList.length - 1)
+                                              left: context.locale ==
+                                                      Locale('ar')
+                                                  ? (i == courseList.length - 1)
                                                       ? 16
-                                                      : 0),
+                                                      : 0
+                                                  : 16,
+                                              right: context.locale ==
+                                                      Locale('en')
+                                                  ? (i == courseList.length - 1)
+                                                      ? 16
+                                                      : 0
+                                                  : 0),
                                           padding: EdgeInsets.symmetric(
                                               horizontal: 12),
                                           height: response.setHeight(65),

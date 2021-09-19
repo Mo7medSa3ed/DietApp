@@ -136,6 +136,7 @@ class API {
       return "error";
     }
   }
+
   static Future<dynamic> getCountries() async {
     try {
       final res = await http.get(Uri.parse('$_BaseUrl/users/countries'),
@@ -281,6 +282,7 @@ class API {
       dio.options = BaseOptions(headers: await getHeader());
       final res = await dio.post('$_BaseUrl/users/account/updateProfile',
           data: formData);
+      print(res.data);
 
       return res;
     } catch (e) {

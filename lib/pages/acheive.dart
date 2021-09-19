@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test_app/constants/config.dart';
 import 'package:flutter_test_app/pages/home.dart';
@@ -22,7 +23,6 @@ class _AchieveScreanState extends State<AchieveScrean> {
 
   @override
   void initState() {
-  
     isBoy = Provider.of<AppProvider>(context, listen: false).user['gender'] ==
             "male"
         ? true
@@ -56,7 +56,7 @@ class _AchieveScreanState extends State<AchieveScrean> {
           Align(
             alignment: Alignment(0, 0.5),
             child: Text(
-              "You are achieved",
+              tr('achived'),
               textAlign: TextAlign.center,
               style: TextStyle(
                   fontSize: response.setFontSize(22),
@@ -78,7 +78,7 @@ class _AchieveScreanState extends State<AchieveScrean> {
           Align(
             alignment: Alignment(0, 0.88),
             child: Text(
-              widget.end == -1 ? "Finish Go Home >>>" : "Next Day >> ",
+              widget.end == -1 ? tr('finish') : tr('next'),
               textAlign: TextAlign.center,
               style: TextStyle(
                   fontSize: response.setFontSize(22),
@@ -131,7 +131,7 @@ class _AchieveScreanState extends State<AchieveScrean> {
                   Align(
                     alignment: Alignment(0, -0.75),
                     child: Text(
-                      "GREAT!",
+                      tr('great'),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontFamily: 'RifficFree',

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test_app/API.dart';
 import 'package:flutter_test_app/Alert.dart';
@@ -20,13 +21,8 @@ class _CartScreanState extends State<CartScrean> {
   getData() async {
     cartList.clear();
     final res = await API.getCart();
-    if (res == 'error')
-      return Alert.errorAlert(
-          ctx: context,
-          title:
-              errorMsg);
+    if (res == 'error') return Alert.errorAlert(ctx: context, title: errorMsg);
     if (res != null) {
-
       status = res['success'];
       if (res['data']['items'].length > 0) {
         cartList = res['data']['items']
@@ -69,7 +65,7 @@ class _CartScreanState extends State<CartScrean> {
                     )
                   : cartList.length == 0
                       ? Center(
-                          child: buildText("No Data Found ...."),
+                          child: buildText(tr("nodata")),
                         )
                       : Expanded(
                           child: Column(
@@ -89,7 +85,7 @@ class _CartScreanState extends State<CartScrean> {
                                       padding:
                                           EdgeInsets.symmetric(horizontal: 4),
                                       child: buildText(
-                                        "Order review",
+                                        tr("order_review"),
                                       ),
                                     ),
                                     SizedBox(
@@ -152,13 +148,13 @@ class _CartScreanState extends State<CartScrean> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     buildOutElevatedButton(
-                        text: "Continue Shopping",
+                        text: tr("continue_shipping"),
                         onpressed: () {
                           goTo(context, ShopScrean());
                         }),
                     SizedBox(height: 8),
                     buildFillElevatedButton(
-                        text: 'Checkout',
+                        text: tr('checkout'),
                         bgcolor: cartList.length == 0 ? Colors.grey : kprimary2,
                         onpressed: () {
                           if (cartList.length == 0) return;
