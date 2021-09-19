@@ -173,7 +173,7 @@ class _ForgetPasswordScreanState extends State<ForgetPasswordScrean> {
     } else if (res.statusCode != 200 || !resBody['success']) {
       return Alert.errorAlert(ctx: context, title: resBody['message']);
     } else {
-      return Alert.errorAlert(ctx: context, title: "Something went wrong...");
+      return Alert.errorAlert(ctx: context, title: "tr('error404')");
     }
   }
 
@@ -193,7 +193,7 @@ class _ForgetPasswordScreanState extends State<ForgetPasswordScrean> {
     } else if (res.statusCode != 200 || !resBody['success']) {
       return Alert.errorAlert(ctx: context, title: resBody['message']);
     } else {
-      return Alert.errorAlert(ctx: context, title: "Something went wrong...");
+      return Alert.errorAlert(ctx: context, title: "tr('error404')");
     }
   }
 }

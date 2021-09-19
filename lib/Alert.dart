@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_test_app/constants/config.dart';
@@ -50,7 +51,7 @@ class Alert {
                                     borderRadius: BorderRadius.circular(50))),
                           ),
                           child: Text(
-                            'OK',
+                            tr('ok'),
                             style: TextStyle(
                                 fontSize: 14,
                                 color: kwhite,
@@ -80,7 +81,7 @@ class Alert {
                       height: 150,
                     ),
                     SizedBox(height: 16),
-                    Text('Error',
+                    Text(tr('error'),
                         style: TextStyle(
                             fontSize: 20,
                             color: ktextcolor,
@@ -89,7 +90,7 @@ class Alert {
                       height: 12,
                     ),
                     Text(
-                      title ?? 'Something Went wrong',
+                      title ??tr('error404'),
                       style: TextStyle(
                           fontSize: 16,
                           color: ksecondary,
@@ -110,7 +111,7 @@ class Alert {
                                       borderRadius: BorderRadius.circular(50))),
                             ),
                             child: Text(
-                              'OK',
+                              tr('ok'),
                               style: TextStyle(
                                   fontSize: 14,
                                   color: kwhite,
@@ -139,7 +140,7 @@ class Alert {
                       height: 150,
                     ),
                     SizedBox(height: 16),
-                    Text('Loading....',
+                    Text(tr('loadingTitle'),
                         style: TextStyle(
                             fontSize: 20,
                             color: ktextcolor,
@@ -148,7 +149,7 @@ class Alert {
                       height: 12,
                     ),
                     Text(
-                      'please wait',
+                      tr('loadingdesc'),
                       style: TextStyle(
                           fontSize: 16,
                           color: ksecondary,

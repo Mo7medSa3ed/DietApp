@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:delayed_display/delayed_display.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test_app/API.dart';
@@ -32,7 +33,7 @@ class _LoginScreanState extends State<LoginScrean>
   //var ageController = TextEditingController(text: '');
   //var emailController = TextEditingController(text: '');
   var phoneController = TextEditingController(text: '');
-  var genderController = TextEditingController(text: 'Male');
+  var genderController = TextEditingController(text: tr('male'));
   var locationController = TextEditingController(text: '');
   var passController = TextEditingController(text: '');
   var confirController = TextEditingController(text: '');
@@ -88,7 +89,7 @@ class _LoginScreanState extends State<LoginScrean>
             fadeIn: true,
             fadingDuration: Duration(seconds: 2),
             child: Text(
-              "Welcome !",
+              tr('welcome'),
               textAlign: TextAlign.center,
               style: TextStyle(
                   fontSize: response.setFontSize(35),
@@ -109,7 +110,7 @@ class _LoginScreanState extends State<LoginScrean>
                         elevation: 0.0,
                         txtcolor: kprimary,
                         bgcolor: kcolor1,
-                        text: "LOGIN",
+                        text: tr('login'),
                         onpressed: () {
                           _controller.reset();
                           _controller2.reset();
@@ -121,7 +122,7 @@ class _LoginScreanState extends State<LoginScrean>
                         child: buildFillElevatedButton(
                             bgcolor:
                                 _controller.value == 0.0 ? kcolor1 : kprimary2,
-                            text: "LOGIN",
+                            text: tr('login'),
                             onpressed: () {
                               if (_controller.value == 0.0) {
                                 _controller.reset();
@@ -149,7 +150,7 @@ class _LoginScreanState extends State<LoginScrean>
                 _controller2.value == 0.0
                     ? buildFillElevatedButton(
                         elevation: 0.0,
-                        text: "SIGNUP",
+                        text: tr('sign_up'),
                         txtcolor: kprimary,
                         bgcolor:
                             _controller2.value == 0.0 ? kcolor1 : kprimary2,
@@ -162,7 +163,7 @@ class _LoginScreanState extends State<LoginScrean>
                         scale: CurvedAnimation(
                             parent: _controller2, curve: Curves.linear),
                         child: buildFillElevatedButton(
-                            text: "SIGNUP",
+                            text: tr('sign_up'),
                             bgcolor:
                                 _controller2.value == 0.0 ? kcolor1 : kprimary2,
                             onpressed: () {
@@ -213,11 +214,12 @@ class _LoginScreanState extends State<LoginScrean>
                                     if (v.length == 0 || v.length == 1)
                                       setState(() {});
                                   },
-                                  text: "Phone",
-                                  hint: 'enter mobile phone ...',
+                                  text: tr('phone'),
+                                  hint: tr('hint_msg',
+                                      namedArgs: {'attribute': tr('phone')}),
                                   controller: phoneController),
                               buldinputContainer(
-                                text: "Password",
+                                text: tr('password'),
                                 controller: passController,
                                 widget: Padding(
                                   padding: const EdgeInsets.symmetric(
@@ -226,7 +228,9 @@ class _LoginScreanState extends State<LoginScrean>
                                     controller: passController,
                                     validator: (String v) {
                                       if (v.trim().isEmpty || v == null) {
-                                        return 'please enter your password...';
+                                        return tr('validate_msg', namedArgs: {
+                                          'attribute': tr('password')
+                                        });
                                       }
                                       return null;
                                     },
@@ -257,7 +261,9 @@ class _LoginScreanState extends State<LoginScrean>
                                             fontSize: 16,
                                             fontWeight: FontWeight.w700),
                                         border: InputBorder.none,
-                                        hintText: "enter your password ..."),
+                                        hintText: tr('hint_msg', namedArgs: {
+                                          'attribute': tr('password')
+                                        })),
                                   ),
                                 ),
                               ),
@@ -268,8 +274,9 @@ class _LoginScreanState extends State<LoginScrean>
                                     if (v.length == 0 || v.length == 1)
                                       setState(() {});
                                   },
-                                  text: "Name",
-                                  hint: 'enter client name ...',
+                                  text: tr('name'),
+                                  hint: tr('hint_msg',
+                                      namedArgs: {'attribute': tr('name')}),
                                   controller: nameController),
                               // buldinputContainer(
                               //     onChange: (v) {
@@ -284,8 +291,9 @@ class _LoginScreanState extends State<LoginScrean>
                                     if (v.length == 0 || v.length == 1)
                                       setState(() {});
                                   },
-                                  text: "Phone",
-                                  hint: 'enter mobile phone ...',
+                                  text: tr('phone'),
+                                  hint: tr('hint_msg',
+                                      namedArgs: {'attribute': tr('phone')}),
                                   controller: phoneController),
                               /*   Row(
                 children: [
@@ -309,8 +317,9 @@ class _LoginScreanState extends State<LoginScrean>
                                     if (v.length == 0 || v.length == 1)
                                       setState(() {});
                                   },
-                                  hint: "enter your location ...",
-                                  text: "Location",
+                                  text: tr('location'),
+                                  hint: tr('hint_msg',
+                                      namedArgs: {'attribute': tr('location')}),
                                   isLoading: isLoading,
                                   onpressed: () async {
                                     setState(() {
@@ -325,7 +334,7 @@ class _LoginScreanState extends State<LoginScrean>
                                   },
                                   controller: locationController),
                               buldinputContainer(
-                                  text: "Birth date",
+                                  text: tr('birthdate'),
                                   widget: InkWell(
                                       onTap: () async {
                                         FocusScope.of(context)
@@ -345,7 +354,9 @@ class _LoginScreanState extends State<LoginScrean>
                                                 ? DateFormat('dd/MM/yyyy')
                                                     .format(selectedDate)
                                                     .toString()
-                                                : 'select your birthdate',
+                                                : tr('hint_msg', namedArgs: {
+                                                    'attribute': tr('birthdate')
+                                                  }),
                                             style: TextStyle(
                                                 color: selectedDate != null
                                                     ? kprimary
@@ -359,7 +370,7 @@ class _LoginScreanState extends State<LoginScrean>
                                       )),
                                   controller: TextEditingController(text: '')),
                               buldinputContainer(
-                                text: "Gender",
+                                text: tr('gender'),
                                 controller: genderController,
                                 widget: Padding(
                                   padding: const EdgeInsets.symmetric(
@@ -380,14 +391,16 @@ class _LoginScreanState extends State<LoginScrean>
                                                 fontWeight: FontWeight.w900,
                                                 fontSize: 18),
                                           ),
-                                      items: ['Male', 'Female'],
+                                      items: [tr('male'), tr('female')],
                                       popupBackgroundColor: kcolor1,
                                       maxHeight: 100,
-                                      hint: "choose your gender ...",
+                                      hint: tr('hint_msg', namedArgs: {
+                                        'attribute': tr('gender')
+                                      }),
                                       onChanged: (v) {
                                         genderController.text = v;
                                       },
-                                      selectedItem: "Male"),
+                                      selectedItem: tr('male')),
                                 ),
                               ),
                               // buldinputContainer(
@@ -399,7 +412,7 @@ class _LoginScreanState extends State<LoginScrean>
                               //     hint: "enter your age ...",
                               //     controller: ageController),
                               buldinputContainer(
-                                text: "Password",
+                                text: tr('password'),
                                 controller: passController,
                                 widget: Padding(
                                   padding: const EdgeInsets.symmetric(
@@ -413,10 +426,16 @@ class _LoginScreanState extends State<LoginScrean>
                                     },
                                     validator: (String v) {
                                       if (v.trim().isEmpty || v == null) {
-                                        return 'please enter your password...';
+                                        return tr('hint_msg', namedArgs: {
+                                          'attribute': tr('password')
+                                        });
                                       }
                                       if (v.trim().length < 6) {
-                                        return 'password must be at least 6 character !!';
+                                        return tr('max_validate_msg',
+                                            namedArgs: {
+                                              'attribute': tr('password'),
+                                              'num': '6'
+                                            });
                                       }
                                       return null;
                                     },
@@ -444,12 +463,14 @@ class _LoginScreanState extends State<LoginScrean>
                                             fontSize: 16,
                                             fontWeight: FontWeight.w700),
                                         border: InputBorder.none,
-                                        hintText: "enter your password ..."),
+                                        hintText: tr('hint_msg', namedArgs: {
+                                          'attribute': tr('password')
+                                        })),
                                   ),
                                 ),
                               ),
                               buldinputContainer(
-                                text: "Confirm Password",
+                                text: tr('confirm_pass'),
                                 controller: confirController,
                                 widget: Padding(
                                   padding: const EdgeInsets.symmetric(
@@ -463,10 +484,15 @@ class _LoginScreanState extends State<LoginScrean>
                                     },
                                     validator: (String v) {
                                       if (v.trim().isEmpty || v == null) {
-                                        return 'please enter your Confirm password...';
+                                        return tr('hint_msg', namedArgs: {
+                                          'attribute': tr('confirm_pass')
+                                        });
                                       }
                                       if (v.trim() != passController.text) {
-                                        return 'confirm password not a same !!';
+                                        return tr('same_validate_msg',
+                                            namedArgs: {
+                                              'attribute': tr('password')
+                                            });
                                       }
                                       return null;
                                     },
@@ -496,8 +522,9 @@ class _LoginScreanState extends State<LoginScrean>
                                             fontSize: 16,
                                             fontWeight: FontWeight.w700),
                                         border: InputBorder.none,
-                                        hintText:
-                                            "enter confirm password ...."),
+                                        hintText: tr('hint_msg', namedArgs: {
+                                          'attribute': tr('confirm_pass')
+                                        })),
                                   ),
                                 ),
                               )
@@ -544,7 +571,9 @@ class _LoginScreanState extends State<LoginScrean>
                   //goTo(context, HomeScrean());
                 },
                 child: Icon(
-                  Icons.arrow_forward_sharp,
+                  context.locale == Locale('ar')
+                      ? Icons.arrow_back_sharp
+                      : Icons.arrow_forward_sharp,
                   color: kprimary,
                 ),
               ),
@@ -579,13 +608,13 @@ class _LoginScreanState extends State<LoginScrean>
           .initUser(resBody['data']);
       return Alert.sucessAlert(
           ctx: context,
-          text: 'User Registered Successfully \nyou must login agin!',
-          title: "Sing Up",
+          text: tr('success' ,namedArgs: {'attribute':tr('signup')}),
+          title: tr('signup_full').toLowerCase(),
           ontap: () => goToWithRemoveUntill(context, LoginScrean()));
     } else if (res.statusCode != 200 || !resBody['success']) {
       return Alert.errorAlert(ctx: context, title: resBody['message']);
     } else {
-      return Alert.errorAlert(ctx: context, title: "Something went wrong...");
+      return Alert.errorAlert(ctx: context, title: tr('error404'));
     }
   }
 
@@ -600,7 +629,7 @@ class _LoginScreanState extends State<LoginScrean>
     final resBody = json.decode(res.body);
     Navigator.of(context).pop();
     if (res == 'error')
-      return Alert.errorAlert(ctx: context, title: "Something went wrong...");
+      return Alert.errorAlert(ctx: context, title: tr('error404'));
 
     if (res.statusCode == 200 && resBody['success']) {
       await setValue(
@@ -610,8 +639,8 @@ class _LoginScreanState extends State<LoginScrean>
           .initUser(resBody['data']['user']);
       return Alert.sucessAlert(
           ctx: context,
-          text: "User Login Successfully",
-          title: "Login",
+          text: tr('success',namedArgs: {'attribute':tr('login')}),
+          title: tr('login_full').toLowerCase(),
           ontap: () => goToWithRemoveUntill(
               context,
               (resBody['data']['user']['height'] != null &&
@@ -621,7 +650,7 @@ class _LoginScreanState extends State<LoginScrean>
     } else if (res.statusCode != 200 || !resBody['success']) {
       return Alert.errorAlert(ctx: context, title: resBody['message']);
     } else {
-      return Alert.errorAlert(ctx: context, title: "Something went wrong...");
+      return Alert.errorAlert(ctx: context, title: tr('error404'));
     }
   }
 }

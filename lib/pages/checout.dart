@@ -1,4 +1,4 @@
-
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test_app/API.dart';
 import 'package:flutter_test_app/Alert.dart';
@@ -19,7 +19,9 @@ class _CheckoutScreanState extends State<CheckoutScrean> {
   var _nameController = TextEditingController(text: '');
   var _phone = TextEditingController(text: '');
   var _address = TextEditingController(text: '');
+  List<String> countriesCode = [];
   var user;
+  var countryCode;
   double total = 0.0;
   Address addresses;
   bool isLoading = false;
@@ -44,11 +46,23 @@ class _CheckoutScreanState extends State<CheckoutScrean> {
           double.parse(res['data']['total'].toString()).toStringAsFixed(1);
       total = double.parse(t);
     }
+    final response = await API.getCountries();
+    if (response == 'error')
+      return Alert.errorAlert(ctx: context, title: errorMsg);
+    if (response != null) {
+      if (response['success']) {
+        countriesCode = (response['data'] ?? [])
+            .map<String>((e) => e['code'].toString())
+            .toList();
+        if (countriesCode.length > 0) countryCode = countriesCode[0];
+      }
+    }
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
+    print(countriesCode);
     return SafeArea(
         child: Scaffold(
             key: scaffoldkey,
@@ -115,7 +129,41 @@ class _CheckoutScreanState extends State<CheckoutScrean> {
                               controller: _phone),
                           SizedBox(
                             height: 10,
-                          )
+                          ),
+                          buldinputContainer(
+                            text: "Country Code",
+                            controller: TextEditingController(text: ''),
+                            widget: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: DropdownSearch<String>(
+                                  searchBoxDecoration: InputDecoration(
+                                    border: InputBorder.none,
+                                  ),
+                                  dropdownSearchDecoration: InputDecoration(
+                                    border: InputBorder.none,
+                                  ),
+                                  mode: Mode.MENU,
+                                  dropdownBuilder:
+                                      (context, selectedItem, itemAsString) =>
+                                          Text(
+                                            selectedItem,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w900,
+                                                fontSize: 18),
+                                          ),
+                                  items: countriesCode,
+                                  popupBackgroundColor:
+                                      kcolor1.withOpacity(0.9),
+                                  hint: "Choose your country code ...",
+                                  onChanged: (g) {
+                                    setState(() {
+                                      countryCode = g;
+                                    });
+                                  },
+                                  selectedItem: countryCode ?? ''),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -192,18 +240,18 @@ class _CheckoutScreanState extends State<CheckoutScrean> {
       "user_mobile": (_phone.text.trim().isEmpty)
           ? user['mobile'].toString().replaceAll("+2", '')
           : "+2" + _phone.text.trim(),
-      "user_country": addresses != null ? addresses.countryName : 'Egypt adas',
+      "user_country": countryCode,
       "user_city": addresses != null ? addresses.subAdminArea : "Minya",
     };
     print(body);
     final res = await API.makeOrder(body);
     Navigator.of(context).pop();
     if (res == 'error') {
-      return Alert.errorAlert(ctx: context, title: "Something went wrong...");
+      return Alert.errorAlert(ctx: context, title: "tr('error404')");
     }
 
     final data = res.data;
- 
+
     if ((res.statusCode == 200 || res.statusCode == 201) && data['success']) {
       return buildDialog(
         context: context,
@@ -215,7 +263,7 @@ class _CheckoutScreanState extends State<CheckoutScrean> {
     } else if (res.statusCode != 200 || !data['success']) {
       return Alert.errorAlert(ctx: context, title: data['message']);
     } else {
-      return Alert.errorAlert(ctx: context, title: "Something went wrong...");
+      return Alert.errorAlert(ctx: context, title: "tr('error404')");
     }
   }
 

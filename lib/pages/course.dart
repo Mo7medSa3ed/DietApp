@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test_app/API.dart';
 import 'package:flutter_test_app/Alert.dart';
@@ -152,12 +153,14 @@ class _CouresScreanState extends State<CouresScrean> {
                               Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 25.0),
-                                  child: buildText('Components')),
+                                  child: buildText(tr('components'))),
                               SizedBox(
                                 height: response.setHeight(10),
                               ),
-                              ...List.generate(course['products'].length,
-                                  (i) => buildCourseItem(course['products'][i])),
+                              ...List.generate(
+                                  course['products'].length,
+                                  (i) =>
+                                      buildCourseItem(course['products'][i])),
                             ],
                           ),
                         ),
@@ -191,7 +194,7 @@ class _CouresScreanState extends State<CouresScrean> {
                     Expanded(
                         child: buildIconElevatedButton(
                             icon: Icon(Icons.play_arrow),
-                            label: 'Start Now',
+                            label: tr('start_now'),
                             onpressed: () =>
                                 goTo(context, TimeLineScrean(course['id'], 0))))
                   ],

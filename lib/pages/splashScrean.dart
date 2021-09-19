@@ -28,6 +28,7 @@ class _SplashScreanState extends State<SplashScrean> {
   }
 
   getData() async {
+    // await clear();
     final user = await getValue(key: 'user');
     final token = await getValue(key: 'token');
     if (user != null && token != null) {

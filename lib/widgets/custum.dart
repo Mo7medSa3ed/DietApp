@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test_app/API.dart';
@@ -89,6 +91,7 @@ buildOutElevatedButton({text, onpressed, test: true}) {
 buildIconElevatedButton(
     {icon, label, onpressed, color = kwhite, bg = kprimary2, fontSize = 16.0}) {
   return ElevatedButton.icon(
+  
     label: Text(label,
         style: TextStyle(
           color: color,
@@ -97,7 +100,9 @@ buildIconElevatedButton(
         )),
     onPressed: onpressed,
     icon: icon,
+    
     style: ButtonStyle(
+      
         padding: MaterialStateProperty.all(
             EdgeInsets.symmetric(vertical: 12, horizontal: 18)),
         backgroundColor: MaterialStateProperty.all<Color>(bg),
@@ -404,61 +409,59 @@ buildCartItem(ProductModel p, ondelete) {
 
 buildCourseItem(product) {
   return Container(
-    margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    padding: EdgeInsets.all(10),
+    width: response.screenWidth ,
+    decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30), color: kwhite),
     child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
-          padding: EdgeInsets.all(10),
-          width: response.screenWidth - 32,
+          alignment: Alignment.center,
+          height: 80,
+          width: 80,
+          padding: EdgeInsets.all(8),
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30), color: kwhite),
-          child: Row(
+              borderRadius: BorderRadius.circular(25),
+              color: Colors.grey[200]),
+          child: Image.network(product['photo'] ?? ''),
+        ),
+        SizedBox(
+          width: response.setWidth(10),
+        ),
+        Expanded(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                alignment: Alignment.center,
-                height: 80,
-                width: 80,
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25),
-                    color: Colors.grey[200]),
-                child: Image.network(product['photo'] ?? ''),
-              ),
+              Text(product['name'] ?? '',
+                  overflow: TextOverflow.fade,
+                  style: TextStyle(
+                      color: kprimary,
+                      fontWeight: FontWeight.w900,
+                      fontSize: response.setFontSize(16.2))),
               SizedBox(
-                width: response.setWidth(10),
+                height: response.setHeight(2),
               ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(product['name'] ?? '',
-                      overflow: TextOverflow.fade,
-                      style: TextStyle(
-                          color: kprimary,
-                          fontWeight: FontWeight.w900,
-                          fontSize: response.setFontSize(16.2))),
-                  SizedBox(
-                    height: response.setHeight(2),
-                  ),
-                  Text(product['description'] ?? '',
-                      overflow: TextOverflow.fade,
-                      style: TextStyle(
-                          color: ksecondary,
-                          fontWeight: FontWeight.w900,
-                          fontSize: response.setFontSize(14))),
-                  SizedBox(
-                    height: response.setHeight(2),
-                  ),
-                  Text("x ${product['pivot']['quantity']}",
-                      overflow: TextOverflow.fade,
-                      style: TextStyle(
-                          color: kprimary,
-                          fontWeight: FontWeight.w900,
-                          fontSize: response.setFontSize(16.5))),
-                ],
+              Text(product['description'] ?? '',
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
+                  maxLines: 1,
+                  style: TextStyle(
+                      color: ksecondary,
+                      fontWeight: FontWeight.w900,
+                      fontSize: response.setFontSize(14))),
+              SizedBox(
+                height: response.setHeight(2),
               ),
+              Text("x ${product['pivot']['quantity']}",
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
+                  maxLines: 1,
+                  style: TextStyle(
+                      color: kprimary,
+                      fontWeight: FontWeight.w900,
+                      fontSize: response.setFontSize(16.5))),
             ],
           ),
         ),
@@ -988,7 +991,19 @@ Widget buildDrawer(context) {
       decoration: BoxDecoration(
           color: Color(0xff3f4075),
           borderRadius: BorderRadius.only(
-              topRight: Radius.circular(50), bottomRight: Radius.circular(50))),
+            topLeft: context.locale == Locale('ar')
+                ? Radius.circular(50)
+                : Radius.zero,
+            bottomLeft: context.locale == Locale('ar')
+                ? Radius.circular(50)
+                : Radius.zero,
+            topRight: context.locale == Locale('ar')
+                ? Radius.zero
+                : Radius.circular(50),
+            bottomRight: context.locale == Locale('ar')
+                ? Radius.zero
+                : Radius.circular(50),
+          )),
       child: Stack(
         children: [
           ClipPath(
@@ -1009,7 +1024,14 @@ Widget buildDrawer(context) {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              buildBackButton(context),
+              Row(
+                mainAxisAlignment: context.locale == Locale('ar')
+                    ? MainAxisAlignment.end
+                    : MainAxisAlignment.start,
+                children: [
+                  buildBackButton(context,context.locale == Locale('ar')),
+                ],
+              ),
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
@@ -1056,7 +1078,7 @@ Widget buildDrawer(context) {
                       SizedBox(
                         height: (response.screenHeight * 0.15) / 2,
                       ),
-                      buildDrawerItem("Home", 0, i, 6, () {
+                      buildDrawerItem(tr("home"), 0, i, 6, () {
                         app.changeIndex(0);
                         Navigator.of(context).pop();
                         goToWithRemoveUntill(context, HomeScrean());
@@ -1064,7 +1086,7 @@ Widget buildDrawer(context) {
                       SizedBox(
                         height: response.setHeight(20),
                       ),
-                      buildDrawerItem("My Course", 1, i, 2, () {
+                      buildDrawerItem(tr("my_course"), 1, i, 2, () {
                         app.changeIndex(1);
                         Navigator.of(context).pop();
                         goTo(context, CouresScrean());
@@ -1072,7 +1094,7 @@ Widget buildDrawer(context) {
                       SizedBox(
                         height: response.setHeight(20),
                       ),
-                      buildDrawerItem("Shop", 2, i, 4, () {
+                      buildDrawerItem(tr("shop"), 2, i, 4, () {
                         app.changeIndex(2);
                         Navigator.of(context).pop();
 
@@ -1081,7 +1103,7 @@ Widget buildDrawer(context) {
                       SizedBox(
                         height: response.setHeight(20),
                       ),
-                      buildDrawerItem("Cart", 3, i, 7, () {
+                      buildDrawerItem(tr("cart"), 3, i, 7, () {
                         app.changeIndex(3);
                         Navigator.of(context).pop();
 
@@ -1090,7 +1112,7 @@ Widget buildDrawer(context) {
                       SizedBox(
                         height: response.setHeight(20),
                       ),
-                      buildDrawerItem("Orders", 4, i, 1, () {
+                      buildDrawerItem(tr("orders"), 4, i, 1, () {
                         app.changeIndex(4);
                         Navigator.of(context).pop();
 
@@ -1099,14 +1121,14 @@ Widget buildDrawer(context) {
                       SizedBox(
                         height: response.setHeight(20),
                       ),
-                      buildDrawerItem("Settings", 5, i, 5, () {
+                      buildDrawerItem(tr("setting"), 5, i, 5, () {
                         app.changeIndex(5);
                         Navigator.of(context).pop();
                       }),
                       SizedBox(
                         height: response.setHeight(20),
                       ),
-                      buildDrawerItem("Logout", 6, i, 6, () async {
+                      buildDrawerItem(tr("logout"), 6, i, 6, () async {
                         app.changeIndex(6);
                         Navigator.of(context).pop();
                         if (await clear())
@@ -1183,7 +1205,7 @@ goToWithRemoveUntill(context, page) {
       MaterialPageRoute(builder: (_) => page), (Route<dynamic> route) => false);
 }
 
-Widget buildBackButton(context) {
+Widget buildBackButton(context ,bool isRtl) {
   return Container(
     margin: EdgeInsets.all(32),
     alignment: Alignment.centerRight,
@@ -1198,9 +1220,11 @@ Widget buildBackButton(context) {
             color: kwhite, borderRadius: BorderRadius.circular(15)),
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.only(left: 8.0),
+            padding:  EdgeInsets.only(left:isRtl?0: 8.0 ,right: isRtl?8.0:0),
             child: Icon(
-              Icons.arrow_back_ios,
+             isRtl
+                  ? Icons.arrow_forward_ios
+                  : Icons.arrow_back_ios,
               size: 25,
               color: kicon,
             ),
@@ -1324,7 +1348,12 @@ Widget buldinputContainer(
                                 ? validator
                                 : (String v) {
                                     if (v.trim().isEmpty || v == null) {
-                                      return 'please enter your ${text.toLowerCase()}...';
+                                      return tr('hint_msg', namedArgs: {
+                                        'attribute': tr(text.toLowerCase())
+                                      });
+                                    }
+                                    if (v.length < 3 && hint == 'Name') {
+                                      return 'name at leaset 3 character';
                                     }
                                     return null;
                                   },
@@ -1333,9 +1362,9 @@ Widget buldinputContainer(
                                 ? 3
                                 : (text == "Age")
                                     ? 2
-                                    : (text == "Phone")
-                                        ? 11
-                                        : null,
+                                    /*  : (text == "Phone")
+                                        ? 11 */
+                                    : null,
                             inputFormatters: (text == "Age")
                                 ? [FilteringTextInputFormatter.digitsOnly]
                                 : null,
@@ -1388,7 +1417,7 @@ Widget buldinputContainer(
                     ),
                   )
                 : Container(
-                    padding: EdgeInsets.only(right: 8.0),
+                    padding: EdgeInsets.symmetric(horizontal: 8.0),
                     child: isLoading
                         ? CircularProgressIndicator(
                             color: kprimary,

@@ -5,17 +5,24 @@ import 'package:flutter_test_app/pages/splashScrean.dart';
 import 'package:flutter_test_app/provider/app_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:response/response.dart';
+import 'package:easy_localization/easy_localization.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
     runApp(
-      // dp.DevicePreview(
-      // builder: (context) =>
-      MyApp(), // Wrap your app
+        // dp.DevicePreview(
+        // builder: (context) =>
+        EasyLocalization(
+      supportedLocales: [Locale('en'), Locale('ar')],
+      path: 'assets/lang',
+      fallbackLocale: Locale('en'),
+      startLocale: Locale('ar'),
+      child: MyApp(), // Wrap your app
       // ),
-    );
+    ));
   });
 }
 
@@ -32,6 +39,9 @@ class MyApp extends StatelessWidget {
         child: GestureDetector(
           onTap: () => FocusScope.of(context).requestFocus(new FocusNode()),
           child: MaterialApp(
+              localizationsDelegates: context.localizationDelegates,
+              supportedLocales: context.supportedLocales,
+              locale: context.locale,
               title: 'Diet App',
               debugShowCheckedModeBanner: false,
               theme: ThemeData(

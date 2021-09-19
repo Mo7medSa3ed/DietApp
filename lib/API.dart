@@ -136,6 +136,22 @@ class API {
       return "error";
     }
   }
+  static Future<dynamic> getCountries() async {
+    try {
+      final res = await http.get(Uri.parse('$_BaseUrl/users/countries'),
+          headers: await getHeader());
+      final body = utf8.decode(res.bodyBytes);
+      final parsed = json.decode(body);
+
+      if ((res.statusCode == 200 || res.statusCode == 201) &&
+          parsed['success']) {
+        return parsed;
+      }
+      return null;
+    } catch (e) {
+      return "error";
+    }
+  }
 
   static Future<dynamic> increaseQtyCart(id) async {
     try {

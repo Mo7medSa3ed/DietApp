@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test_app/API.dart';
 import 'package:flutter_test_app/Alert.dart';
@@ -95,7 +96,7 @@ class _HomeScreanState extends State<HomeScrean> {
                           ),
                           Container(
                             padding: EdgeInsets.symmetric(horizontal: 24),
-                            child: buildText("Recommended"),
+                            child: buildText(tr('recommended')),
                           ),
                           SizedBox(
                             height: response.setHeight(20),
@@ -171,7 +172,7 @@ class _HomeScreanState extends State<HomeScrean> {
                           ),
                           Container(
                               padding: EdgeInsets.symmetric(horizontal: 24),
-                              child: buildText("Courses")),
+                              child: buildText(tr('courses'))),
                           SizedBox(
                             height: response.setHeight(20),
                           ),
@@ -188,7 +189,7 @@ class _HomeScreanState extends State<HomeScrean> {
                                 ],
                               ),
                               child: buildSearch(
-                                  hint: "search",
+                                  hint: tr("search"),
                                   onChange: (v) {
                                     if (v.toString().length > 0) {
                                       courseList = allCourseList

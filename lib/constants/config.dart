@@ -23,7 +23,7 @@ const APIKEY = "AIzaSyDXgbuvH4h_A7OkEbqAucUKQSLUfJs8i2Y";
 const img =
     "https://digitaldefynd.com/wp-content/uploads/2020/04/Best-Food-Styling-course-tutorial-class-certification-training-online-1024x625.jpg";
 const errorMsg =
-    "Something went wrong...\nplease send correct data or check network status!!";
+    "tr('error404')\nplease send correct data or check network status!!";
 setValue({key, value}) async {
   SharedPreferences prfs = await SharedPreferences.getInstance();
   prfs.setString(key, value);
