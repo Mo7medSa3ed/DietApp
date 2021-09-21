@@ -87,14 +87,15 @@ class _AchieveScreanState extends State<AchieveScrean> {
             ),
           ),
           Align(
-              alignment: Alignment(0.85, 0.9),
+              alignment:
+                  Alignment(context.locale == Locale('ar') ? -0.85 : 0.85, 0.9),
               child: Container(
                 width: 65,
                 height: 65,
                 child: FloatingActionButton(
                   heroTag: "btn1",
                   mini: false,
-                  onPressed: () {
+                  onPressed: () async {
                     return widget.end == -1
                         ? goToWithRemoveUntill(context, HomeScrean())
                         : goTo(

@@ -21,7 +21,7 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
 
   var courseDayList = [];
   var status = false;
-
+  var isRtl = false;
   getData() async {
     courseDayList = [];
     final res = await API.getOneCourseDays(widget.id);
@@ -32,8 +32,12 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
         res['data'].forEach((k, v) {
           courseDayList.add({
             "day": k,
-            "value": v[0]['components']
-                .map((e) => {"item": e, "done": false})
+            "value": v
+                .map((e) => {
+                      "done": false,
+                      "name": e['name'],
+                      "items": e['components'].map((e) => e).toList()
+                    })
                 .toList()
           });
         });
@@ -50,6 +54,8 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
 
   @override
   Widget build(BuildContext context) {
+    print(courseDayList);
+    isRtl = context.locale == Locale('ar');
     return SafeArea(
       child: Scaffold(
         key: scaffoldkey,
@@ -264,48 +270,14 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
                                     fontSize: 20, fontWeight: FontWeight.w900),
                               )),
                           Container(
-                            margin: EdgeInsets.all(10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                ...List.generate(
-                                    courseDayList[press]['value'].length, (i) {
-                                  var m;
-                                  final product =
-                                      courseDayList[press]['value'][i]['item'];
-                                  if (product['type'] == 'and' ||
-                                      product['type'] == 'or') {
-                                    m = product['items'];
-                                  } else {
-                                    m = [product['items']];
-                                  }
-
-                                  print(m);
-
-                                  return Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      buildRowwithindicator(
-                                          index: i,
-                                          firsttext: getMealName(1),
-                                          seconttext: "02:30 AM"),
-                                      // buildRowwithindicator(
-                                      //     index: i,
-                                      //     firsttext: getMealName(int.parse(
-                                      //         m['time'].substring(0, 2))),
-                                      //     seconttext:
-                                      //         "${m['time'].substring(0, 5)} AM"),
-                                      buldcardForcourseitem(
-                                          index: i, products: m),
-                                    ],
-                                  );
-                                }),
-                              ],
-                            ),
-                          )
+                              margin: EdgeInsets.all(10),
+                              child: Column(
+                                  children: courseDayList[press]['value']
+                                      .map<Widget>((e) => buldcardForcourseitem(
+                                          e['items'],
+                                          i: courseDayList[press]['value']
+                                              .indexOf(e)))
+                                      .toList())),
                         ],
                       ),
                     ),
@@ -354,7 +326,7 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              tr('ok'),
+              tr('done'),
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
             ),
             SizedBox(
@@ -377,7 +349,7 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
     );
   }
 
-  Widget buildRowwithindicator({index, firsttext, seconttext}) {
+  Widget buildRowwithindicator({index, firsttext, seconttext, isDone = false}) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -388,17 +360,11 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
           width: 25,
           height: 25,
           decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: courseDayList[press]['value'][index]['done']
-                  ? kgreen
-                  : kbackcolor),
+              shape: BoxShape.circle, color: isDone ? kgreen : kbackcolor),
           child: Container(
             margin: EdgeInsets.all(6),
             decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: courseDayList[press]['value'][index]['done']
-                    ? kgreen
-                    : kcolor1),
+                shape: BoxShape.circle, color: isDone ? kgreen : kcolor1),
           ),
         ),
         Container(
@@ -422,55 +388,73 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
     );
   }
 
-  Widget buldcardForcourseitem({time, index, products}) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 15.0, right: 15),
-      child: TimelineTile(
-        alignment: TimelineAlign.start,
-        hasIndicator: false,
-        beforeLineStyle: LineStyle(
-            color: courseDayList[press]['value'][index]['done']
-                ? kgreen
-                : ksecondary.withOpacity(0.5),
-            thickness: courseDayList[press]['value'][index]['done'] ? 5 : 3),
-        endChild: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
+  Widget buldcardForcourseitem(products, {i = 0}) {
+    var isDone = courseDayList[press]['value'][i]['done'];
+    var name = courseDayList[press]['value'][i]['name'];
+    print(products);
+    return Column(children: [
+      buildRowwithindicator(
+          firsttext: name, seconttext: '08:00 Am', index: 0, isDone: isDone),
+      ...List.generate(products.length, (index) {
+        var time;
+        var items = [];
+        final item = products[index];
+        if (item['type'] == 'and' || item['type'] == 'or') {
+          items = item['items'];
+        } else {
+          items = [item['items']];
+        }
+
+        return Padding(
+          padding: const EdgeInsets.only(left: 15.0, right: 15),
+          child: TimelineTile(
+            alignment: TimelineAlign.start,
+            hasIndicator: false,
+            beforeLineStyle: LineStyle(
+                color: isDone ? kgreen : ksecondary.withOpacity(0.5),
+                thickness: isDone ? 5 : 3),
+            endChild: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                buildItemForCourse(products, index),
-                time != null
-                    ? buildRowforTimer(text: time.toString())
-                    : Container(),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    buildItemForCourse(items, item['type']),
+                    time != null
+                        ? buildRowforTimer(text: time.toString())
+                        : Container(),
+                  ],
+                ),
+                if (index == products.length - 1)
+                  buildDonerow(
+                      isDone: isDone,
+                      ontap: () {
+                        courseDayList[press]['value'][i]['done'] =
+                            !courseDayList[press]['value'][i]['done'];
+                        setState(() {});
+                        if (i == courseDayList[press]['value'].length - 1) {
+                          return goTo(
+                              context,
+                              AchieveScrean(
+                                  (((press + 1) / courseDayList.length) * 100)
+                                      .toStringAsFixed(0),
+                                  widget.id,
+                                  press == courseDayList.length - 1
+                                      ? -1
+                                      : press));
+                        }
+                      })
               ],
             ),
-            buildDonerow(
-                isDone: courseDayList[press]['value'][index]['done'],
-                ontap: () {
-                  courseDayList[press]['value'][index]['done'] =
-                      !courseDayList[press]['value'][index]['done'];
-                  if (index == courseDayList[press]['value'].length - 1) {
-                    return goTo(
-                        context,
-                        AchieveScrean(
-                            (((press + 1) / courseDayList.length) * 100)
-                                .toStringAsFixed(0),
-                            widget.id,
-                            press == courseDayList.length - 1 ? -1 : press));
-                  }
-
-                  setState(() {});
-                })
-          ],
-        ),
-      ),
-    );
+          ),
+        );
+      }),
+    ]);
   }
 
-  Widget buildItemForCourse(products, i) {
+  Widget buildItemForCourse(products, type) {
     return Container(
       margin: EdgeInsets.only(top: 5, bottom: 5, left: 15, right: 15),
       padding: EdgeInsets.all(12),
@@ -507,9 +491,7 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
                         padding: EdgeInsets.only(
                           left: 125,
                         ),
-                        child: courseDayList[press]['value'][i]['item']
-                                    ['type'] ==
-                                'or'
+                        child: type == 'or'
                             ? Text(
                                 "Or",
                                 style: TextStyle(
@@ -517,11 +499,7 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
                                     color: kprimary2,
                                     fontWeight: FontWeight.w900),
                               )
-                            : courseDayList[press]['value'][i]['item']['type']
-                                        .toString()
-                                        .toLowerCase()
-                                        .trim() ==
-                                    'and'
+                            : type.toString().toLowerCase().trim() == 'and'
                                 ? Container(
                                     height: 23,
                                     padding: const EdgeInsets.only(bottom: 8.0),

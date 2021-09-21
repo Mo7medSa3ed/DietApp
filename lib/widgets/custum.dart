@@ -12,6 +12,7 @@ import 'package:flutter_test_app/pages/login.dart';
 import 'package:flutter_test_app/pages/orders.dart';
 import 'package:flutter_test_app/pages/profile.dart';
 import 'package:flutter_test_app/pages/shop.dart';
+import 'package:flutter_test_app/pages/support.dart';
 import 'package:flutter_test_app/provider/app_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:response/response.dart';
@@ -844,7 +845,7 @@ buildAppBar(
             SizedBox(
               height: 3,
             ),
-            Text("welcome",
+            Text(tr('welcome').replaceAll("!", ''),
                 style: TextStyle(
                     fontSize: response.setFontSize(14),
                     color: kprimary.withOpacity(0.8),
@@ -882,7 +883,8 @@ buildAppBar(
   );
 }
 
-buildAppBarForPages(context, text, press, {showProfile = true}) {
+buildAppBarForPages(context, text, press,
+    {showProfile = true, icon = Icons.menu}) {
   var user = Provider.of<AppProvider>(context, listen: false).user;
   return Container(
     padding: EdgeInsets.all(16),
@@ -899,7 +901,7 @@ buildAppBarForPages(context, text, press, {showProfile = true}) {
             decoration: BoxDecoration(
                 color: kwhite, borderRadius: BorderRadius.circular(15)),
             child: Icon(
-              Icons.menu,
+              icon,
               size: 30,
             ),
           ),
@@ -1022,7 +1024,7 @@ Widget buildDrawer(context) {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Row(
-                mainAxisAlignment: context.locale == Locale('ar')
+                mainAxisAlignment: context.locale != Locale('ar')
                     ? MainAxisAlignment.end
                     : MainAxisAlignment.start,
                 children: [
@@ -1125,6 +1127,14 @@ Widget buildDrawer(context) {
                       SizedBox(
                         height: response.setHeight(20),
                       ),
+                      buildDrawerItem(tr("support"), 7, i, 7, () {
+                        app.changeIndex(7);
+                        Navigator.of(context).pop();
+                        goTo(context, SupportScrean());
+                      }),
+                      SizedBox(
+                        height: response.setHeight(20),
+                      ),
                       buildDrawerItem(tr("logout"), 6, i, 6, () async {
                         app.changeIndex(6);
                         Navigator.of(context).pop();
@@ -1202,9 +1212,9 @@ goToWithRemoveUntill(context, page) {
       MaterialPageRoute(builder: (_) => page), (Route<dynamic> route) => false);
 }
 
-Widget buildBackButton(context, bool isRtl) {
+Widget buildBackButton(context, bool isRtl, {margin = 32}) {
   return Container(
-    margin: EdgeInsets.all(32),
+    margin: EdgeInsets.all(margin.toDouble()),
     alignment: Alignment.centerRight,
     child: GestureDetector(
       onTap: () {

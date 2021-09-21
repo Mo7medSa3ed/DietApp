@@ -48,7 +48,7 @@ dependencies:
   height_slider:
   weight_slider:
   dio:
-  readmore: ^1.0.2  
+  readmore:   
   easy_localization: ^3.0.0 
   image_picker:
 dev_dependencies:

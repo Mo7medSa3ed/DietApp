@@ -609,7 +609,7 @@ class _LoginScreanState extends State<LoginScrean>
       return Alert.sucessAlert(
           ctx: context,
           text: tr('success' ,namedArgs: {'attribute':tr('signup')}),
-          title: tr('signup_full').toLowerCase(),
+          title: tr('sign_up_full').toLowerCase(),
           ontap: () => goToWithRemoveUntill(context, LoginScrean()));
     } else if (res.statusCode != 200 || !resBody['success']) {
       return Alert.errorAlert(ctx: context, title: resBody['message']);
