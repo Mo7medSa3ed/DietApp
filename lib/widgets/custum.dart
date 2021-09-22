@@ -7,6 +7,7 @@ import 'package:flutter_test_app/constants/config.dart';
 import 'package:flutter_test_app/models/product.dart';
 import 'package:flutter_test_app/pages/cart.dart';
 import 'package:flutter_test_app/pages/course.dart';
+import 'package:flutter_test_app/pages/help.dart';
 import 'package:flutter_test_app/pages/home.dart';
 import 'package:flutter_test_app/pages/login.dart';
 import 'package:flutter_test_app/pages/orders.dart';
@@ -21,14 +22,21 @@ import 'package:toast/toast.dart';
 final response = ResponseUI.instance;
 
 Widget buildFillElevatedButton(
-    {text, onpressed, bgcolor = kprimary2, txtcolor, elevation}) {
+    {text,
+    onpressed,
+    bgcolor = kprimary2,
+    txtcolor,
+    elevation,
+    widget,
+    borderRadius = 30}) {
   return ElevatedButton(
     onPressed: onpressed,
-    child: Text(text.toString().trim(),
-        style: TextStyle(
-            color: txtcolor ?? kwhite.withOpacity(0.9),
-            fontWeight: FontWeight.w900,
-            fontSize: response.setFontSize(14))),
+    child: widget ??
+        Text(text.toString().trim(),
+            style: TextStyle(
+                color: txtcolor ?? kwhite.withOpacity(0.9),
+                fontWeight: FontWeight.w900,
+                fontSize: response.setFontSize(14))),
     style: ButtonStyle(
         elevation:
             elevation != null ? MaterialStateProperty.all(elevation) : null,
@@ -37,14 +45,14 @@ Widget buildFillElevatedButton(
         backgroundColor: MaterialStateProperty.all<Color>(bgcolor),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(borderRadius.toDouble()),
         ))),
   );
 }
 
-buildIconButton({icon, onpressed}) {
+buildIconButton({icon, onpressed, spColor = kprimary}) {
   return InkWell(
-    splashColor: kprimary,
+    splashColor: spColor,
     onTap: onpressed,
     child: Container(
       margin: EdgeInsets.symmetric(horizontal: 8),
@@ -619,9 +627,10 @@ buildText(text, {color = kprimary, fontsize}) {
               : response.setFontSize(17)));
 }
 
-buildText2(text, {color = ksecondary, fontsize}) {
+buildText2(text, {color = ksecondary, fontsize ,align =TextAlign.start}) {
   return Text(text.toString().trim(),
       overflow: TextOverflow.fade,
+      textAlign: align,
       style: TextStyle(
           color: color,
           fontWeight: FontWeight.w900,
@@ -1130,7 +1139,7 @@ Widget buildDrawer(context) {
                       buildDrawerItem(tr("support"), 7, i, 7, () {
                         app.changeIndex(7);
                         Navigator.of(context).pop();
-                        goTo(context, SupportScrean());
+                        goTo(context, HelpScrean());
                       }),
                       SizedBox(
                         height: response.setHeight(20),

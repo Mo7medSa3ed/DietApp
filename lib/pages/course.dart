@@ -26,6 +26,7 @@ class _CouresScreanState extends State<CouresScrean> {
         .user['course_recommended'];
 
     final res = await API.getOneCourse(2);
+  
     if (res == 'error') return Alert.errorAlert(ctx: context, title: errorMsg);
     if (res != null) {
       status = res['success'];
