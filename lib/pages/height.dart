@@ -40,10 +40,16 @@ class _HeightScreanState extends State<HeightScrean> {
           width: double.infinity,
           height: double.infinity,
           decoration: BoxDecoration(
-              gradient: RadialGradient(radius: 1, colors: [
-            kwhite,
-            kcolor1,
-          ])),
+              gradient: LinearGradient(
+            // radius: 0.1,
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            colors: [
+              Color(0xffe4e6f3),
+              Color(0xfffefefe),
+              Color(0xffe4e6f3),
+            ],
+          )),
           padding: EdgeInsets.only(top: 20),
           child: Column(
             children: [

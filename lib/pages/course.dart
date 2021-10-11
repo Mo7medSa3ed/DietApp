@@ -26,7 +26,7 @@ class _CouresScreanState extends State<CouresScrean> {
         .user['course_recommended'];
 
     final res = await API.getOneCourse(2);
-  
+
     if (res == 'error') return Alert.errorAlert(ctx: context, title: errorMsg);
     if (res != null) {
       status = res['success'];
@@ -49,9 +49,20 @@ class _CouresScreanState extends State<CouresScrean> {
         key: scaffoldkey,
         drawer: buildDrawer(context),
         body: Container(
+          width: double.infinity,
+          height: double.infinity,
           decoration: BoxDecoration(
-              gradient:
-                  LinearGradient(colors: [kcolor1, Colors.grey[200], kcolor1])),
+            gradient: LinearGradient(
+              // radius: 0.1,
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: [
+                Color(0xffe4e6f3),
+                Color(0xfffefefe),
+                Color(0xffe4e6f3),
+              ],
+            ),
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -76,15 +87,15 @@ class _CouresScreanState extends State<CouresScrean> {
                             physics: BouncingScrollPhysics(),
                             children: [
                               Container(
-                                height: response.screenHeight * 0.23 + 5,
+                                height: response.screenHeight * 0.23 + 50,
                                 width: double.infinity,
                                 child: Stack(
                                   children: [
                                     Positioned(
-                                      left: 25,
-                                      right: 25,
+                                      left: 32,
+                                      right: 32,
+                                      top: 0,
                                       child: Container(
-                                        width: response.screenWidth - 50,
                                         height: response.screenHeight * 0.23,
                                         decoration: BoxDecoration(
                                             borderRadius:
@@ -103,41 +114,54 @@ class _CouresScreanState extends State<CouresScrean> {
                                     Positioned(
                                         right: 25,
                                         left: 25,
-                                        bottom: 0,
-                                        top: 0,
+                                        top: 20,
+                                        bottom: -10,
                                         child: Container(
                                           width: double.infinity,
                                           height: response.screenHeight * 0.23,
                                           decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(25),
-                                              image: DecorationImage(
-                                                  fit: BoxFit.cover,
-                                                  image: NetworkImage(
-                                                      course['photo']))),
+                                            borderRadius:
+                                                BorderRadius.circular(25),
+                                            image: DecorationImage(
+                                                fit: BoxFit.cover,
+                                                image: NetworkImage(
+                                                    course['photo'])),
+                                          ),
                                         )),
                                     Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Image.asset(
-                                        "assets/images/curve.png",
-                                        height: 110,
-                                      ),
-                                    ),
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(right: 4.0),
-                                        child: Text(
-                                          "${course['days']} Days",
-                                          style: TextStyle(
-                                              color: kwhite,
-                                              fontWeight: FontWeight.w900,
-                                              fontSize:
-                                                  response.setFontSize(17)),
+                                      alignment: Alignment(1, -0.7),
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 16),
+                                        height: 100,
+                                        width: 110,
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            fit: BoxFit.fill,
+                                            image: AssetImage(
+                                              "assets/images/curve.png",
+                                            ),
+                                          ),
+                                        ),
+                                        child: Center(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "${course['days']} Days",
+                                                textAlign: TextAlign.right,
+                                                style: TextStyle(
+                                                    color: kwhite,
+                                                    fontWeight: FontWeight.w900,
+                                                    fontSize: response
+                                                        .setFontSize(15)),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    )
+                                    ),
                                   ],
                                 ),
                               ),
@@ -146,14 +170,14 @@ class _CouresScreanState extends State<CouresScrean> {
                               ),
                               Padding(
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 25.0),
+                                      horizontal: 32.0),
                                   child: buildText2(course['description'])),
                               SizedBox(
                                 height: response.setHeight(10),
                               ),
                               Padding(
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 25.0),
+                                      horizontal: 32.0),
                                   child: buildText(tr('components'))),
                               SizedBox(
                                 height: response.setHeight(10),
@@ -166,7 +190,7 @@ class _CouresScreanState extends State<CouresScrean> {
                           ),
                         ),
               Container(
-                padding: EdgeInsets.all(16),
+                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
                 decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
@@ -209,7 +233,4 @@ class _CouresScreanState extends State<CouresScrean> {
   }
 }
 
-/**
- * 
- * 
- */
+

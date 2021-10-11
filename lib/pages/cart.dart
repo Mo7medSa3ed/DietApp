@@ -48,8 +48,17 @@ class _CartScreanState extends State<CartScrean> {
         drawer: buildDrawer(context),
         body: Container(
           decoration: BoxDecoration(
-              gradient:
-                  LinearGradient(colors: [kcolor1, Colors.grey[200], kcolor1])),
+            gradient: LinearGradient(
+              // radius: 0.1,
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: [
+                Color(0xffe4e6f3),
+                Color(0xfffefefe),
+                Color(0xffe4e6f3),
+              ],
+            ),
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -73,7 +82,7 @@ class _CartScreanState extends State<CartScrean> {
                             children: [
                               Padding(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 16.0),
+                                    horizontal: 32.0),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,8 +91,6 @@ class _CartScreanState extends State<CartScrean> {
                                       height: response.setHeight(5),
                                     ),
                                     Container(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 4),
                                       child: buildText(
                                         tr("order_review"),
                                       ),
@@ -100,7 +107,7 @@ class _CartScreanState extends State<CartScrean> {
                                   child: ListView.builder(
                                     physics: BouncingScrollPhysics(),
                                     padding:
-                                        EdgeInsets.only(left: 16, right: 8),
+                                        EdgeInsets.only(left: 32, right: 8),
                                     itemBuilder: (c, i) =>
                                         buildCartItem(cartList[i], () async {
                                       final res =
@@ -127,7 +134,7 @@ class _CartScreanState extends State<CartScrean> {
                         ),
               Container(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 30.0),
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 32.0),
                 width: double.infinity,
                 decoration: BoxDecoration(
                   boxShadow: [

@@ -65,8 +65,16 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
           width: double.infinity,
           height: double.infinity,
           decoration: BoxDecoration(
-              gradient:
-                  LinearGradient(colors: [kcolor1, Colors.grey[200], kcolor1])),
+              gradient: LinearGradient(
+            // radius: 0.1,
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            colors: [
+              Color(0xffe4e6f3),
+              Color(0xfffefefe),
+              Color(0xffe4e6f3),
+            ],
+          )),
           child: !status
               ? Column(
                   children: [

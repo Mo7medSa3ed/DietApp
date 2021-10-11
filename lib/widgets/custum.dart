@@ -13,7 +13,6 @@ import 'package:flutter_test_app/pages/login.dart';
 import 'package:flutter_test_app/pages/orders.dart';
 import 'package:flutter_test_app/pages/profile.dart';
 import 'package:flutter_test_app/pages/shop.dart';
-import 'package:flutter_test_app/pages/support.dart';
 import 'package:flutter_test_app/provider/app_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:response/response.dart';
@@ -98,7 +97,14 @@ buildOutElevatedButton({text, onpressed, test: true}) {
 }
 
 buildIconElevatedButton(
-    {icon, label, onpressed, color = kwhite, bg = kprimary2, fontSize = 16.0}) {
+    {icon,
+    label,
+    onpressed,
+    color = kwhite,
+    bg = kprimary2,
+    elevation = 4,
+    shadowColor,
+    fontSize = 16.0}) {
   return ElevatedButton.icon(
     label: Text(label,
         style: TextStyle(
@@ -112,6 +118,8 @@ buildIconElevatedButton(
         padding: MaterialStateProperty.all(
             EdgeInsets.symmetric(vertical: 12, horizontal: 18)),
         backgroundColor: MaterialStateProperty.all<Color>(bg),
+        shadowColor: MaterialStateProperty.all<Color>(shadowColor),
+        elevation: MaterialStateProperty.all(elevation.toDouble()),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(50),
@@ -415,7 +423,7 @@ buildCartItem(ProductModel p, ondelete) {
 
 buildCourseItem(product) {
   return Container(
-    margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    margin: EdgeInsets.symmetric(horizontal: 32, vertical: 8),
     padding: EdgeInsets.all(10),
     width: response.screenWidth,
     decoration:
@@ -486,7 +494,7 @@ buildShopItem({context, ProductModel product}) {
           children: [
             Container(
               padding: EdgeInsets.all(8),
-              width: response.screenWidth - 32,
+              width: response.screenWidth - 64,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20), color: kwhite),
               child: Row(
@@ -497,7 +505,7 @@ buildShopItem({context, ProductModel product}) {
                     height: 60,
                     width: 60,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(15),
                       color: kcolor1.withOpacity(0.5),
                     ),
                     child: Image.network(product.photo),
@@ -627,7 +635,7 @@ buildText(text, {color = kprimary, fontsize}) {
               : response.setFontSize(17)));
 }
 
-buildText2(text, {color = ksecondary, fontsize ,align =TextAlign.start}) {
+buildText2(text, {color = ksecondary, fontsize, align = TextAlign.start}) {
   return Text(text.toString().trim(),
       overflow: TextOverflow.fade,
       textAlign: align,
@@ -879,6 +887,24 @@ buildAppBar(
             width: response.setHeight(40),
             height: response.setHeight(40),
             decoration: BoxDecoration(
+                color: kwhite, borderRadius: BorderRadius.circular(15)),
+            child: Icon(
+              Icons.notifications,
+              size: 30,
+              color: kprimary,
+            ),
+          ),
+        ),
+        SizedBox(
+          width: 8,
+        ),
+        InkWell(
+          onTap: () => goTo(context, ProfileScrean()),
+          child: Container(
+            alignment: Alignment.center,
+            width: response.setHeight(40),
+            height: response.setHeight(40),
+            decoration: BoxDecoration(
                 image: DecorationImage(
                   image: NetworkImage(user['photo']),
                   fit: BoxFit.fill,
@@ -893,10 +919,10 @@ buildAppBar(
 }
 
 buildAppBarForPages(context, text, press,
-    {showProfile = true, icon = Icons.menu}) {
+    {showProfile = true, icon = Icons.menu, marginHorizental = 32.0}) {
   var user = Provider.of<AppProvider>(context, listen: false).user;
   return Container(
-    padding: EdgeInsets.all(16),
+    padding: EdgeInsets.symmetric(vertical: 16, horizontal: marginHorizental),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -1437,12 +1463,14 @@ Widget buldinputContainer(
                         ? CircularProgressIndicator(
                             color: kprimary,
                           )
-                        : Icon(
-                            Icons.check_circle,
-                            color: controller.text.isNotEmpty
-                                ? kprimary2
-                                : ksecondary,
-                          ),
+                        : Icon(Icons.check_circle,
+                            color: text == "Phone"
+                                ? controller.text.length == 11
+                                    ? controller.text.isNotEmpty
+                                        ? kprimary2
+                                        : ksecondary
+                                    : ksecondary
+                                : ksecondary),
                   )
           ],
         ),

@@ -72,8 +72,17 @@ class _CheckoutScreanState extends State<CheckoutScrean> {
               width: double.infinity,
               height: double.infinity,
               decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      colors: [kcolor1, Colors.grey[300], kcolor1])),
+                gradient: LinearGradient(
+                  // radius: 0.1,
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [
+                    Color(0xffe4e6f3),
+                    Color(0xfffefefe),
+                    Color(0xffe4e6f3),
+                  ],
+                ),
+              ),
               child: Column(
                 children: [
                   Expanded(
@@ -81,15 +90,14 @@ class _CheckoutScreanState extends State<CheckoutScrean> {
                       key: formKey,
                       child: ListView(
                         physics: BouncingScrollPhysics(),
+                        padding: EdgeInsets.symmetric(horizontal: 16),
                         children: [
-                          buildAppBarForPages(
-                            context,
-                            "Checkout",
-                            () => scaffoldkey.currentState.openDrawer(),
-                          ),
+                          buildAppBarForPages(context, "Checkout",
+                              () => scaffoldkey.currentState.openDrawer(),
+                              marginHorizental: 16.0),
                           Container(
                               padding: EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 10),
+                                  horizontal: 16, vertical: 10),
                               child: buildText("Delivery data")),
                           buldinputContainer(
                               text: "Client Name",
@@ -169,7 +177,7 @@ class _CheckoutScreanState extends State<CheckoutScrean> {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 30),
+                    padding: EdgeInsets.symmetric(horizontal: 32),
                     decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(

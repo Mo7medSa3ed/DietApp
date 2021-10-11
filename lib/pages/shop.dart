@@ -60,7 +60,7 @@ class _ShopScreanState extends State<ShopScrean> {
             drawer: buildDrawer(context),
             bottomSheet: Container(
               padding:
-                  const EdgeInsets.symmetric(vertical: 12, horizontal: 24.0),
+                  const EdgeInsets.symmetric(vertical: 12, horizontal: 32.0),
               width: double.infinity,
               decoration: BoxDecoration(
                 boxShadow: [
@@ -106,10 +106,16 @@ class _ShopScreanState extends State<ShopScrean> {
             ),
             body: Container(
                 decoration: BoxDecoration(
-                    gradient: RadialGradient(radius: 1, colors: [
-                  kwhite,
-                  kcolor1,
-                ])),
+                    gradient: LinearGradient(
+                  // radius: 0.1,
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [
+                    Color(0xffe4e6f3),
+                    Color(0xfffefefe),
+                    Color(0xffe4e6f3),
+                  ],
+                )),
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,7 +140,8 @@ class _ShopScreanState extends State<ShopScrean> {
                                 )
                               : Expanded(
                                   child: ListView(
-                                    padding: EdgeInsets.all(16),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 32, vertical: 16),
                                     physics: BouncingScrollPhysics(
                                         parent:
                                             AlwaysScrollableScrollPhysics()),

@@ -42,8 +42,16 @@ class _OrderScreanState extends State<OrderScrean> {
         drawer: buildDrawer(context),
         body: Container(
           decoration: BoxDecoration(
-              gradient:
-                  LinearGradient(colors: [kcolor1, Colors.grey[200], kcolor1])),
+              gradient: LinearGradient(
+            // radius: 0.1,
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            colors: [
+              Color(0xffe4e6f3),
+              Color(0xfffefefe),
+              Color(0xffe4e6f3),
+            ],
+          )),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -71,7 +79,7 @@ class _OrderScreanState extends State<OrderScrean> {
                       : Expanded(
                           child: ListView.builder(
                             physics: BouncingScrollPhysics(),
-                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            padding: EdgeInsets.symmetric(horizontal: 32),
                             itemBuilder: (c, i) => buildOrderItem(cartList[i]),
                             itemCount: cartList.length,
                           ),
