@@ -25,6 +25,7 @@ class _CartScreanState extends State<CartScrean> {
     if (res != null) {
       status = res['success'];
       if (res['data']['items'].length > 0) {
+        print(res['data']['items']);
         cartList = res['data']['items']
             .map((e) => ProductModel.fromJsonForCart(
                 e['buyable'], e['quantity'], e['id']))

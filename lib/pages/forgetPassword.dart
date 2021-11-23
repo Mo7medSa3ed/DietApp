@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:easy_localization/easy_localization.dart';
 import 'package:delayed_display/delayed_display.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test_app/API.dart';
@@ -173,7 +173,7 @@ class _ForgetPasswordScreanState extends State<ForgetPasswordScrean> {
     } else if (res.statusCode != 200 || !resBody['success']) {
       return Alert.errorAlert(ctx: context, title: resBody['message']);
     } else {
-      return Alert.errorAlert(ctx: context, title: "tr('error404')");
+      return Alert.errorAlert(ctx: context, title: tr('error404'));
     }
   }
 
@@ -193,7 +193,7 @@ class _ForgetPasswordScreanState extends State<ForgetPasswordScrean> {
     } else if (res.statusCode != 200 || !resBody['success']) {
       return Alert.errorAlert(ctx: context, title: resBody['message']);
     } else {
-      return Alert.errorAlert(ctx: context, title: "tr('error404')");
+      return Alert.errorAlert(ctx: context, title: tr('error404'));
     }
   }
 }

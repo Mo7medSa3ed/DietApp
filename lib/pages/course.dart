@@ -4,12 +4,8 @@ import 'package:flutter_test_app/API.dart';
 import 'package:flutter_test_app/Alert.dart';
 import 'package:flutter_test_app/constants/config.dart';
 import 'package:flutter_test_app/pages/cart.dart';
-// ignore: unused_import
-import 'package:flutter_test_app/pages/shop.dart';
 import 'package:flutter_test_app/pages/timeline.dart';
-import 'package:flutter_test_app/provider/app_provider.dart';
 import 'package:flutter_test_app/widgets/custum.dart';
-import 'package:provider/provider.dart';
 import 'package:response/response.dart';
 
 class CouresScrean extends StatefulWidget {
@@ -22,8 +18,8 @@ class _CouresScreanState extends State<CouresScrean> {
   var course;
   var status = false;
   getData() async {
-    var id = Provider.of<AppProvider>(context, listen: false)
-        .user['course_recommended'];
+    // var id = Provider.of<AppProvider>(context, listen: false)
+    //     .user['course_recommended'];
 
     final res = await API.getOneCourse(2);
 
@@ -218,10 +214,13 @@ class _CouresScreanState extends State<CouresScrean> {
                     ),
                     Expanded(
                         child: buildIconElevatedButton(
-                            icon: Icon(Icons.play_arrow),
-                            label: tr('start_now'),
-                            onpressed: () =>
-                                goTo(context, TimeLineScrean(course['id'], 0))))
+                      icon: Icon(Icons.play_arrow),
+                      label: tr('start_now'),
+                      onpressed: () => goTo(
+                        context,
+                        TimeLineScrean(course['id'], course['name'], 0, null),
+                      ),
+                    ))
                   ],
                 ),
               )
@@ -232,5 +231,3 @@ class _CouresScreanState extends State<CouresScrean> {
     );
   }
 }
-
-

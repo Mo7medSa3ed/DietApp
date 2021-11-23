@@ -25,6 +25,7 @@ class _ShopScreanState extends State<ShopScrean> {
   getData() async {
     data.clear();
     final res = await API.getAllCategories();
+    print(res);
     if (res == 'error') return Alert.errorAlert(ctx: context, title: errorMsg);
     if (res != null) {
       status = res['success'];

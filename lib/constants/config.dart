@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_test_app/main.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:location/location.dart' as loc;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -36,6 +37,17 @@ Future<dynamic> getValue({key}) async {
   return value;
 }
 
+setboolValue({key, value}) async {
+  SharedPreferences prfs = await SharedPreferences.getInstance();
+  prfs.setBool(key, value);
+}
+
+Future<dynamic> getboolValue({key}) async {
+  SharedPreferences prfs = await SharedPreferences.getInstance();
+  final value = prfs.getBool(key);
+  return value;
+}
+
 Future<dynamic> clear() async {
   SharedPreferences prfs = await SharedPreferences.getInstance();
   prfs.clear();
@@ -48,6 +60,8 @@ Future<dynamic> getHeader() async {
   final header = <String, String>{
     'Content-Type': 'application/json;charset=UTF-8',
     'Accept': 'application/json',
+    'Accept-Language': isArabic ? 'ar' : 'en',
+    'CountryID': selectedCountry != null ? selectedCountry.id.toString() : '',
     'Authorization': 'Bearer $token'
   };
   return header;

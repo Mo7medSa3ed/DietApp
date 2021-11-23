@@ -1,46 +1,75 @@
+import 'dart:convert';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test_app/API.dart';
 import 'package:flutter_test_app/Alert.dart';
 import 'package:flutter_test_app/constants/config.dart';
+import 'package:flutter_test_app/main.dart';
 import 'package:flutter_test_app/pages/acheive.dart';
+import 'package:flutter_test_app/pages/home.dart';
 import 'package:flutter_test_app/widgets/custum.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class TimeLineScrean extends StatefulWidget {
   final id;
   final start;
-  TimeLineScrean(this.id, this.start);
+  final name;
+  final nextdayId;
+  TimeLineScrean(this.id, this.name, this.start, this.nextdayId);
   @override
   _TimeLineScreanState createState() => _TimeLineScreanState();
 }
 
 class _TimeLineScreanState extends State<TimeLineScrean> {
+/*
+ * save RecommendedCourseID 
+ * save day
+ * save DoneIds 
+ * {
+  'rcId':'',
+  'currantday':''
+  'doneIds':[]
+}
+ */
+
   final scaffoldkey = GlobalKey<ScaffoldState>();
   int press;
 
   var courseDayList = [];
   var status = false;
   var isRtl = false;
+  var rc;
+
   getData() async {
+    if (widget.nextdayId != null)
+      await saveRecommendedCourse(doneDayId: widget.nextdayId.toString());
+    rc = await getSavedRecommendedCourse();
     courseDayList = [];
     final res = await API.getOneCourseDays(widget.id);
     if (res == 'error') return Alert.errorAlert(ctx: context, title: errorMsg);
     if (res != null) {
       status = res['success'];
-      if (res['data'].length > 0)
+      if (res['data'].length > 0) {
         res['data'].forEach((k, v) {
           courseDayList.add({
             "day": k,
+            "isDone": (rc['doneDaysIds'].contains(k.toString()) &&
+                widget.nextdayId != null &&
+                k.toString() != widget.nextdayId.toString()),
             "value": v
                 .map((e) => {
-                      "done": false,
+                      "id": e['id'],
+                      "done": rc['doneIds'].contains(e['id'].toString()),
                       "name": e['name'],
+                      "time": e['from_time'].substring(0, 5),
                       "items": e['components'].map((e) => e).toList()
                     })
                 .toList()
           });
         });
+      }
     }
     setState(() {});
   }
@@ -52,253 +81,295 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
     super.initState();
   }
 
+  Future saveRecommendedCourse({String doneId, String doneDayId}) async {
+    final prefs = await SharedPreferences.getInstance();
+    var res = prefs.getString('rc');
+    var r = {'rcId': widget.id, 'doneDaysIds': [], 'doneIds': []};
+    if (res == null || res.trim().isEmpty) {
+      await prefs.setString('rc', jsonEncode(r));
+      res = jsonEncode(r);
+    }
+    final response = jsonDecode(res);
+    if (doneDayId != null) {
+      if (!response['doneDaysIds'].contains(doneDayId.toString()))
+        response['doneDaysIds'].add(doneDayId.toString());
+    }
+    if (doneId != null) {
+      if (!response['doneIds'].contains(doneId.toString()))
+        response['doneIds'].add(doneId.toString());
+    }
+    await prefs.setString('rc', jsonEncode(response));
+  }
+
+  Future getSavedRecommendedCourse() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final res = prefs.getString('rc');
+
+    if (res == null || res.trim().isEmpty) {
+      return {'rcId': widget.id, 'doneDaysIds': [], 'doneIds': []};
+    }
+    return jsonDecode(res);
+  }
+
   @override
   Widget build(BuildContext context) {
-    print(courseDayList);
     isRtl = context.locale == Locale('ar');
-    return SafeArea(
-      child: Scaffold(
-        key: scaffoldkey,
-        drawer: buildDrawer(context),
-        backgroundColor: kcolor1,
-        body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-            // radius: 0.1,
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            colors: [
-              Color(0xffe4e6f3),
-              Color(0xfffefefe),
-              Color(0xffe4e6f3),
-            ],
-          )),
-          child: !status
-              ? Column(
-                  children: [
-                    buildAppBarForPages(
-                      context,
-                      "Clean 9",
-                      () => scaffoldkey.currentState.openDrawer(),
-                    ),
-                    Expanded(
-                      child: Center(
-                        child: CircularProgressIndicator(color: kprimary),
+
+    return WillPopScope(
+      onWillPop: () => goToWithRemoveUntill(context, HomeScrean()),
+      child: SafeArea(
+        child: Scaffold(
+          key: scaffoldkey,
+          drawer: buildDrawer(context),
+          backgroundColor: kcolor1,
+          body: Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+              // radius: 0.1,
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: [
+                Color(0xffe4e6f3),
+                Color(0xfffefefe),
+                Color(0xffe4e6f3),
+              ],
+            )),
+            child: !status
+                ? Column(
+                    children: [
+                      buildAppBarForPages(
+                        context,
+                        widget.name,
+                        () => scaffoldkey.currentState.openDrawer(),
                       ),
-                    ),
-                  ],
-                )
-              : courseDayList.length == 0
-                  ? Column(
-                      children: [
-                        buildAppBarForPages(
-                          context,
-                          "Clean 9",
-                          () => scaffoldkey.currentState.openDrawer(),
+                      Expanded(
+                        child: Center(
+                          child: CircularProgressIndicator(color: kprimary),
                         ),
-                        Expanded(
-                          child: Center(
-                            child: buildText(tr("nodata")),
-                          ),
-                        ),
-                      ],
-                    )
-                  : SingleChildScrollView(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      ),
+                    ],
+                  )
+                : courseDayList.length == 0
+                    ? Column(
                         children: [
-                          buildAppBarForPages(
-                            context,
-                            "Clean 9",
-                            () => scaffoldkey.currentState.openDrawer(),
-                          ),
-                          Container(
-                            height: 80,
-                            decoration: BoxDecoration(
-                              color: /* kprimary2, */ kscaffoldcolor,
-                              borderRadius: BorderRadius.circular(20),
-                              // border: Border.symmetric(
-                              //     horizontal: BorderSide(width: 2, color: kwhite)),
-                            ),
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                  children: List.generate(
-                                      courseDayList.length,
-                                      (index) => Container(
-                                            decoration: BoxDecoration(
-                                                color:
-                                                    /* press != index || index > 3
-                                        ? kscaffoldcolor
-                                        : */
-                                                    press > index
-                                                        ? kscaffoldcolor
-                                                        : kprimary2,
-                                                borderRadius:
-                                                    /*  (press ==
-                                            index /*  && index > 3 */)
-                                        ? */
-                                                    BorderRadius.only(
-                                                  topRight: context.locale ==
-                                                          Locale('en')
-                                                      ? Radius.circular(20)
-                                                      : Radius.zero,
-                                                  bottomRight: context.locale ==
-                                                          Locale('en')
-                                                      ? Radius.circular(20)
-                                                      : Radius.zero,
-                                                  topLeft: context.locale !=
-                                                          Locale('en')
-                                                      ? Radius.circular(20)
-                                                      : Radius.zero,
-                                                  bottomLeft: context.locale !=
-                                                          Locale('en')
-                                                      ? Radius.circular(20)
-                                                      : Radius.zero,
-                                                )),
-                                            child: InkWell(
-                                              onTap: () {
-                                                setState(() {
-                                                  press = index;
-                                                });
-                                              },
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: press == index
-                                                      ? kblue
-                                                      /* : index < 5
-                                                ? kprimary2 */
-                                                      : index > press
-                                                          ? kscaffoldcolor
-                                                          : kprimary2, //kscaffoldcolor,
-                                                  borderRadius: press == index
-                                                      ? BorderRadius.circular(
-                                                          20)
-                                                      : index ==
-                                                              courseDayList.length -
-                                                                  1
-                                                          ? BorderRadius.only(
-                                                              topRight: context.locale == Locale('en')
-                                                                  ? Radius.circular(
-                                                                      20)
-                                                                  : Radius.zero,
-                                                              bottomRight: context
-                                                                          .locale ==
-                                                                      Locale(
-                                                                          'en')
-                                                                  ? Radius.circular(
-                                                                      20)
-                                                                  : Radius.zero,
-                                                              topLeft: context.locale !=
-                                                                      Locale(
-                                                                          'en')
-                                                                  ? Radius.circular(
-                                                                      20)
-                                                                  : Radius.zero,
-                                                              bottomLeft: context
-                                                                          .locale !=
-                                                                      Locale('en')
-                                                                  ? Radius.circular(20)
-                                                                  : Radius.zero)
-                                                          : null,
-                                                  border: press == index
-                                                      ? Border.all(
-                                                          width: 2,
-                                                          color: kwhite)
-                                                      : null,
-                                                ),
-                                                child: Center(
-                                                    child: Row(
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              12.0),
-                                                      child: Text(
-                                                        tr('day') +
-                                                            "\n${courseDayList[index]['day']}",
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w900,
-                                                            fontSize: 16,
-                                                            color: kwhite),
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                      ),
-                                                    ),
-                                                    (press == index ||
-                                                            index ==
-                                                                press - 1 ||
-                                                            index ==
-                                                                courseDayList
-                                                                        .length -
-                                                                    1)
-                                                        ? Container()
-                                                        : Container(
-                                                            height: 30,
-                                                            child:
-                                                                VerticalDivider(
-                                                              thickness: 2,
-                                                              color: kwhite
-                                                                  .withOpacity(
-                                                                      0.6),
-                                                            ),
-                                                          )
-                                                  ],
-                                                )),
-                                              ),
-                                            ),
-                                          ))),
+                          buildAppBarForPages(context, widget.name,
+                              () => scaffoldkey.currentState.openDrawer(),
+                              marginHorizental: 16.0),
+                          Expanded(
+                            child: Center(
+                              child: buildText(tr("nodata")),
                             ),
                           ),
-                          Container(
-                            margin: EdgeInsets.all(20),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                buildExpandedForRow(
-                                    text:
-                                        "${(((press) / courseDayList.length) * 100).toStringAsFixed(0)} % " +
-                                            tr('complete'),
-                                    color: kprimary2),
-                                buildExpandedForRow(
-                                    text: "$press " + tr('days_left'),
-                                    color: kblue)
-                              ],
-                            ),
-                          ),
-                          Container(
-                              margin: EdgeInsets.symmetric(horizontal: 20),
-                              child: Text(
-                                tr("today"),
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.w900),
-                              )),
-                          Container(
-                              margin: EdgeInsets.all(10),
-                              child: Column(
-                                  children: courseDayList[press]['value']
-                                      .map<Widget>((e) => buldcardForcourseitem(
-                                          e['items'],
-                                          i: courseDayList[press]['value']
-                                              .indexOf(e)))
-                                      .toList())),
                         ],
+                      )
+                    : SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              buildAppBarForPages(context, widget.name,
+                                  () => scaffoldkey.currentState.openDrawer(),
+                                  marginHorizental: 16.0),
+                              Container(
+                                height: 80,
+                                margin: EdgeInsets.symmetric(horizontal: 16),
+                                decoration: BoxDecoration(
+                                  color: /* kprimary2, */ kscaffoldcolor,
+                                  borderRadius: BorderRadius.circular(25),
+                                  border: Border.all(width: 3, color: kwhite),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Row(
+                                        children: List.generate(
+                                            courseDayList.length,
+                                            (index) => Container(
+                                                  decoration: BoxDecoration(
+                                                      color: press > index
+                                                          ? kscaffoldcolor
+                                                          : kprimary2,
+                                                      borderRadius:
+                                                          BorderRadius.only(
+                                                        topRight: context
+                                                                    .locale ==
+                                                                Locale('en')
+                                                            ? Radius.circular(
+                                                                20)
+                                                            : Radius.zero,
+                                                        bottomRight: context
+                                                                    .locale ==
+                                                                Locale('en')
+                                                            ? Radius.circular(
+                                                                20)
+                                                            : Radius.zero,
+                                                        topLeft: context
+                                                                    .locale !=
+                                                                Locale('en')
+                                                            ? Radius.circular(
+                                                                20)
+                                                            : Radius.zero,
+                                                        bottomLeft: context
+                                                                    .locale !=
+                                                                Locale('en')
+                                                            ? Radius.circular(
+                                                                20)
+                                                            : Radius.zero,
+                                                      )),
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      print(rc['doneDaysIds']);
+                                                      if (rc['doneDaysIds']
+                                                          .contains(
+                                                              courseDayList[
+                                                                      index]
+                                                                  ['day'])) {
+                                                        setState(() {
+                                                          press = index;
+                                                        });
+                                                      }
+                                                    },
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                        color: press == index
+                                                            ? kblue
+                                                            : index > press
+                                                                ? kscaffoldcolor
+                                                                : kprimary2,
+                                                        borderRadius: press ==
+                                                                index
+                                                            ? BorderRadius
+                                                                .circular(20)
+                                                            : index ==
+                                                                    courseDayList
+                                                                            .length -
+                                                                        1
+                                                                ? BorderRadius.only(
+                                                                    topRight: context.locale == Locale('en')
+                                                                        ? Radius.circular(
+                                                                            20)
+                                                                        : Radius
+                                                                            .zero,
+                                                                    bottomRight: context.locale == Locale('en')
+                                                                        ? Radius.circular(
+                                                                            20)
+                                                                        : Radius
+                                                                            .zero,
+                                                                    topLeft: context.locale != Locale('en')
+                                                                        ? Radius.circular(
+                                                                            20)
+                                                                        : Radius
+                                                                            .zero,
+                                                                    bottomLeft: context.locale !=
+                                                                            Locale('en')
+                                                                        ? Radius.circular(20)
+                                                                        : Radius.zero)
+                                                                : null,
+                                                        border: press == index
+                                                            ? Border.all(
+                                                                width: 2,
+                                                                color: kwhite)
+                                                            : null,
+                                                      ),
+                                                      child: Center(
+                                                          child: Row(
+                                                        children: [
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(12.0),
+                                                            child: Text(
+                                                              tr('day') +
+                                                                  "\n${courseDayList[index]['day']}",
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w900,
+                                                                  fontSize: 16,
+                                                                  color:
+                                                                      kwhite),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            ),
+                                                          ),
+                                                          (press == index ||
+                                                                  index ==
+                                                                      press -
+                                                                          1 ||
+                                                                  index ==
+                                                                      courseDayList
+                                                                              .length -
+                                                                          1)
+                                                              ? Container()
+                                                              : Container(
+                                                                  height: 30,
+                                                                  child:
+                                                                      VerticalDivider(
+                                                                    thickness:
+                                                                        2,
+                                                                    color: kwhite
+                                                                        .withOpacity(
+                                                                            0.6),
+                                                                  ),
+                                                                )
+                                                        ],
+                                                      )),
+                                                    ),
+                                                  ),
+                                                ))),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.all(20),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    buildExpandedForRow(
+                                        text:
+                                            "${(((press) / courseDayList.length) * 100).toStringAsFixed(0)} % " +
+                                                tr('complete'),
+                                        color: kprimary2),
+                                    buildExpandedForRow(
+                                        text: "$press " + tr('days_left'),
+                                        color: kblue)
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 20),
+                                  child: Text(
+                                    tr("today"),
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w900),
+                                  )),
+                              Container(
+                                  margin: EdgeInsets.all(10),
+                                  child: Column(
+                                      children: courseDayList[press]['value']
+                                          .map<Widget>((e) =>
+                                              buldcardForcourseitem(e['items'],
+                                                  i: courseDayList[press]
+                                                          ['value']
+                                                      .indexOf(e)))
+                                          .toList())),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
+          ),
         ),
       ),
     );
-  }
-
-  getMealName(num) {
-    if (num > 1)
-      return tr("launch");
-    else if (num < 1) return tr("breakfast");
-    return tr("dinner");
   }
 
   Widget buildRowforTimer({text}) {
@@ -314,7 +385,7 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
           ),
           Expanded(
             child: Text(
-              "Wait $text Minutes",
+              "$text",
               style: TextStyle(
                   fontWeight: FontWeight.w900, fontSize: 16, color: ksecondary),
             ),
@@ -399,10 +470,10 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
   Widget buldcardForcourseitem(products, {i = 0}) {
     var isDone = courseDayList[press]['value'][i]['done'];
     var name = courseDayList[press]['value'][i]['name'];
-    print(products);
+    var time = courseDayList[press]['value'][i]['time'];
     return Column(children: [
       buildRowwithindicator(
-          firsttext: name, seconttext: '08:00 Am', index: 0, isDone: isDone),
+          firsttext: name, seconttext: time, index: 0, isDone: isDone),
       ...List.generate(products.length, (index) {
         var time;
         var items = [];
@@ -438,9 +509,23 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
                 if (index == products.length - 1)
                   buildDonerow(
                       isDone: isDone,
-                      ontap: () {
+                      ontap: () async {
+                        if (widget.nextdayId == null &&
+                            rc['doneDaysIds'].length > 0) return;
+
                         courseDayList[press]['value'][i]['done'] =
                             !courseDayList[press]['value'][i]['done'];
+
+                        var id = courseDayList[press]['value'][i]['id'];
+                        print(id);
+                        if (i == courseDayList[press]['value'].length - 1) {
+                          await saveRecommendedCourse(
+                              doneId: id.toString(),
+                              doneDayId: courseDayList[press]['day']);
+                        } else {
+                          await saveRecommendedCourse(doneId: id.toString());
+                        }
+
                         setState(() {});
                         if (i == courseDayList[press]['value'].length - 1) {
                           return goTo(
@@ -449,9 +534,13 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
                                   (((press + 1) / courseDayList.length) * 100)
                                       .toStringAsFixed(0),
                                   widget.id,
+                                  widget.name,
                                   press == courseDayList.length - 1
                                       ? -1
-                                      : press));
+                                      : press,
+                                  press != courseDayList.length - 1
+                                      ? courseDayList[press + 1]['day']
+                                      : null));
                         }
                       })
               ],
@@ -464,32 +553,50 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
 
   Widget buildItemForCourse(products, type) {
     return Container(
-      margin: EdgeInsets.only(top: 5, bottom: 5, left: 15, right: 15),
+      margin: EdgeInsets.only(
+          top: 5,
+          bottom: 5,
+          left: isArabic
+              ? 0
+              : type == 'wait'
+                  ? 0
+                  : 32,
+          right: isArabic
+              ? type == 'wait'
+                  ? 0
+                  : 32
+              : 0),
       padding: EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: kwhite,
-        borderRadius: BorderRadius.circular(30),
-        boxShadow: [
-          BoxShadow(
-              color: kcolor1,
-              offset: Offset(0, 7),
-              blurRadius: 10,
-              spreadRadius: 5)
-        ],
-      ),
+      decoration: type == 'wait'
+          ? null
+          : BoxDecoration(
+              color: kwhite,
+              borderRadius: BorderRadius.circular(30),
+              boxShadow: [
+                BoxShadow(
+                    color: kcolor1,
+                    offset: Offset(0, 7),
+                    blurRadius: 10,
+                    spreadRadius: 5)
+              ],
+            ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ...List.generate(
-            products.length,
-            (index) => Column(
+          ...List.generate(products.length, (index) {
+            if (type == 'wait') {
+              return buildRowforTimer(text: products[index]['name']);
+            }
+            return Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 buildrowForCousritem(
-                  products[index]['photo'] ?? "",
+                  'https://clean.forever-affiliate.com/' +
+                          products[index]['photo'] ??
+                      "",
                   products[index]['name'] ?? "",
                   products[index]['description'] ?? "",
                 ),
@@ -519,8 +626,8 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
                                 : Container(),
                       ),
               ],
-            ),
-          )
+            );
+          })
         ],
       ),
     );

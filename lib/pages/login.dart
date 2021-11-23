@@ -206,351 +206,342 @@ class _LoginScreanState extends State<LoginScrean>
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Card(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20)),
-                child: Container(
-                  width: response.screenWidth * 0.9,
-                  padding: EdgeInsets.symmetric(vertical: 2),
-                  child: Form(
-                    key: _controller.value > 0.0 ? formKey : formKey2,
-                    child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: _controller.value > 0.0
-                            ? [
-                                // buldinputContainer(
-                                //     onChange: (v) {
-                                //       if (v.length == 0 || v.length == 1)
-                                //         setState(() {});
-                                //     },
-                                //     text: "Email",
-                                //     hint: 'Enter your email ...',
-                                //     controller: emailController),
-                                buldinputContainer(
-                                    onChange: (v) {
-                                      if (v.length == 0 || v.length == 1)
-                                        setState(() {});
+              Container(
+                width: response.screenWidth * 0.9,
+                padding: EdgeInsets.symmetric(vertical: 2),
+                child: Form(
+                  key: _controller.value > 0.0 ? formKey : formKey2,
+                  child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: _controller.value > 0.0
+                          ? [
+                              // buldinputContainer(
+                              //     onChange: (v) {
+                              //       if (v.length == 0 || v.length == 1)
+                              //         setState(() {});
+                              //     },
+                              //     text: "Email",
+                              //     hint: 'Enter your email ...',
+                              //     controller: emailController),
+                              buldinputContainer(
+                                  onChange: (v) {
+                                    if (v.length == 0 || v.length == 1)
+                                      setState(() {});
+                                  },
+                                  text: tr('phone'),
+                                  hint: tr('hint_msg',
+                                      namedArgs: {'attribute': tr('phone')}),
+                                  controller: phoneController),
+                              buldinputContainer(
+                                text: tr('password'),
+                                controller: passController,
+                                widget: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10.0),
+                                  child: TextFormField(
+                                    controller: passController,
+                                    validator: (String v) {
+                                      if (v.trim().isEmpty || v == null) {
+                                        return tr('validate_msg', namedArgs: {
+                                          'attribute': tr('password')
+                                        });
+                                      }
+                                      return null;
                                     },
-                                    text: tr('phone'),
-                                    hint: tr('hint_msg',
-                                        namedArgs: {'attribute': tr('phone')}),
-                                    controller: phoneController),
-                                buldinputContainer(
-                                  text: tr('password'),
-                                  controller: passController,
-                                  widget: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10.0),
-                                    child: TextFormField(
-                                      controller: passController,
-                                      validator: (String v) {
-                                        if (v.trim().isEmpty || v == null) {
-                                          return tr('validate_msg', namedArgs: {
-                                            'attribute': tr('password')
-                                          });
-                                        }
-                                        return null;
-                                      },
-                                      onChanged: (v) {
-                                        setState(() {});
-                                      },
-                                      obscureText: isVisible,
-                                      cursorColor: kprimary,
-                                      style: TextStyle(
-                                          color: kprimary,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w900),
-                                      decoration: InputDecoration(
-                                          suffixIcon: IconButton(
-                                              icon: Icon(
-                                                isVisible
-                                                    ? Icons.visibility
-                                                    : Icons.visibility_off,
-                                                color: ksecondary,
-                                              ),
-                                              onPressed: () {
-                                                setState(() {
-                                                  isVisible = !isVisible;
-                                                });
-                                              }),
-                                          hintStyle: TextStyle(
+                                    onChanged: (v) {
+                                      setState(() {});
+                                    },
+                                    obscureText: isVisible,
+                                    cursorColor: kprimary,
+                                    style: TextStyle(
+                                        color: kprimary,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w900),
+                                    decoration: InputDecoration(
+                                        suffixIcon: IconButton(
+                                            icon: Icon(
+                                              isVisible
+                                                  ? Icons.visibility
+                                                  : Icons.visibility_off,
                                               color: ksecondary,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w700),
-                                          border: InputBorder.none,
-                                          hintText: tr('hint_msg', namedArgs: {
-                                            'attribute': tr('password')
-                                          })),
-                                    ),
-                                  ),
-                                ),
-                              ]
-                            : [
-                                buldinputContainer(
-                                    onChange: (v) {
-                                      if (v.length == 0 || v.length == 1)
-                                        setState(() {});
-                                    },
-                                    text: tr('name'),
-                                    hint: tr('hint_msg',
-                                        namedArgs: {'attribute': tr('name')}),
-                                    controller: nameController),
-                                // buldinputContainer(
-                                //     onChange: (v) {
-                                //       if (v.length == 0 || v.length == 1)
-                                //         setState(() {});
-                                //     },
-                                //     text: "Email",
-                                //     hint: 'Enter your email ...',
-                                //     controller: emailController),
-                                buldinputContainer(
-                                    onChange: (v) {
-                                      if (v.length <= 11) setState(() {});
-                                    },
-                                    text: tr('phone'),
-                                    hint: tr('hint_msg',
-                                        namedArgs: {'attribute': tr('phone')}),
-                                    controller: phoneController),
-                                /*   Row(
-                  children: [
-                    Spacer(),
-                    Container(
-                      margin:EdgeInsets.symmetric(horizontal: 20),
-                      width: 200,
-                      child: buildFillElevatedButton(
-                        text: "Send Code",
-                        onpressed: () {},
-                      ),
-                    ),
-                  ],
-                ),
-                buldinputContainer(
-                    text: "Confirmation Code",
-                    hint: 'Enter confirmation code ...',
-                    controller: TextEditingController(text: '')), */
-                                buldinputContainer(
-                                    onChange: (v) {
-                                      if (v.length == 0 || v.length == 1)
-                                        setState(() {});
-                                    },
-                                    text: tr('location'),
-                                    hint: tr('hint_msg', namedArgs: {
-                                      'attribute': tr('location')
-                                    }),
-                                    isLoading: isLoading,
-                                    onpressed: () async {
-                                      setState(() {
-                                        isLoading = true;
-                                      });
-                                      final add = await getCurrantaddress();
-                                      locationController.text = add.addressLine;
-
-                                      setState(() {
-                                        isLoading = false;
-                                      });
-                                    },
-                                    controller: locationController),
-                                buldinputContainer(
-                                    text: tr('birthdate'),
-                                    widget: InkWell(
-                                        onTap: () async {
-                                          FocusScope.of(context)
-                                              .requestFocus(new FocusNode());
-                                          selectedDate = await showDatePicker(
-                                              context: context,
-                                              initialDate: DateTime(2000),
-                                              firstDate: DateTime(1970),
-                                              lastDate: DateTime.now());
-                                          setState(() {});
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 10.0, vertical: 16),
-                                          child: Text(
-                                              selectedDate != null
-                                                  ? DateFormat('dd/MM/yyyy')
-                                                      .format(selectedDate)
-                                                      .toString()
-                                                  : tr('hint_msg', namedArgs: {
-                                                      'attribute':
-                                                          tr('birthdate')
-                                                    }),
-                                              style: TextStyle(
-                                                  color: selectedDate != null
-                                                      ? kprimary
-                                                      : ksecondary,
-                                                  fontWeight:
-                                                      selectedDate != null
-                                                          ? FontWeight.w900
-                                                          : FontWeight.w600,
-                                                  fontSize: selectedDate != null
-                                                      ? 18
-                                                      : 16)),
-                                        )),
-                                    controller:
-                                        TextEditingController(text: '')),
-                                buldinputContainer(
-                                  text: tr('gender'),
-                                  controller: genderController,
-                                  widget: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10),
-                                    child: DropdownSearch<String>(
-                                        searchBoxDecoration: InputDecoration(
-                                          border: InputBorder.none,
-                                        ),
-                                        dropdownSearchDecoration:
-                                            InputDecoration(
-                                          border: InputBorder.none,
-                                        ),
-                                        mode: Mode.MENU,
-                                        dropdownBuilder: (context, selectedItem,
-                                                itemAsString) =>
-                                            Text(
-                                              selectedItem,
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w900,
-                                                  fontSize: 18),
                                             ),
-                                        items: [tr('male'), tr('female')],
-                                        popupBackgroundColor: kcolor1,
-                                        maxHeight: 100,
-                                        hint: tr('hint_msg', namedArgs: {
-                                          'attribute': tr('gender')
-                                        }),
-                                        onChanged: (v) {
-                                          genderController.text = v;
-                                        },
-                                        selectedItem: tr('male')),
+                                            onPressed: () {
+                                              setState(() {
+                                                isVisible = !isVisible;
+                                              });
+                                            }),
+                                        hintStyle: TextStyle(
+                                            color: ksecondary,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w700),
+                                        border: InputBorder.none,
+                                        hintText: tr('hint_msg', namedArgs: {
+                                          'attribute': tr('password')
+                                        })),
                                   ),
                                 ),
-                                // buldinputContainer(
-                                //     onChange: (v) {
-                                //       if (v.length == 0 || v.length == 1)
-                                //         setState(() {});
-                                //     },
-                                //     text: "Age",
-                                //     hint: "enter your age ...",
-                                //     controller: ageController),
-                                buldinputContainer(
-                                  text: tr('password'),
-                                  controller: passController,
-                                  widget: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10.0),
-                                    child: TextFormField(
-                                      autovalidateMode:
-                                          AutovalidateMode.onUserInteraction,
-                                      controller: passController,
-                                      onChanged: (v) {
+                              ),
+                            ]
+                          : [
+                              buldinputContainer(
+                                  onChange: (v) {
+                                    if (v.length == 0 || v.length == 1)
+                                      setState(() {});
+                                  },
+                                  text: tr('name'),
+                                  hint: tr('hint_msg',
+                                      namedArgs: {'attribute': tr('name')}),
+                                  controller: nameController),
+                              // buldinputContainer(
+                              //     onChange: (v) {
+                              //       if (v.length == 0 || v.length == 1)
+                              //         setState(() {});
+                              //     },
+                              //     text: "Email",
+                              //     hint: 'Enter your email ...',
+                              //     controller: emailController),
+                              buldinputContainer(
+                                  onChange: (v) {
+                                    if (v.length <= 11) setState(() {});
+                                  },
+                                  text: tr('phone'),
+                                  hint: tr('hint_msg',
+                                      namedArgs: {'attribute': tr('phone')}),
+                                  controller: phoneController),
+                              /*   Row(
+                children: [
+                  Spacer(),
+                  Container(
+                    margin:EdgeInsets.symmetric(horizontal: 20),
+                    width: 200,
+                    child: buildFillElevatedButton(
+                      text: "Send Code",
+                      onpressed: () {},
+                    ),
+                  ),
+                ],
+              ),
+              buldinputContainer(
+                  text: "Confirmation Code",
+                  hint: 'Enter confirmation code ...',
+                  controller: TextEditingController(text: '')), */
+                              buldinputContainer(
+                                  onChange: (v) {
+                                    if (v.length == 0 || v.length == 1)
+                                      setState(() {});
+                                  },
+                                  text: tr('location'),
+                                  hint: tr('hint_msg',
+                                      namedArgs: {'attribute': tr('location')}),
+                                  isLoading: isLoading,
+                                  onpressed: () async {
+                                    setState(() {
+                                      isLoading = true;
+                                    });
+                                    final add = await getCurrantaddress();
+                                    locationController.text = add.addressLine;
+
+                                    setState(() {
+                                      isLoading = false;
+                                    });
+                                  },
+                                  controller: locationController),
+                              buldinputContainer(
+                                  text: tr('birthdate'),
+                                  widget: InkWell(
+                                      onTap: () async {
+                                        FocusScope.of(context)
+                                            .requestFocus(new FocusNode());
+                                        selectedDate = await showDatePicker(
+                                            context: context,
+                                            initialDate: DateTime(2000),
+                                            firstDate: DateTime(1970),
+                                            lastDate: DateTime.now());
                                         setState(() {});
                                       },
-                                      validator: (String v) {
-                                        if (v.trim().isEmpty || v == null) {
-                                          return tr('hint_msg', namedArgs: {
-                                            'attribute': tr('password')
-                                          });
-                                        }
-                                        if (v.trim().length < 6) {
-                                          return tr('max_validate_msg',
-                                              namedArgs: {
-                                                'attribute': tr('password'),
-                                                'num': '6'
-                                              });
-                                        }
-                                        return null;
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10.0, vertical: 16),
+                                        child: Text(
+                                            selectedDate != null
+                                                ? DateFormat('dd/MM/yyyy')
+                                                    .format(selectedDate)
+                                                    .toString()
+                                                : tr('hint_msg', namedArgs: {
+                                                    'attribute': tr('birthdate')
+                                                  }),
+                                            style: TextStyle(
+                                                color: selectedDate != null
+                                                    ? kprimary
+                                                    : ksecondary,
+                                                fontWeight: selectedDate != null
+                                                    ? FontWeight.w900
+                                                    : FontWeight.w600,
+                                                fontSize: selectedDate != null
+                                                    ? 18
+                                                    : 16)),
+                                      )),
+                                  controller: TextEditingController(text: '')),
+                              buldinputContainer(
+                                text: tr('gender'),
+                                controller: genderController,
+                                widget: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: DropdownSearch<String>(
+                                      searchBoxDecoration: InputDecoration(
+                                        border: InputBorder.none,
+                                      ),
+                                      dropdownSearchDecoration: InputDecoration(
+                                        border: InputBorder.none,
+                                      ),
+                                      mode: Mode.MENU,
+                                      dropdownBuilder: (context, selectedItem,
+                                              itemAsString) =>
+                                          Text(
+                                            selectedItem,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w900,
+                                                fontSize: 18),
+                                          ),
+                                      items: [tr('male'), tr('female')],
+                                      popupBackgroundColor: kcolor1,
+                                      maxHeight: 100,
+                                      hint: tr('hint_msg', namedArgs: {
+                                        'attribute': tr('gender')
+                                      }),
+                                      onChanged: (v) {
+                                        genderController.text = v;
                                       },
-                                      obscureText: isVisible,
-                                      cursorColor: kprimary,
-                                      style: TextStyle(
-                                          color: kprimary,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w900),
-                                      decoration: InputDecoration(
-                                          suffixIcon: IconButton(
-                                              icon: Icon(
-                                                isVisible
-                                                    ? Icons.visibility
-                                                    : Icons.visibility_off,
-                                                color: ksecondary,
-                                              ),
-                                              onPressed: () {
-                                                setState(() {
-                                                  isVisible = !isVisible;
-                                                });
-                                              }),
-                                          hintStyle: TextStyle(
+                                      selectedItem: tr('male')),
+                                ),
+                              ),
+                              // buldinputContainer(
+                              //     onChange: (v) {
+                              //       if (v.length == 0 || v.length == 1)
+                              //         setState(() {});
+                              //     },
+                              //     text: "Age",
+                              //     hint: "enter your age ...",
+                              //     controller: ageController),
+                              buldinputContainer(
+                                text: tr('password'),
+                                controller: passController,
+                                widget: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10.0),
+                                  child: TextFormField(
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    controller: passController,
+                                    onChanged: (v) {
+                                      setState(() {});
+                                    },
+                                    validator: (String v) {
+                                      if (v.trim().isEmpty || v == null) {
+                                        return tr('hint_msg', namedArgs: {
+                                          'attribute': tr('password')
+                                        });
+                                      }
+                                      if (v.trim().length < 6) {
+                                        return tr('max_validate_msg',
+                                            namedArgs: {
+                                              'attribute': tr('password'),
+                                              'num': '6'
+                                            });
+                                      }
+                                      return null;
+                                    },
+                                    obscureText: isVisible,
+                                    cursorColor: kprimary,
+                                    style: TextStyle(
+                                        color: kprimary,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w900),
+                                    decoration: InputDecoration(
+                                        suffixIcon: IconButton(
+                                            icon: Icon(
+                                              isVisible
+                                                  ? Icons.visibility
+                                                  : Icons.visibility_off,
                                               color: ksecondary,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w700),
-                                          border: InputBorder.none,
-                                          hintText: tr('hint_msg', namedArgs: {
-                                            'attribute': tr('password')
-                                          })),
-                                    ),
+                                            ),
+                                            onPressed: () {
+                                              setState(() {
+                                                isVisible = !isVisible;
+                                              });
+                                            }),
+                                        hintStyle: TextStyle(
+                                            color: ksecondary,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w700),
+                                        border: InputBorder.none,
+                                        hintText: tr('hint_msg', namedArgs: {
+                                          'attribute': tr('password')
+                                        })),
                                   ),
                                 ),
-                                buldinputContainer(
-                                  text: tr('confirm_pass'),
-                                  controller: confirController,
-                                  widget: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10.0),
-                                    child: TextFormField(
-                                      autovalidateMode:
-                                          AutovalidateMode.onUserInteraction,
-                                      onChanged: (v) {
-                                        if (v.length == 0 || v.length == 1)
-                                          setState(() {});
-                                      },
-                                      validator: (String v) {
-                                        if (v.trim().isEmpty || v == null) {
-                                          return tr('hint_msg', namedArgs: {
-                                            'attribute': tr('confirm_pass')
-                                          });
-                                        }
-                                        if (v.trim() != passController.text) {
-                                          return tr('same_validate_msg',
-                                              namedArgs: {
-                                                'attribute': tr('password')
-                                              });
-                                        }
-                                        return null;
-                                      },
-                                      controller: confirController,
-                                      obscureText: isConfirmVisible,
-                                      cursorColor: kprimary,
-                                      style: TextStyle(
-                                          color: kprimary,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w900),
-                                      decoration: InputDecoration(
-                                          suffixIcon: IconButton(
-                                              icon: Icon(
-                                                isConfirmVisible
-                                                    ? Icons.visibility
-                                                    : Icons.visibility_off,
-                                                color: ksecondary,
-                                              ),
-                                              onPressed: () {
-                                                setState(() {
-                                                  isConfirmVisible =
-                                                      !isConfirmVisible;
-                                                });
-                                              }),
-                                          hintStyle: TextStyle(
+                              ),
+                              buldinputContainer(
+                                text: tr('confirm_pass'),
+                                controller: confirController,
+                                widget: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10.0),
+                                  child: TextFormField(
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    onChanged: (v) {
+                                      if (v.length == 0 || v.length == 1)
+                                        setState(() {});
+                                    },
+                                    validator: (String v) {
+                                      if (v.trim().isEmpty || v == null) {
+                                        return tr('hint_msg', namedArgs: {
+                                          'attribute': tr('confirm_pass')
+                                        });
+                                      }
+                                      if (v.trim() != passController.text) {
+                                        return tr('same_validate_msg',
+                                            namedArgs: {
+                                              'attribute': tr('password')
+                                            });
+                                      }
+                                      return null;
+                                    },
+                                    controller: confirController,
+                                    obscureText: isConfirmVisible,
+                                    cursorColor: kprimary,
+                                    style: TextStyle(
+                                        color: kprimary,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w900),
+                                    decoration: InputDecoration(
+                                        suffixIcon: IconButton(
+                                            icon: Icon(
+                                              isConfirmVisible
+                                                  ? Icons.visibility
+                                                  : Icons.visibility_off,
                                               color: ksecondary,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w700),
-                                          border: InputBorder.none,
-                                          hintText: tr('hint_msg', namedArgs: {
-                                            'attribute': tr('confirm_pass')
-                                          })),
-                                    ),
+                                            ),
+                                            onPressed: () {
+                                              setState(() {
+                                                isConfirmVisible =
+                                                    !isConfirmVisible;
+                                              });
+                                            }),
+                                        hintStyle: TextStyle(
+                                            color: ksecondary,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w700),
+                                        border: InputBorder.none,
+                                        hintText: tr('hint_msg', namedArgs: {
+                                          'attribute': tr('confirm_pass')
+                                        })),
                                   ),
-                                )
-                              ]),
-                  ),
+                                ),
+                              )
+                            ]),
                 ),
               ),
               // Container(

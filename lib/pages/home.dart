@@ -17,11 +17,14 @@ class HomeScrean extends StatefulWidget {
 class _HomeScreanState extends State<HomeScrean> {
   var courseList = [];
   var allCourseList = [];
+  var rcourse;
   var status = false;
   var user;
   //var _scrollController = ScrollController();
   @override
   void initState() {
+    user = Provider.of<AppProvider>(context, listen: false).user;
+
     getData();
     // _scrollController.addListener(() {
     //   if (_scrollController.position.maxScrollExtent ==
@@ -37,8 +40,15 @@ class _HomeScreanState extends State<HomeScrean> {
       status = res['success'];
       allCourseList = res['data'] ?? [];
       courseList = res['data'] ?? [];
-      Provider.of<AppProvider>(context, listen: false)
-          .user['course_recommended'] = allCourseList[0]['id'];
+      if (user['recommended_course'] != null) {
+        rcourse = allCourseList.firstWhere(
+            (e) => e['id'] == user['recommended_course'],
+            orElse: () => null);
+      }
+
+      // if (allCourseList.length > 0) {
+      //   user['course_recommended'] = allCourseList[1]['id'];
+      // }
     }
     setState(() {});
   }
@@ -46,77 +56,70 @@ class _HomeScreanState extends State<HomeScrean> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
+    print(user);
     final response = ResponseUI.instance;
     return SafeArea(
       child: Scaffold(
           key: scaffoldKey,
           drawer: buildDrawer(context),
           body: Container(
-            width: double.infinity,
-            height: double.infinity,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                // radius: 0.1,
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [
-                  Color(0xffe4e6f3),
-                  Color(0xfffefefe),
-                  Color(0xffe4e6f3),
-                ],
+              width: double.infinity,
+              height: double.infinity,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  // radius: 0.1,
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [
+                    Color(0xffe4e6f3),
+                    Color(0xfffefefe),
+                    Color(0xffe4e6f3),
+                  ],
+                ),
               ),
-            ),
-            child: !status
-                ? Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 32.0, vertical: 16),
-                        child: buildAppBar(() {
-                          scaffoldKey.currentState.openDrawer();
-                        }, context),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 32.0, vertical: 16),
+                    child: buildAppBar(() {
+                      scaffoldKey.currentState.openDrawer();
+                    }, context),
+                  ),
+                  SizedBox(
+                    height: response.setHeight(10),
+                  ),
+                  if (!status)
+                    Expanded(
+                      child: Center(
+                        child: CircularProgressIndicator(color: kprimary),
                       ),
-                      SizedBox(
-                        height: response.setHeight(10),
-                      ),
-                      Expanded(
-                        child: Center(
-                          child: CircularProgressIndicator(color: kprimary),
-                        ),
-                      ),
-                    ],
-                  )
-                : allCourseList.length == 0
-                    ? Center(
-                        child: buildText(tr("nodata")),
-                      )
-                    : ListView(
+                    )
+                  else if (allCourseList.length == 0)
+                    Center(
+                      child: buildText(tr("nodata")),
+                    )
+                  else
+                    Expanded(
+                      child: ListView(
                         physics: BouncingScrollPhysics(),
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 32.0, vertical: 16),
-                            child: buildAppBar(() {
-                              scaffoldKey.currentState.openDrawer();
-                            }, context),
-                          ),
-                          SizedBox(
-                            height: response.setHeight(10),
-                          ),
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: 32),
-                            child: buildText(tr('recommended')),
-                          ),
-                          SizedBox(
-                            height: response.setHeight(20),
-                          ),
-                          InkWell(
-                            onTap: () => goTo(context, CouresScrean()),
-                            child: buildRecommendedCourseCard(),
-                          ),
-                          SizedBox(
-                            height: response.setHeight(20),
-                          ),
+                          if (rcourse != null) ...[
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 32),
+                              child: buildText(tr('recommended')),
+                            ),
+                            SizedBox(
+                              height: response.setHeight(20),
+                            ),
+                            InkWell(
+                              onTap: () => goTo(context, CouresScrean()),
+                              child: buildRecommendedCourseCard(),
+                            ),
+                            SizedBox(
+                              height: response.setHeight(20),
+                            ),
+                          ],
                           Container(
                               padding: EdgeInsets.symmetric(horizontal: 32),
                               child: buildText(tr('courses'))),
@@ -168,7 +171,9 @@ class _HomeScreanState extends State<HomeScrean> {
                           )
                         ],
                       ),
-          )),
+                    ),
+                ],
+              ))),
     );
   }
 

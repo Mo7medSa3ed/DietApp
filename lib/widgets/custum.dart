@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test_app/API.dart';
 import 'package:flutter_test_app/constants/config.dart';
+import 'package:flutter_test_app/main.dart';
 import 'package:flutter_test_app/models/product.dart';
 import 'package:flutter_test_app/pages/cart.dart';
 import 'package:flutter_test_app/pages/course.dart';
@@ -12,9 +13,11 @@ import 'package:flutter_test_app/pages/home.dart';
 import 'package:flutter_test_app/pages/login.dart';
 import 'package:flutter_test_app/pages/orders.dart';
 import 'package:flutter_test_app/pages/profile.dart';
+import 'package:flutter_test_app/pages/settings.dart';
 import 'package:flutter_test_app/pages/shop.dart';
 import 'package:flutter_test_app/provider/app_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:readmore/readmore.dart';
 import 'package:response/response.dart';
 import 'package:toast/toast.dart';
 
@@ -154,7 +157,16 @@ buildIconElevatedButtonOutLine(
   );
 }
 
-buildDialog({context, text, desc, img, test = true}) {
+buildDialog(
+    {context,
+    text,
+    desc,
+    img,
+    homebtnText,
+    homebtnTap,
+    gobtnText,
+    gobtnTap,
+    test = true}) {
   return showDialog(
       context: context,
       builder: (ctx) => Dialog(
@@ -189,19 +201,21 @@ buildDialog({context, text, desc, img, test = true}) {
                     height: 12,
                   ),
                   buildOutElevatedButton(
-                      text: "Continue Shopping",
-                      onpressed: () {
-                        goToWithRemoveUntill(context, ShopScrean());
-                      },
+                      text: homebtnText ?? "Continue Shopping",
+                      onpressed: homebtnTap ??
+                          () {
+                            goToWithRemoveUntill(context, ShopScrean());
+                          },
                       test: test),
                   SizedBox(
                     height: 8,
                   ),
                   buildFillElevatedButton(
-                      text: "Go To Orders",
-                      onpressed: () {
-                        goToWithRemoveUntill(context, OrderScrean());
-                      }),
+                      text: gobtnText ?? "Go To Orders",
+                      onpressed: gobtnTap ??
+                          () {
+                            goToWithRemoveUntill(context, OrderScrean());
+                          }),
                 ],
               ),
             ),
@@ -456,14 +470,22 @@ buildCourseItem(product) {
               SizedBox(
                 height: response.setHeight(2),
               ),
-              Text(product['description'] ?? '',
-                  overflow: TextOverflow.fade,
-                  softWrap: false,
-                  maxLines: 1,
-                  style: TextStyle(
-                      color: ksecondary,
-                      fontWeight: FontWeight.w900,
-                      fontSize: response.setFontSize(14))),
+              ReadMoreText(
+                product['description'] ?? '',
+                trimLines: 2,
+                colorClickableText: kprimary2,
+                style: TextStyle(
+                    color: ksecondary,
+                    fontWeight: FontWeight.w900,
+                    fontSize: response.setFontSize(14)),
+                trimMode: TrimMode.Line,
+                trimCollapsedText: 'Show more',
+                trimExpandedText: 'Show less',
+                moreStyle: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w900,
+                    color: kprimary2),
+              ),
               SizedBox(
                 height: response.setHeight(2),
               ),
@@ -528,22 +550,26 @@ buildShopItem({context, ProductModel product}) {
                                     fontSize: response.setFontSize(15))),
                           ),
                           buildText(
-                              "\$ " +
-                                  double.parse(product.price.toString())
-                                      .toStringAsFixed(1),
+                              double.parse(product.price.toString())
+                                      .toStringAsFixed(1) +
+                                  ' ' +
+                                  selectedCountry.currency,
                               color: kprimary2,
-                              fontsize: 15.0),
+                              fontsize: 14.0),
                         ]),
                         SizedBox(
                           height: 2,
                         ),
-                        Text(product.description,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                            style: TextStyle(
-                                color: ksecondary,
-                                fontWeight: FontWeight.w900,
-                                fontSize: response.setFontSize(13))),
+                        SizedBox(
+                          width: response.screenWidth * 0.53,
+                          child: Text(product.description,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              style: TextStyle(
+                                  color: ksecondary,
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: response.setFontSize(13))),
+                        ),
                         SizedBox(
                           height: 2,
                         ),
@@ -595,8 +621,8 @@ buildShopItem({context, ProductModel product}) {
         ),
       ),
       Positioned(
-        right: 35,
-        bottom: -5,
+        right: 10,
+        bottom: 0,
         child: FloatingActionButton(
           heroTag: product.photo,
           mini: true,
@@ -881,7 +907,6 @@ buildAppBar(
         ),
         Spacer(),
         InkWell(
-          onTap: () => goTo(context, ProfileScrean()),
           child: Container(
             alignment: Alignment.center,
             width: response.setHeight(40),
@@ -1158,6 +1183,7 @@ Widget buildDrawer(context) {
                       buildDrawerItem(tr("setting"), 5, i, 5, () {
                         app.changeIndex(5);
                         Navigator.of(context).pop();
+                        goTo(context, SettingsScrean());
                       }),
                       SizedBox(
                         height: response.setHeight(20),
@@ -1286,9 +1312,10 @@ Widget buldinputContainer(
     validator,
     isLoading = false,
     phoneMaxLength = 10,
+    withoutIcon = false,
     onCountryChanged}) {
   return Container(
-    margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+    margin: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
     decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
@@ -1457,21 +1484,23 @@ Widget buldinputContainer(
                       ],
                     ),
                   )
-                : Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8.0),
-                    child: isLoading
-                        ? CircularProgressIndicator(
-                            color: kprimary,
-                          )
-                        : Icon(Icons.check_circle,
-                            color: text == "Phone"
-                                ? controller.text.length == 11
-                                    ? controller.text.isNotEmpty
-                                        ? kprimary2
+                : withoutIcon
+                    ? SizedBox()
+                    : Container(
+                        padding: EdgeInsets.symmetric(horizontal: 8.0),
+                        child: isLoading
+                            ? CircularProgressIndicator(
+                                color: kprimary,
+                              )
+                            : Icon(Icons.check_circle,
+                                color: text == "Phone"
+                                    ? controller.text.length == 11
+                                        ? controller.text.isNotEmpty
+                                            ? kprimary2
+                                            : ksecondary
                                         : ksecondary
-                                    : ksecondary
-                                : ksecondary),
-                  )
+                                    : ksecondary),
+                      )
           ],
         ),
       ],

@@ -121,6 +121,7 @@ class API {
   }
 
   static Future<dynamic> getCart() async {
+    print(await getHeader());
     try {
       final res = await http.get(Uri.parse('$_BaseUrl/users/cart'),
           headers: await getHeader());
@@ -175,12 +176,13 @@ class API {
 
   static Future<dynamic> addToCart(id) async {
     try {
+      print('$_BaseUrl/users/cart/addProduct/$id');
       final res = await http.get(
           Uri.parse('$_BaseUrl/users/cart/addProduct/$id'),
           headers: await getHeader());
       final body = utf8.decode(res.bodyBytes);
       final parsed = json.decode(body);
-
+      print(parsed);
       if ((res.statusCode == 200 || res.statusCode == 201) &&
           parsed['success']) {
         return {"success": true, "amount": parsed['data']['items_count']};
@@ -275,6 +277,22 @@ class API {
     }
   }
 
+  static Future<dynamic> getAllTickets(id) async {
+    try {
+      final res = await http.get(Uri.parse('$_BaseUrl/users/tickets/$id'),
+          headers: await getHeader());
+      final body = utf8.decode(res.bodyBytes);
+      final parsed = json.decode(body);
+      if ((res.statusCode == 200 || res.statusCode == 201) &&
+          parsed['success']) {
+        return parsed;
+      }
+      return null;
+    } catch (e) {
+      return "error";
+    }
+  }
+
   static Future<dynamic> updateProfile(userUpdated) async {
     try {
       final formData = FormData.fromMap(userUpdated);
@@ -298,9 +316,42 @@ class API {
         contentType: 'application/json',
       );
 
-      print(await getHeader());
       final res = await dio.post('$_BaseUrl/users/orders', data: body);
 
+      return res;
+    } catch (e) {
+      print(e);
+      return "error";
+    }
+  }
+
+  static Future<dynamic> addNewTicket({String title, String desc}) async {
+    try {
+      final dio = Dio();
+      dio.options = BaseOptions(
+        headers: await getHeader(),
+        contentType: 'application/json',
+      );
+      final bodyMap = {'title': title.trim(), 'description': desc.trim()};
+      final res = await dio.post('$_BaseUrl/users/tickets', data: bodyMap);
+      return res;
+    } catch (e) {
+      return "error";
+    }
+  }
+
+  static Future<dynamic> addNewcomment(
+      {String ticketId, String comment}) async {
+    try {
+      final dio = Dio();
+      dio.options = BaseOptions(
+        headers: await getHeader(),
+        contentType: 'application/json',
+      );
+      final bodyMap = {'ticket_id': ticketId.trim(), 'comment': comment.trim()};
+
+      final res =
+          await dio.post('$_BaseUrl/users/tickets/comment', data: bodyMap);
       return res;
     } catch (e) {
       print(e);

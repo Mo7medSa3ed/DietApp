@@ -70,7 +70,12 @@
     "great":"Great !",
     "achived":"You are achieved",
     "finish":"Finish Go Home >>>",
-    "next":"Next Day >>"
+    "next":"Next Day >>",
+    "ar":"Arabic",
+    "en":"English",
+    "lang":"Language",
+    "country":"Country",
+    "support":"Support"
 
 
     

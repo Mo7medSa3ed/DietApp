@@ -1,4 +1,5 @@
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test_app/API.dart';
 import 'package:flutter_test_app/Alert.dart';
@@ -255,7 +256,7 @@ class _CheckoutScreanState extends State<CheckoutScrean> {
     final res = await API.makeOrder(body);
     Navigator.of(context).pop();
     if (res == 'error') {
-      return Alert.errorAlert(ctx: context, title: "tr('error404')");
+      return Alert.errorAlert(ctx: context, title: tr('error404'));
     }
 
     final data = res.data;
@@ -271,7 +272,7 @@ class _CheckoutScreanState extends State<CheckoutScrean> {
     } else if (res.statusCode != 200 || !data['success']) {
       return Alert.errorAlert(ctx: context, title: data['message']);
     } else {
-      return Alert.errorAlert(ctx: context, title: "tr('error404')");
+      return Alert.errorAlert(ctx: context, title: tr('error404'));
     }
   }
 

@@ -532,7 +532,7 @@ class _EditProfileScreanState extends State<EditProfileScrean> {
     } else if (res.statusCode != 200 || !resBody['success']) {
       return Alert.errorAlert(ctx: context, title: resBody['message']);
     } else {
-      return Alert.errorAlert(ctx: context, title: "tr('error404')");
+      return Alert.errorAlert(ctx: context, title: tr('error404'));
     }
   }
 }

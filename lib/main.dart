@@ -1,15 +1,30 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_test_app/API.dart';
 import 'package:flutter_test_app/constants/config.dart';
+import 'package:flutter_test_app/models/countries.dart';
 import 'package:flutter_test_app/pages/splashScrean.dart';
 import 'package:flutter_test_app/provider/app_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:response/response.dart';
 import 'package:easy_localization/easy_localization.dart';
 
+bool isArabic = false;
+CountriesModel selectedCountry;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
+  final sc = await getValue(key: 'selectedCountry');
+  isArabic = await getboolValue(key: 'isArabic') ?? false;
+
+  if (sc == null || sc.trim().length == 0) {
+    await getCountriesData();
+  } else {
+    selectedCountry = CountriesModel.fromJson(jsonDecode(sc));
+  }
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
@@ -20,11 +35,34 @@ void main() async {
       supportedLocales: [Locale('en'), Locale('ar')],
       path: 'assets/lang',
       fallbackLocale: Locale('en'),
-      startLocale: Locale('en'),
+      startLocale: Locale(isArabic ? 'ar' : 'en'),
       child: MyApp(), // Wrap your app
       // ),
     ));
   });
+}
+
+getCountriesData() async {
+  print("object");
+  final response = await API.getCountries();
+
+  if (response == 'error') return exit(0);
+  if (response != null) {
+    if (response['success']) {
+      if (response['data'].length > 0) {
+        selectedCountry = CountriesModel.fromJson(response['data'][0]);
+      } else {
+        return exit(0);
+      }
+
+      await saveCountry();
+    }
+  }
+}
+
+saveCountry() async {
+  await setValue(
+      key: 'selectedCountry', value: jsonEncode(selectedCountry.toMap()));
 }
 
 class MyApp extends StatelessWidget {
@@ -48,7 +86,7 @@ class MyApp extends StatelessWidget {
               theme: ThemeData(
                 fontFamily: 'Nexa',
                 primaryColor: kprimary,
-                splashColor: kprimary,
+                splashColor: kprimary.withOpacity(0.1),
                 indicatorColor: kprimary,
                 // ignore: deprecated_member_use
                 accentColor: kprimary,
