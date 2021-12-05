@@ -75,7 +75,26 @@
     "en":"English",
     "lang":"Language",
     "country":"Country",
-    "support":"Support"
+    "support":"Support",
+    
+    "customer_service":"Customer Service",
+    "title":"Title",
+    "subject":"Subject",
+    "help_title":"Tell us how we can help",
+    "help_desc":"Our crew are standing by\n for service and support.",
+    "send":"Send",
+    "discard":"Discard",
+    "go_to_home":"Go To Home",
+    "continueChating":"Continue Chatting",
+    "add_ticket_title_success":"Your ticket is added successfully.",
+    "add_ticket_desc_success":"Support will reply in available time soon",
+    "add_order_title_success":"Your order is successfully.",
+    "add_order_desc_success":"we can track the delivery in the orders section",
+    "conversation":"Conversation",
+    "message":"Message...",
+    "alltickets":"Problems"
+
+
 
 
     

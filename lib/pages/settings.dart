@@ -7,6 +7,7 @@ import 'package:flutter_test_app/Alert.dart';
 import 'package:flutter_test_app/constants/config.dart';
 import 'package:flutter_test_app/main.dart';
 import 'package:flutter_test_app/models/countries.dart';
+import 'package:flutter_test_app/pages/home.dart';
 import 'package:flutter_test_app/widgets/custum.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -105,6 +106,7 @@ class _SettingsScreanState extends State<SettingsScrean> {
                             setState(() {
                               isArabic = val;
                             });
+                            goToWithRemoveUntill(context, HomeScrean());
                           },
                           selectedItem: isArabic ? tr('ar') : tr('en')),
                     ),
@@ -153,7 +155,9 @@ class _SettingsScreanState extends State<SettingsScrean> {
                                 countries.firstWhere((e) => e.name == g);
 
                             await saveCountry();
+
                             setState(() {});
+                            goToWithRemoveUntill(context, HomeScrean());
                           },
                           selectedItem:
                               countries.length > 0 ? selectedCountry.name : ''),

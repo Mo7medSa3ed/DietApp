@@ -96,8 +96,10 @@ class _HomeScreanState extends State<HomeScrean> {
                       ),
                     )
                   else if (allCourseList.length == 0)
-                    Center(
-                      child: buildText(tr("nodata")),
+                    Expanded(
+                      child: Center(
+                        child: buildText(tr("nodata")),
+                      ),
                     )
                   else
                     Expanded(

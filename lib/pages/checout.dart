@@ -250,7 +250,7 @@ class _CheckoutScreanState extends State<CheckoutScrean> {
           ? user['mobile'].toString().replaceAll("+2", '')
           : "+2" + _phone.text.trim(),
       "user_country": countryCode,
-      "user_city": addresses != null ? addresses.subAdminArea : "Minya",
+      "user_city": addresses != null ? addresses.subAdminArea : "",
     };
     print(body);
     final res = await API.makeOrder(body);

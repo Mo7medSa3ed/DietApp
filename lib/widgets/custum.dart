@@ -6,6 +6,7 @@ import 'package:flutter_test_app/API.dart';
 import 'package:flutter_test_app/constants/config.dart';
 import 'package:flutter_test_app/main.dart';
 import 'package:flutter_test_app/models/product.dart';
+import 'package:flutter_test_app/pages/allTickets.dart';
 import 'package:flutter_test_app/pages/cart.dart';
 import 'package:flutter_test_app/pages/course.dart';
 import 'package:flutter_test_app/pages/help.dart';
@@ -831,18 +832,24 @@ buildOrderItem(o) {
               children: [
                 buildIconElevatedButton(
                     label: tr('edit_order'),
-                    icon: Image.asset("assets/images/edit-button.png"),
+                    icon: Image.asset(
+                      "assets/images/edit-button.png",
+                      height: 20,
+                      width: 20,
+                    ),
+                    fontSize: 14.0,
                     onpressed: () {}),
                 SizedBox(
                   width: 8,
                 ),
                 buildIconElevatedButtonOutLine(
                     label: tr('cancel'),
+                    fontSize: 14.0,
                     color: kprimary2,
                     icon: Icon(
                       Icons.close,
                       color: kprimary2,
-                      size: 25,
+                      size: 20,
                     ),
                     onpressed: () {}),
               ],
@@ -1041,7 +1048,7 @@ buildSearch(
 
 Widget buildDrawer(context) {
   final app = Provider.of<AppProvider>(context, listen: false);
-  var user = Provider.of<AppProvider>(context, listen: false).user;
+  var user = app.user;
   return Selector<AppProvider, int>(
     selector: (context, app) => app.index,
     builder: (context, i, w) => Container(
@@ -1084,11 +1091,9 @@ Widget buildDrawer(context) {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Row(
-                mainAxisAlignment: context.locale != Locale('ar')
-                    ? MainAxisAlignment.end
-                    : MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  buildBackButton(context, context.locale == Locale('ar')),
+                  buildBackButton(context, isArabic),
                 ],
               ),
               Expanded(
@@ -1145,14 +1150,16 @@ Widget buildDrawer(context) {
                       SizedBox(
                         height: response.setHeight(20),
                       ),
-                      buildDrawerItem(tr("my_course"), 1, i, 2, () {
-                        app.changeIndex(1);
-                        Navigator.of(context).pop();
-                        goTo(context, CouresScrean());
-                      }),
-                      SizedBox(
-                        height: response.setHeight(20),
-                      ),
+                      if (user['recommended_course'] != null) ...[
+                        buildDrawerItem(tr("my_course"), 1, i, 2, () {
+                          app.changeIndex(1);
+                          Navigator.of(context).pop();
+                          goTo(context, CouresScrean());
+                        }),
+                        SizedBox(
+                          height: response.setHeight(20),
+                        ),
+                      ],
                       buildDrawerItem(tr("shop"), 2, i, 4, () {
                         app.changeIndex(2);
                         Navigator.of(context).pop();
@@ -1188,10 +1195,18 @@ Widget buildDrawer(context) {
                       SizedBox(
                         height: response.setHeight(20),
                       ),
-                      buildDrawerItem(tr("support"), 7, i, 7, () {
+                      buildDrawerItem(tr("support"), 8, i, 8, () {
                         app.changeIndex(7);
                         Navigator.of(context).pop();
                         goTo(context, HelpScrean());
+                      }),
+                      SizedBox(
+                        height: response.setHeight(20),
+                      ),
+                      buildDrawerItem(tr('alltickets'), 9, i, 9, () async {
+                        app.changeIndex(8);
+                        Navigator.of(context).pop();
+                        goTo(context, AllTicketsScrean());
                       }),
                       SizedBox(
                         height: response.setHeight(20),
@@ -1291,8 +1306,7 @@ Widget buildBackButton(context, bool isRtl, {margin = 32}) {
             padding:
                 EdgeInsets.only(left: isRtl ? 0 : 8.0, right: isRtl ? 8.0 : 0),
             child: Icon(
-              isRtl ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
-              size: 25,
+              Icons.arrow_back_ios,
               color: kicon,
             ),
           ),

@@ -84,7 +84,7 @@ class MyApp extends StatelessWidget {
               title: 'Diet App',
               debugShowCheckedModeBanner: false,
               theme: ThemeData(
-                fontFamily: 'Nexa',
+                fontFamily: isArabic ? 'SSTArabic' : 'Nexa',
                 primaryColor: kprimary,
                 splashColor: kprimary.withOpacity(0.1),
                 indicatorColor: kprimary,

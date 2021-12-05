@@ -98,6 +98,10 @@ flutter:
     - family: RifficFree  
       fonts:
         - asset: assets/fonts/RifficFreeBold.ttf    
+    - family: SSTArabic  
+      fonts:
+        - asset: assets/fonts/SSTArabicBold.ttf    
+        - asset: assets/fonts/SSTArabicRoman.ttf    
          
   #         style: italic
   #   - family: Trajan Pro

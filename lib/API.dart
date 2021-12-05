@@ -277,9 +277,25 @@ class API {
     }
   }
 
-  static Future<dynamic> getAllTickets(id) async {
+  static Future<dynamic> getOneTicket(id) async {
     try {
       final res = await http.get(Uri.parse('$_BaseUrl/users/tickets/$id'),
+          headers: await getHeader());
+      final body = utf8.decode(res.bodyBytes);
+      final parsed = json.decode(body);
+      if ((res.statusCode == 200 || res.statusCode == 201) &&
+          parsed['success']) {
+        return parsed;
+      }
+      return null;
+    } catch (e) {
+      return "error";
+    }
+  }
+
+  static Future<dynamic> getAllTickets() async {
+    try {
+      final res = await http.get(Uri.parse('$_BaseUrl/users/tickets'),
           headers: await getHeader());
       final body = utf8.decode(res.bodyBytes);
       final parsed = json.decode(body);

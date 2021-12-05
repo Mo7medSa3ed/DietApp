@@ -5,7 +5,9 @@ import 'package:flutter_test_app/Alert.dart';
 import 'package:flutter_test_app/constants/config.dart';
 import 'package:flutter_test_app/pages/cart.dart';
 import 'package:flutter_test_app/pages/timeline.dart';
+import 'package:flutter_test_app/provider/app_provider.dart';
 import 'package:flutter_test_app/widgets/custum.dart';
+import 'package:provider/provider.dart';
 import 'package:response/response.dart';
 
 class CouresScrean extends StatefulWidget {
@@ -16,19 +18,26 @@ class CouresScrean extends StatefulWidget {
 class _CouresScreanState extends State<CouresScrean> {
   final scaffoldkey = GlobalKey<ScaffoldState>();
   var course;
+
   var status = false;
   getData() async {
-    // var id = Provider.of<AppProvider>(context, listen: false)
-    //     .user['course_recommended'];
+    var id = Provider.of<AppProvider>(context, listen: false)
+        .user['course_recommended'];
+    print(id);
+    if (id != null) {
+      final res = await API.getOneCourse(id);
 
-    final res = await API.getOneCourse(2);
-
-    if (res == 'error') return Alert.errorAlert(ctx: context, title: errorMsg);
-    if (res != null) {
-      status = res['success'];
-      course = res['data'];
-      setState(() {});
+      if (res == 'error')
+        return Alert.errorAlert(ctx: context, title: errorMsg);
+      if (res != null) {
+        status = res['success'];
+        course = res['data'];
+      }
+    } else {
+      status = true;
     }
+
+    setState(() {});
   }
 
   @override
@@ -60,7 +69,7 @@ class _CouresScreanState extends State<CouresScrean> {
             ),
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               buildAppBarForPages(
                 context,
@@ -71,12 +80,16 @@ class _CouresScreanState extends State<CouresScrean> {
                 height: response.setHeight(30),
               ),
               !status
-                  ? Center(
-                      child: CircularProgressIndicator(color: kprimary),
+                  ? Expanded(
+                      child: Center(
+                        child: CircularProgressIndicator(color: kprimary),
+                      ),
                     )
                   : course == null
-                      ? Center(
-                          child: buildText(tr("nodata")),
+                      ? Expanded(
+                          child: Center(
+                            child: buildText(tr("nodata")),
+                          ),
                         )
                       : Expanded(
                           child: ListView(
@@ -185,45 +198,46 @@ class _CouresScreanState extends State<CouresScrean> {
                             ],
                           ),
                         ),
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
-                decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                          color: ksecondary,
-                          offset: Offset(0, -5),
-                          blurRadius: 10,
-                          spreadRadius: 2)
-                    ],
-                    color: kwhite,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(50),
-                      topRight: Radius.circular(50),
-                    )),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    FloatingActionButton(
-                      heroTag: "btn3",
-                      backgroundColor: kdrawer,
-                      onPressed: () => goTo(context, CartScrean()),
-                      child: Image.asset("assets/images/cart.png"),
-                    ),
-                    SizedBox(
-                      width: response.setWidth(10),
-                    ),
-                    Expanded(
-                        child: buildIconElevatedButton(
-                      icon: Icon(Icons.play_arrow),
-                      label: tr('start_now'),
-                      onpressed: () => goTo(
-                        context,
-                        TimeLineScrean(course['id'], course['name'], 0, null),
+              if (course != null)
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+                  decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                            color: ksecondary,
+                            offset: Offset(0, -5),
+                            blurRadius: 10,
+                            spreadRadius: 2)
+                      ],
+                      color: kwhite,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(50),
+                        topRight: Radius.circular(50),
+                      )),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      FloatingActionButton(
+                        heroTag: "btn3",
+                        backgroundColor: kdrawer,
+                        onPressed: () => goTo(context, CartScrean()),
+                        child: Image.asset("assets/images/cart.png"),
                       ),
-                    ))
-                  ],
-                ),
-              )
+                      SizedBox(
+                        width: response.setWidth(10),
+                      ),
+                      Expanded(
+                          child: buildIconElevatedButton(
+                        icon: Icon(Icons.play_arrow),
+                        label: tr('start_now'),
+                        onpressed: () => goTo(
+                          context,
+                          TimeLineScrean(course['id'], course['name'], 0, null),
+                        ),
+                      ))
+                    ],
+                  ),
+                )
             ],
           ),
         ),

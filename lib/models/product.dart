@@ -37,11 +37,11 @@ class ProductModel {
       );
   factory ProductModel.fromJsonForCart(json, amount, cartId) => ProductModel(
       id: json['id'],
-      name: json['name'],
-      description: json['description'],
+      name: json['product']['name'] ?? "",
+      description: json['product']['description'] ?? "",
       price: json['price'],
-      photo: json['photo'],
-      isActive: json['is_active'],
+      photo: json['product']['photo'],
+      isActive: json['is_active'] ?? false,
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
       amount: amount,

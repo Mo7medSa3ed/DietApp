@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:flutter_test_app/API.dart';
 import 'package:flutter_test_app/Alert.dart';
 import 'package:flutter_test_app/constants/config.dart';
@@ -17,9 +18,10 @@ class HelpScrean extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldkey,
+      drawer: buildDrawer(context),
       body: SafeArea(
           child: Container(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
         width: double.infinity,
         height: double.infinity,
         decoration: BoxDecoration(
@@ -37,26 +39,20 @@ class HelpScrean extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
-              children: [
-                buildBackButton(context, false, margin: 0),
-                SizedBox(
-                  width: 16,
-                ),
-                buildText("Custumer Service")
-              ],
-            ),
+            buildAppBarForPages(context, tr('support'),
+                () => scaffoldkey.currentState.openDrawer(),
+                marginHorizental: 16.0),
             SizedBox(
-              height: 16,
+              width: 16,
             ),
             Expanded(
               child: ListView(
                 physics: BouncingScrollPhysics(),
                 padding: const EdgeInsets.all(16.0),
                 children: [
-                  Image.asset(
-                    'assets/images/girl.png',
-                    height: 120,
+                  SvgPicture.asset(
+                    'assets/images/support.svg',
+                    height: MediaQuery.of(context).size.height * 0.2,
                   ),
                   Form(
                     key: formKey,
@@ -64,12 +60,11 @@ class HelpScrean extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SizedBox(height: 30),
-                        buildText('Tell us how we can help', fontsize: 22),
+                        SizedBox(height: 20),
+                        buildText(tr('help_title'), fontsize: 20),
                         SizedBox(height: 10),
-                        buildText2(
-                            'Our crew are standing by\n for service and support.',
-                            align: TextAlign.center),
+                        buildText2(tr('help_desc'),
+                            align: TextAlign.center, fontsize: 14),
                         SizedBox(height: 30),
                         Container(
                           padding: EdgeInsets.all(8),
@@ -80,7 +75,7 @@ class HelpScrean extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              buildText('Title', color: kprimary2),
+                              buildText(tr('title'), color: kprimary2),
                               TextFormField(
                                 controller: tController,
                                 maxLines: 1,
@@ -101,7 +96,7 @@ class HelpScrean extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              buildText('Subject', color: kprimary2),
+                              buildText(tr('subject'), color: kprimary2),
                               TextFormField(
                                 controller: sController,
                                 maxLines: 8,
@@ -119,7 +114,7 @@ class HelpScrean extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -128,7 +123,7 @@ class HelpScrean extends StatelessWidget {
                       width: 100,
                       height: 45,
                       child: buildFillElevatedButton(
-                          text: 'Discard',
+                          text: tr('discard'),
                           bgcolor: kwhite.withOpacity(0.3),
                           elevation: 0.0,
                           txtcolor: kprimary,
@@ -142,14 +137,8 @@ class HelpScrean extends StatelessWidget {
                       width: 90,
                       height: 45,
                       child: buildFillElevatedButton(
-                          text: 'Send',
+                          text: tr('send'),
                           onpressed: () async => await sendTicket(context))),
-                  SizedBox(
-                      width: 90,
-                      height: 45,
-                      child: buildFillElevatedButton(
-                          text: 'go',
-                          onpressed: () => goTo(context, SupportScrean(1)))),
                 ],
               ),
             )
@@ -179,14 +168,16 @@ class HelpScrean extends StatelessWidget {
       return buildDialog(
         context: context,
         test: true,
-        text: "Your ticket is added successfully.",
-        desc: "Your ticket is added successfully.",
+        text: tr('add_ticket_title_success'),
+        desc: tr('add_ticket_desc_success'),
         img: "image5.png",
         homebtnTap: () => goToWithRemoveUntill(context, HomeScrean()),
-        gobtnTap: () =>
-            goToWithRemoveUntill(context, SupportScrean(data['data']['id'])),
-        homebtnText: 'Go To Home',
-        gobtnText: 'Continue Chating',
+        gobtnTap: () {
+          Navigator.of(context).pop();
+          goToWithReplace(context, SupportScrean(data['data']['id']));
+        },
+        homebtnText: tr('go_to_home'),
+        gobtnText: tr('ontinueChating'),
       );
     } else if (res.statusCode != 200 || !data['success']) {
       return Alert.errorAlert(ctx: context, title: data['message']);

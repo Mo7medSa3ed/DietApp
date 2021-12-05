@@ -1,8 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as td;
+import 'package:flutter_svg/svg.dart';
 import 'package:flutter_test_app/API.dart';
 import 'package:flutter_test_app/Alert.dart';
 import 'package:flutter_test_app/constants/config.dart';
+import 'package:flutter_test_app/main.dart';
 import 'package:flutter_test_app/provider/app_provider.dart';
 import 'package:flutter_test_app/widgets/custum.dart';
 import 'package:provider/provider.dart';
@@ -21,11 +24,10 @@ class _SupportScreanState extends State<SupportScrean> {
 
   bool status = false;
   getData() async {
-    final res = await API.getAllTickets(widget.id);
+    final res = await API.getOneTicket(widget.id);
     if (res == 'error') return Alert.errorAlert(ctx: context, title: errorMsg);
     if (res != null) {
       status = res['success'];
-
       Provider.of<AppProvider>(context, listen: false).initChatList([
         {
           "id": res['data']['id'],
@@ -75,12 +77,13 @@ class _SupportScreanState extends State<SupportScrean> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  buildBackButton(context, false, margin: 0),
+                  buildBackButton(context, isArabic, margin: 0),
                   SizedBox(
                     width: 16,
                   ),
-                  buildText("Custumer Service")
+                  buildText(tr('support'))
                 ],
               ),
               SizedBox(
@@ -104,18 +107,21 @@ class _SupportScreanState extends State<SupportScrean> {
                                   horizontal: 12, vertical: 12),
                               child: Column(
                                 children: [
-                                  buildText2("Conversation"),
+                                  buildText2(tr("conversation")),
                                   SizedBox(
                                     height: 8,
                                   ),
                                   Expanded(
                                     child: ListView.builder(
                                       physics: BouncingScrollPhysics(),
-                                      // reverse: true,
-                                      itemCount: pro.chatList.length,
+                                      reverse: true,
+                                      itemCount: pro.chatList.reversed.length,
                                       itemBuilder: (ctx, index) =>
                                           buildMessageCard(
-                                              pro.chatList[index], context),
+                                              pro.chatList[pro.chatList.length -
+                                                  index -
+                                                  1],
+                                              context),
                                     ),
                                   ),
                                 ],
@@ -135,41 +141,56 @@ class _SupportScreanState extends State<SupportScrean> {
   }
 
   Widget buildCardForChat(pro) {
-    return Card(
-      color: kwhite.withOpacity(0.9),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                    color: ksecondary.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(8)),
-                child: TextFormField(
-                  controller: mController,
-                  decoration: InputDecoration(
-                    hintText: 'Message...',
-                    contentPadding: EdgeInsets.symmetric(horizontal: 16),
-                    border: InputBorder.none,
+    return Directionality(
+      textDirection: td.TextDirection.ltr,
+      child: Card(
+        color: kwhite.withOpacity(0.9),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: Container(
+                  height: 50,
+                  decoration: BoxDecoration(
+                      color: ksecondary.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(8)),
+                  child: TextFormField(
+                    controller: mController,
+                    onChanged: (String v) {
+                      if (v.trim().length == 0 || v.trim().length == 1) {
+                        setState(() {});
+                      }
+                    },
+                    textDirection:
+                        isArabic ? td.TextDirection.rtl : td.TextDirection.ltr,
+                    decoration: InputDecoration(
+                      hintText: tr('message'),
+                      hintTextDirection: isArabic
+                          ? td.TextDirection.rtl
+                          : td.TextDirection.ltr,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                      border: InputBorder.none,
+                    ),
                   ),
                 ),
               ),
-            ),
-            SizedBox(
-              width: 8,
-            ),
-            SizedBox(
-              width: 70,
-              height: 50,
-              child: buildFillElevatedButton(
-                widget: Icon(Icons.send),
-                borderRadius: 10,
-                onpressed: () async => await addMessage(pro),
+              SizedBox(
+                width: 8,
               ),
-            )
-          ],
+              if (mController.text.trim().length > 0)
+                SizedBox(
+                  width: 60,
+                  height: 45,
+                  child: buildFillElevatedButton(
+                    widget: Icon(Icons.send),
+                    borderRadius: 10,
+                    onpressed: () async => await addMessage(pro),
+                  ),
+                )
+            ],
+          ),
         ),
       ),
     );
@@ -186,21 +207,19 @@ class _SupportScreanState extends State<SupportScrean> {
         isUser
             ? Container()
             : Container(
-                margin: EdgeInsets.only(right: 8),
-                padding: EdgeInsets.only(right: 8),
+                // margin: EdgeInsets.only(right: 8),
+                padding: EdgeInsets.all(2),
                 width: 50,
                 height: 50,
                 decoration: BoxDecoration(
-                    color: kscaffoldcolor.withOpacity(0.5),
-                    borderRadius: BorderRadius.circular(10),
-                    image: DecorationImage(
-                        fit: BoxFit.contain,
-                        image: AssetImage('assets/images/girl.png'))),
+                  color: kscaffoldcolor.withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: SvgPicture.asset('assets/images/support.svg'),
               ),
         Container(
-          width: MediaQuery.of(context).size.width * 0.7,
           padding: EdgeInsets.all(16),
-          margin: EdgeInsets.only(bottom: 16),
+          margin: EdgeInsets.only(bottom: 16, left: 8, right: 8),
           decoration: BoxDecoration(
             color: !isUser ? kscaffoldcolor.withOpacity(0.5) : kprimary2,
             borderRadius: BorderRadius.circular(20),
@@ -228,12 +247,12 @@ class _SupportScreanState extends State<SupportScrean> {
 
   addMessage(pro) async {
     if (mController.text.trim().length == 0) return;
-    Alert.loadingAlert(ctx: context);
+    // Alert.loadingAlert(ctx: context);
 
     final res = await API.addNewcomment(
-        comment: mController.text.trim(), ticketId: '2');
+        comment: mController.text.trim(), ticketId: widget.id.toString());
 
-    Navigator.of(context).pop();
+    // Navigator.of(context).pop();
     if (res == 'error') {
       return Alert.errorAlert(ctx: context, title: tr('error404'));
     }
