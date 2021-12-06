@@ -20,16 +20,12 @@ class _HomeScreanState extends State<HomeScrean> {
   var rcourse;
   var status = false;
   var user;
-  //var _scrollController = ScrollController();
   @override
   void initState() {
     user = Provider.of<AppProvider>(context, listen: false).user;
 
     getData();
-    // _scrollController.addListener(() {
-    //   if (_scrollController.position.maxScrollExtent ==
-    //       _scrollController.offset) print("object");
-    // });
+
     super.initState();
   }
 
@@ -40,6 +36,7 @@ class _HomeScreanState extends State<HomeScrean> {
       status = res['success'];
       allCourseList = res['data'] ?? [];
       courseList = res['data'] ?? [];
+
       if (user['recommended_course'] != null) {
         rcourse = allCourseList.firstWhere(
             (e) => e['id'] == user['recommended_course'],

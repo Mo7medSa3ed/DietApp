@@ -18,6 +18,7 @@ class AppProvider extends ChangeNotifier {
 
   initUser(user) {
     this.user = user;
+
     notifyListeners();
   }
 

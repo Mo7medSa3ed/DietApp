@@ -23,7 +23,6 @@ class _CouresScreanState extends State<CouresScrean> {
   getData() async {
     var id = Provider.of<AppProvider>(context, listen: false)
         .user['course_recommended'];
-    print(id);
     if (id != null) {
       final res = await API.getOneCourse(id);
 
