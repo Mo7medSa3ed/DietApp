@@ -92,7 +92,8 @@
     "add_order_desc_success":"we can track the delivery in the orders section",
     "conversation":"Conversation",
     "message":"Message...",
-    "alltickets":"Problems"
+    "alltickets":"Problems",
+    "phone_pass_error":"phone or password incorrect"
 
 
 

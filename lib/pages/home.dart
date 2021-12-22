@@ -36,11 +36,11 @@ class _HomeScreanState extends State<HomeScrean> {
       status = res['success'];
       allCourseList = res['data'] ?? [];
       courseList = res['data'] ?? [];
-
-      if (user['recommended_course'] != null) {
+      if (user['course_recommended'] != null) {
         rcourse = allCourseList.firstWhere(
-            (e) => e['id'] == user['recommended_course'],
+            (e) => e['id'] == user['course_recommended'],
             orElse: () => null);
+        print(rcourse);
       }
 
       // if (allCourseList.length > 0) {
@@ -203,7 +203,7 @@ class _HomeScreanState extends State<HomeScrean> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(30),
                 child: Image.network(
-                  allCourseList[1]['photo'],
+                  rcourse['photo'],
                   fit: BoxFit.fill,
                 ),
               )),
@@ -216,7 +216,7 @@ class _HomeScreanState extends State<HomeScrean> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    allCourseList[1]['name'],
+                    rcourse['name'],
                     style: TextStyle(
                         fontSize: response.setFontSize(20),
                         color: kwhite,
@@ -225,7 +225,7 @@ class _HomeScreanState extends State<HomeScrean> {
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
-                    "${allCourseList[1]['days']} Days",
+                    "${rcourse['days']} Days",
                     style: TextStyle(
                         fontSize: response.setFontSize(15),
                         color: kprimary2,

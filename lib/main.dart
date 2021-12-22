@@ -88,6 +88,10 @@ class MyApp extends StatelessWidget {
                 primaryColor: kprimary,
                 splashColor: kprimary.withOpacity(0.1),
                 indicatorColor: kprimary,
+
+                colorScheme: ColorScheme.light(
+                  primary: kprimary2, // header background color
+                ),
                 // ignore: deprecated_member_use
                 accentColor: kprimary,
                 inputDecorationTheme: InputDecorationTheme(

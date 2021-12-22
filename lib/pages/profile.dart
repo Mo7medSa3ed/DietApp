@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test_app/constants/config.dart';
+import 'package:flutter_test_app/main.dart';
 import 'package:flutter_test_app/pages/edit_profile.dart';
 import 'package:flutter_test_app/provider/app_provider.dart';
 import 'package:flutter_test_app/widgets/custum.dart';
@@ -208,7 +209,7 @@ class _ProfileScreanState extends State<ProfileScrean> {
                   style: TextStyle(
                       color: kprimary,
                       fontSize: 18,
-                      fontWeight: FontWeight.w900),
+                      fontWeight: isArabic ? FontWeight.w700 : FontWeight.w900),
                 ),
                 Text(
                   subtitle,

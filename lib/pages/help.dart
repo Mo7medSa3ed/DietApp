@@ -42,17 +42,15 @@ class HelpScrean extends StatelessWidget {
             buildAppBarForPages(context, tr('support'),
                 () => scaffoldkey.currentState.openDrawer(),
                 marginHorizental: 16.0),
-            SizedBox(
-              width: 16,
-            ),
             Expanded(
               child: ListView(
                 physics: BouncingScrollPhysics(),
                 padding: const EdgeInsets.all(16.0),
                 children: [
                   SvgPicture.asset(
-                    'assets/images/support.svg',
-                    height: MediaQuery.of(context).size.height * 0.2,
+                    'assets/images/Customer Service.svg',
+                    height: MediaQuery.of(context).size.height * 0.29,
+                    fit: BoxFit.fitWidth,
                   ),
                   Form(
                     key: formKey,
@@ -60,7 +58,7 @@ class HelpScrean extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SizedBox(height: 20),
+                        SizedBox(height: 10),
                         buildText(tr('help_title'), fontsize: 20),
                         SizedBox(height: 10),
                         buildText2(tr('help_desc'),

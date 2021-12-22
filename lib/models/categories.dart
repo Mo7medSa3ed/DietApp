@@ -12,7 +12,9 @@ class CategoriesModel {
   factory CategoriesModel.fromJson(json) => CategoriesModel(
         id: json['id'],
         name: json['name'],
-        products: json['products'].map<ProductModel>((e) => ProductModel.fromJson(e)).toList(),
+        products: json['products']
+            .map<ProductModel>((e) => ProductModel.fromJson(e))
+            .toList(),
         createdAt: json['created_at'],
         updatedAt: json['updated_at'],
       );

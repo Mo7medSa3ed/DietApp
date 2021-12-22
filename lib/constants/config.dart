@@ -82,9 +82,9 @@ Future<dynamic> getCurrantaddress() async {
   }
 
   _permissionGranted = await location.hasPermission();
-  if (_permissionGranted == loc.PermissionStatus.DENIED) {
+  if (_permissionGranted == loc.PermissionStatus.denied) {
     _permissionGranted = await location.requestPermission();
-    if (_permissionGranted != loc.PermissionStatus.GRANTED) {
+    if (_permissionGranted != loc.PermissionStatus.granted) {
       return;
     }
   }

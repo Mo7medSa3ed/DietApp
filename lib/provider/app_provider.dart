@@ -17,6 +17,8 @@ class AppProvider extends ChangeNotifier {
   }
 
   initUser(user) {
+    user['course_recommended'] = 2;
+    print(user);
     this.user = user;
 
     notifyListeners();

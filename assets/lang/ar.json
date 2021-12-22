@@ -91,5 +91,6 @@
     "add_order_desc_success": "يمكننا تتبع التسليم في قسم الطلبات",
     "conversation": "المحادثة",
     "message": "الرسالة...",
-    "alltickets":"الشكاوى"
+    "alltickets":"الشكاوى",
+    "phone_pass_error":"هناك خطا ف البيانات المدخلة"
 }

@@ -123,7 +123,7 @@ class _ShopScreanState extends State<ShopScrean> {
                     children: [
                       buildAppBarForPages(
                         context,
-                        'Shop',
+                        tr('shop'),
                         () => scaffoldkey.currentState.openDrawer(),
                       ),
                       !status

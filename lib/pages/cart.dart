@@ -66,7 +66,7 @@ class _CartScreanState extends State<CartScrean> {
             children: [
               buildAppBarForPages(
                 context,
-                'Cart',
+                tr('cart'),
                 () => scaffoldkey.currentState.openDrawer(),
               ),
               !status

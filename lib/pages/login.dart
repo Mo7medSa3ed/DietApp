@@ -30,8 +30,6 @@ class _LoginScreanState extends State<LoginScrean>
   bool isLoading = false;
   bool isVisible = true;
   var nameController = TextEditingController(text: '');
-  //var ageController = TextEditingController(text: '');
-  //var emailController = TextEditingController(text: '');
   var phoneController = TextEditingController(text: '');
   var genderController = TextEditingController(text: tr('male'));
   var locationController = TextEditingController(text: '');
@@ -331,6 +329,9 @@ class _LoginScreanState extends State<LoginScrean>
                                       setState(() {});
                                   },
                                   text: tr('location'),
+                                  validator: (v) {
+                                    return null;
+                                  },
                                   hint: tr('hint_msg',
                                       namedArgs: {'attribute': tr('location')}),
                                   isLoading: isLoading,
@@ -695,7 +696,7 @@ class _LoginScreanState extends State<LoginScrean>
                   ? HomeScrean()
                   : HeightScrean()));
     } else if (res.statusCode != 200 || !resBody['success']) {
-      return Alert.errorAlert(ctx: context, title: resBody['message']);
+      return Alert.errorAlert(ctx: context, title: tr('phone_pass_error'));
     } else {
       return Alert.errorAlert(ctx: context, title: tr('error404'));
     }

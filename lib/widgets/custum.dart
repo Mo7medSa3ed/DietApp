@@ -656,7 +656,7 @@ buildText(text, {color = kprimary, fontsize}) {
       overflow: TextOverflow.fade,
       style: TextStyle(
           color: color,
-          fontWeight: FontWeight.w900,
+          fontWeight: isArabic ? FontWeight.w700 : FontWeight.w900,
           fontSize: fontsize != null
               ? response.setFontSize(fontsize.toDouble())
               : response.setFontSize(17)));
@@ -823,37 +823,37 @@ buildOrderItem(o) {
                 ),
               ],
             ),
-            SizedBox(
-              height: response.setHeight(15),
-            ),
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                buildIconElevatedButton(
-                    label: tr('edit_order'),
-                    icon: Image.asset(
-                      "assets/images/edit-button.png",
-                      height: 20,
-                      width: 20,
-                    ),
-                    fontSize: 14.0,
-                    onpressed: () {}),
-                SizedBox(
-                  width: 8,
-                ),
-                buildIconElevatedButtonOutLine(
-                    label: tr('cancel'),
-                    fontSize: 14.0,
-                    color: kprimary2,
-                    icon: Icon(
-                      Icons.close,
-                      color: kprimary2,
-                      size: 20,
-                    ),
-                    onpressed: () {}),
-              ],
-            ),
+            // SizedBox(
+            //   height: response.setHeight(15),
+            // ),
+            // Row(
+            //   mainAxisSize: MainAxisSize.max,
+            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //   children: [
+            //     buildIconElevatedButton(
+            //         label: tr('edit_order'),
+            //         icon: Image.asset(
+            //           "assets/images/edit-button.png",
+            //           height: 20,
+            //           width: 20,
+            //         ),
+            //         fontSize: 14.0,
+            //         onpressed: () {}),
+            //     SizedBox(
+            //       width: 8,
+            //     ),
+            //     buildIconElevatedButtonOutLine(
+            //         label: tr('cancel'),
+            //         fontSize: 14.0,
+            //         color: kprimary2,
+            //         icon: Icon(
+            //           Icons.close,
+            //           color: kprimary2,
+            //           size: 20,
+            //         ),
+            //         onpressed: () {}),
+            //   ],
+            // ),
           ],
         ),
       ),
@@ -1150,7 +1150,7 @@ Widget buildDrawer(context) {
                       SizedBox(
                         height: response.setHeight(20),
                       ),
-                      if (user['recommended_course'] != null) ...[
+                      if (user['course_recommended'] != null) ...[
                         buildDrawerItem(tr("my_course"), 1, i, 2, () {
                           app.changeIndex(1);
                           Navigator.of(context).pop();
@@ -1196,7 +1196,7 @@ Widget buildDrawer(context) {
                         height: response.setHeight(20),
                       ),
                       buildDrawerItem(tr("support"), 8, i, 8, () {
-                        app.changeIndex(7);
+                        app.changeIndex(8);
                         Navigator.of(context).pop();
                         goTo(context, HelpScrean());
                       }),
@@ -1204,7 +1204,7 @@ Widget buildDrawer(context) {
                         height: response.setHeight(20),
                       ),
                       buildDrawerItem(tr('alltickets'), 9, i, 9, () async {
-                        app.changeIndex(8);
+                        app.changeIndex(9);
                         Navigator.of(context).pop();
                         goTo(context, AllTicketsScrean());
                       }),
@@ -1257,6 +1257,7 @@ Widget buildDrawerItem(text, index, currant, icon, onTap) {
                   "assets/images/icon$icon.png",
                   height: 18,
                   width: 18,
+                  color: kwhite,
                 ),
           SizedBox(
             width: response.setWidth(14),
@@ -1330,6 +1331,7 @@ Widget buldinputContainer(
     onCountryChanged}) {
   return Container(
     margin: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+    padding: EdgeInsets.only(bottom: 4),
     decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
@@ -1351,9 +1353,10 @@ Widget buldinputContainer(
                     style: TextStyle(
                         color: kprimary2,
                         fontSize: 16,
-                        fontWeight: FontWeight.w900)),
+                        fontWeight:
+                            isArabic ? FontWeight.w700 : FontWeight.w900)),
               ),
-              text == "Address" || text == "Location"
+              text == tr("address") || text == tr('location')
                   ? Container(
                       width: 32,
                       height: 32,
@@ -1434,32 +1437,28 @@ Widget buldinputContainer(
                                         'attribute': tr(text.toLowerCase())
                                       });
                                     }
-                                    if (v.length < 3 && hint == 'Name') {
-                                      return 'name at leaset 3 character';
+                                    if (v.length < 3 && hint == tr('name')) {
+                                      return '${tr('name')} at leaset 3 character';
                                     }
                                     return null;
                                   },
                             cursorColor: kprimary,
-                            maxLength: (text == "Weight") || (text == "Height")
-                                ? 3
-                                : (text == "Age")
-                                    ? 2
-                                    /*  : (text == "Phone")
-                                        ? 11 */
+                            maxLength:
+                                (text == tr("weight")) || (text == tr("height"))
+                                    ? 3
                                     : null,
-                            inputFormatters: (text == "Age")
-                                ? [FilteringTextInputFormatter.digitsOnly]
-                                : null,
-                            keyboardType: (text == "Weight") ||
-                                    (text == "Height") ||
-                                    (text == "Age") ||
-                                    (text == "Phone")
+                            inputFormatters: null,
+                            keyboardType: (text == tr("weight")) ||
+                                    (text == tr("height")) ||
+                                    (text == tr("phone"))
                                 ? TextInputType.number
                                 : null,
                             style: TextStyle(
                                 color: kprimary,
                                 fontSize: 18,
-                                fontWeight: FontWeight.w900),
+                                fontWeight: isArabic
+                                    ? FontWeight.w700
+                                    : FontWeight.w900),
                             decoration: InputDecoration(
                                 counterText: '',
                                 hintStyle: TextStyle(
@@ -1474,14 +1473,14 @@ Widget buldinputContainer(
             /*      text == "Address"
                 ? Container()
                 :  */
-            (text == "Weight") || (text == "Height")
+            (text == tr("weight")) || (text == tr("height"))
                 ? Expanded(
                     flex: 3,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          (text == "Weight") ? "kg" : "cm",
+                          (text == tr("weight")) ? "kg" : "cm",
                           style: TextStyle(
                               fontWeight: FontWeight.w800, fontSize: 20),
                         ),
@@ -1507,13 +1506,13 @@ Widget buldinputContainer(
                                 color: kprimary,
                               )
                             : Icon(Icons.check_circle,
-                                color: text == "Phone"
+                                color: text == tr("phone")
                                     ? controller.text.length == 11
-                                        ? controller.text.isNotEmpty
-                                            ? kprimary2
-                                            : ksecondary
+                                        ? kprimary2
                                         : ksecondary
-                                    : ksecondary),
+                                    : controller.text.isNotEmpty
+                                        ? kprimary2
+                                        : ksecondary),
                       )
           ],
         ),

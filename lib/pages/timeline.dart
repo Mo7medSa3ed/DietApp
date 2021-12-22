@@ -7,6 +7,7 @@ import 'package:flutter_test_app/Alert.dart';
 import 'package:flutter_test_app/constants/config.dart';
 import 'package:flutter_test_app/main.dart';
 import 'package:flutter_test_app/pages/acheive.dart';
+import 'package:flutter_test_app/pages/course.dart';
 import 'package:flutter_test_app/pages/home.dart';
 import 'package:flutter_test_app/widgets/custum.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -35,7 +36,7 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
  */
 
   final scaffoldkey = GlobalKey<ScaffoldState>();
-  int press;
+  int press = 0;
 
   var courseDayList = [];
   var status = false;
@@ -43,9 +44,10 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
   var rc;
 
   getData() async {
-    if (widget.nextdayId != null)
-      await saveRecommendedCourse(doneDayId: widget.nextdayId.toString());
+    // if (widget.nextdayId != null)
+    // await saveRecommendedCourse(doneDayId: widget.nextdayId.toString());
     rc = await getSavedRecommendedCourse();
+
     courseDayList = [];
     final res = await API.getOneCourseDays(widget.id);
     if (res == 'error') return Alert.errorAlert(ctx: context, title: errorMsg);
@@ -55,9 +57,11 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
         res['data'].forEach((k, v) {
           courseDayList.add({
             "day": k,
-            "isDone": (rc['doneDaysIds'].contains(k.toString()) &&
+            "isDone": (rc['doneDaysIds'].contains(k
+                    .toString()) /* &&
                 widget.nextdayId != null &&
-                k.toString() != widget.nextdayId.toString()),
+                k.toString() != widget.nextdayId.toString()), */
+                ),
             "value": v
                 .map((e) => {
                       "id": e['id'],
@@ -69,6 +73,12 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
                 .toList()
           });
         });
+        print(rc);
+        if (widget.start == null) {
+          int idx = courseDayList.indexWhere((e) => e['isDone'] == false);
+          press = idx != -1 ? idx : 0;
+        } else
+          press = widget.start;
       }
     }
     setState(() {});
@@ -76,7 +86,6 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
 
   @override
   void initState() {
-    press = widget.start ?? 0;
     getData();
     super.initState();
   }
@@ -103,7 +112,7 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
 
   Future getSavedRecommendedCourse() async {
     final prefs = await SharedPreferences.getInstance();
-
+    // await prefs.setString('rc', '');
     final res = prefs.getString('rc');
 
     if (res == null || res.trim().isEmpty) {
@@ -117,7 +126,11 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
     isRtl = context.locale == Locale('ar');
 
     return WillPopScope(
-      onWillPop: () => goToWithRemoveUntill(context, HomeScrean()),
+      onWillPop: () {
+        goToWithRemoveUntill(context, HomeScrean());
+        goTo(context, CouresScrean());
+        return Future.value(true);
+      },
       child: SafeArea(
         child: Scaffold(
           key: scaffoldkey,
@@ -224,12 +237,29 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
                                                       )),
                                                   child: InkWell(
                                                     onTap: () {
-                                                      print(rc['doneDaysIds']);
-                                                      if (rc['doneDaysIds']
-                                                          .contains(
-                                                              courseDayList[
-                                                                      index]
-                                                                  ['day'])) {
+                                                      int idx =
+                                                          rc['doneDaysIds']
+                                                              .length;
+                                                      if (index - idx == 1) {
+                                                        if (rc['doneDaysIds']
+                                                                .contains(
+                                                                    courseDayList[
+                                                                            index]
+                                                                        [
+                                                                        'day']) ||
+                                                            (index - idx == 1 &&
+                                                                rc['doneDaysIds']
+                                                                    .contains(courseDayList[
+                                                                            index -
+                                                                                1]
+                                                                        [
+                                                                        'day']))) {
+                                                          setState(() {
+                                                            press = index;
+                                                          });
+                                                        } else
+                                                          return;
+                                                      } else {
                                                         setState(() {
                                                           press = index;
                                                         });
@@ -510,8 +540,9 @@ class _TimeLineScreanState extends State<TimeLineScrean> {
                   buildDonerow(
                       isDone: isDone,
                       ontap: () async {
-                        if (widget.nextdayId == null &&
-                            rc['doneDaysIds'].length > 0) return;
+                        if (rc['doneDaysIds'].length > 0 &&
+                            rc['doneDaysIds']
+                                .contains(courseDayList[press]['day'])) return;
 
                         courseDayList[press]['value'][i]['done'] =
                             !courseDayList[press]['value'][i]['done'];

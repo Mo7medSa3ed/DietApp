@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test_app/API.dart';
 import 'package:flutter_test_app/Alert.dart';
 import 'package:flutter_test_app/constants/config.dart';
+import 'package:flutter_test_app/main.dart';
 import 'package:flutter_test_app/pages/home.dart';
 import 'package:flutter_test_app/provider/app_provider.dart';
 import 'package:flutter_test_app/widgets/custum.dart';
@@ -38,7 +39,8 @@ class _EditProfileScreanState extends State<EditProfileScrean> {
   var user;
 
   Future getImage(source) async {
-    await ImagePicker.pickImage(source: source).then((value) async {
+    // ignore: invalid_use_of_visible_for_testing_member
+    await ImagePicker.platform.pickImage(source: source).then((value) async {
       if (value != null) {
         setState(() {
           image = value;
@@ -307,7 +309,9 @@ class _EditProfileScreanState extends State<EditProfileScrean> {
                                               ? kprimary
                                               : ksecondary,
                                           fontWeight: _selectedDate != null
-                                              ? FontWeight.w900
+                                              ? isArabic
+                                                  ? FontWeight.w700
+                                                  : FontWeight.w900
                                               : FontWeight.w600,
                                           fontSize:
                                               _selectedDate != null ? 18 : 16)),
@@ -334,7 +338,9 @@ class _EditProfileScreanState extends State<EditProfileScrean> {
                                         Text(
                                           selectedItem,
                                           style: TextStyle(
-                                              fontWeight: FontWeight.w900,
+                                              fontWeight: isArabic
+                                                  ? FontWeight.w700
+                                                  : FontWeight.w900,
                                               fontSize: 18),
                                         ),
                                 items: [tr('male'), tr('female')],

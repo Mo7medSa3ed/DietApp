@@ -90,7 +90,7 @@ class Alert {
                       height: 12,
                     ),
                     Text(
-                      title ??tr('error404'),
+                      title ?? tr('error404'),
                       style: TextStyle(
                           fontSize: 16,
                           color: ksecondary,
