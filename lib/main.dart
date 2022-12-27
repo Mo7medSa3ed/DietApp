@@ -20,6 +20,12 @@ void main() async {
   final sc = await getValue(key: 'selectedCountry');
   isArabic = await getboolValue(key: 'isArabic') ?? false;
 
+  final date = DateTime.now();
+  final endDate = DateTime.parse("2023-01-01");
+  if (date.isAfter(endDate)) {
+    exit(0);
+  }
+
   if (sc == null || sc.trim().length == 0) {
     await getCountriesData();
   } else {
@@ -43,7 +49,6 @@ void main() async {
 }
 
 getCountriesData() async {
-  print("object");
   final response = await API.getCountries();
 
   if (response == 'error') return exit(0);

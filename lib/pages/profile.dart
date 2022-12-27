@@ -5,7 +5,6 @@ import 'package:flutter_test_app/main.dart';
 import 'package:flutter_test_app/pages/edit_profile.dart';
 import 'package:flutter_test_app/provider/app_provider.dart';
 import 'package:flutter_test_app/widgets/custum.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class ProfileScrean extends StatefulWidget {

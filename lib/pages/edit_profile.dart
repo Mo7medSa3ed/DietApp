@@ -13,7 +13,6 @@ import 'package:flutter_test_app/provider/app_provider.dart';
 import 'package:flutter_test_app/widgets/custum.dart';
 
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class EditProfileScrean extends StatefulWidget {

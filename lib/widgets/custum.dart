@@ -1,5 +1,4 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test_app/API.dart';
@@ -634,11 +633,11 @@ buildShopItem({context, ProductModel product}) {
             if (res != false) {
               Provider.of<AppProvider>(context, listen: false)
                   .changeCartCount(int.parse(res['amount'].toString()));
-              Toast.show(tr("added"), context,
+              Toast.show(tr("added"),
                   backgroundColor: kprimary,
-                  textColor: kwhite,
-                  gravity: Toast.BOTTOM,
-                  duration: Toast.LENGTH_SHORT);
+                  textStyle: TextStyle(color: kwhite),
+                  gravity: Toast.bottom,
+                  duration: Toast.lengthShort);
             }
           },
           child: Padding(
